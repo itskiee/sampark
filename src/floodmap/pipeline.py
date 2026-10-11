@@ -64,6 +64,7 @@ class StageContext:
     cache: Cache
     results: Results
     progress: ProgressFn
+    focus_bbox: tuple[float, float, float, float] | None = None  # optional close-up window
 
 
 @dataclass(frozen=True)
@@ -118,6 +119,7 @@ def run_pipeline(
     event_name: str = "custom area",
     settings: Settings | None = None,
     progress: ProgressFn | None = None,
+    focus_bbox: tuple[float, float, float, float] | None = None,
 ) -> Results:
     config = config or load_config()
     settings = settings or load_settings()
@@ -148,6 +150,7 @@ def run_pipeline(
         cache=Cache(config.resolve(config.cache.dir), config.cache.enabled),
         results=results,
         progress=progress,
+        focus_bbox=focus_bbox,
     )
 
     to_run = _expand_with_requirements(stages) if stages else list(STAGE_NAMES)
@@ -191,3 +194,8 @@ def _run_stage(name: str, ctx: StageContext) -> StageResult:
     result.seconds = round(time.perf_counter() - start, 2)
     ctx.progress(name, f"{result.status.value} ({result.seconds}s) {result.message}".strip())
     return result
+
+
+# Register the implemented stages (each module uses @register_stage). Imported last so the
+# stage modules can import register_stage/StageContext from this, fully defined, module.
+import floodmap.stages  # noqa: E402,F401

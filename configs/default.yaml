@@ -25,6 +25,60 @@ logging:
   dir: logs             # full (redacted) log with tracebacks, git-ignored
   level: INFO           # console verbosity
 
+s1:
+  # --- Pairing (which before/after images to compare) -------------------------------
+  # Look back this far for pre-event images. 36 days = three 12-day repeats of one
+  # satellite on the same track, so we normally get up to 3 pre-event images.
+  pre_window_days: 36
+  # Look ahead this far for the first post-event image. 24 days = two repeats, so a
+  # track that missed one pass still qualifies; the earliest post image is chosen.
+  post_window_days: 24
+  # Up to this many pre-event images are combined (per-pixel median) into a cleaner
+  # reference: the median suppresses speckle and one-off effects (rain, wet snow).
+  max_pre_images: 3
+  # Minimum fraction of the area an image must cover to be used.
+  min_coverage: 0.5
+  # An image taken ON the event date may be from before the flood, so by default it is
+  # used neither as "before" nor as "after". Set true to allow it as "after".
+  include_event_day_as_post: false
+  # Images of one pass are split into ~25 s slices; slices of the same track closer than
+  # this are merged into one acquisition.
+  same_pass_minutes: 10
+
+  # --- Processing ---------------------------------------------------------------------
+  # Output pixel size. Sentinel-1 IW GRD has ~20 m true resolution (10 m pixels are
+  # oversampled), so 20 m loses little detail and quarters the data volume.
+  resolution_m: 20
+  # Larger areas are processed at a coarser pixel size so one image stays below this
+  # many pixels (bounds download size/time on Copernicus Data Space).
+  max_pixels: 16000000
+  # Speckle filter: median over a square window of this many pixels (3 = 60 m at 20 m).
+  # Small on purpose: rivers here are only 50-150 m wide and larger windows blur them.
+  speckle_window_px: 3
+  # Backscatter below this (dB) is treated as no-data (image borders, radar shadow).
+  min_valid_db: -30.0
+  # Seconds to wait for one synchronous openEO request before switching to a batch job.
+  sync_timeout_s: 600
+
+  # --- Change classification ----------------------------------------------------------
+  # "fixed": thresholds below. "otsu": data-driven thresholds per tail, sanity-checked,
+  # falling back to the fixed values if the histogram is not clearly bimodal.
+  threshold_method: fixed
+  # Log-ratio = 10*log10(after/before). -3 dB = backscatter halved; +3 dB = doubled.
+  # A factor-2 change is far above speckle noise after filtering, a common conservative
+  # choice for SAR change detection.
+  decrease_db: -3.0
+  increase_db: 3.0
+  # New water must also be DARK after the event (smooth water reflects radar away).
+  water_post_vv_db: -15.0
+  # Otsu thresholds outside these bounds are rejected (fallback to fixed values).
+  otsu_decrease_bounds_db: [-10.0, -1.5]
+  otsu_increase_bounds_db: [1.5, 10.0]
+  # Minimum between-class variance ratio for a histogram tail to count as bimodal.
+  otsu_min_separability: 0.5
+  # Changed patches smaller than this are removed as noise (2,000 m² = 5 pixels at 20 m).
+  min_mapping_unit_m2: 2000
+
 network:
   # Per-request timeout for catalogue / ohsome HTTP calls. ohsome's own server timeout is
   # 600 s; we stop earlier so a stuck request cannot freeze a live demo.

@@ -23,22 +23,24 @@ brief); OpenStreetMap only from the **ohsome API** (named in the brief). No Goog
 - [x] CI workflow (ubuntu + windows, read-only token, SHA-pinned actions, gitleaks, pip-audit) + Dependabot
 - [x] rework 2026-10-11: Earth Engine removed, Copernicus Data Space (STAC catalogue + openEO) added
 - [x] `scripts/check_cdse.py` prints the Sentinel-1 inventory (public catalogue)
-- [ ] `check_cdse.py` DEM sample + `pytest -m cdse` green  ← **needs owner's CDSE login**
+- [x] `check_cdse.py` DEM sample (1,666 m near Syabrubesi) + `pytest -m cdse` green (2026-10-11)
 - [ ] CI green on GitHub  ← **needs owner's private GitHub repo**
 
 **Done when:** offline tests + pre-commit green; doctor runs without printing secrets; skeleton
 run writes results.json; CDSE inventory + DEM sample work; CI green.
 
-### M1 — Sentinel-1 change detection on Trishuli (Oct 11)
-- [ ] `s1_pairing`: same-track (relative orbit + pass) pre/post selection from the CDSE catalogue, slice merge, coverage ranking, clean failure
-- [ ] `s1_change` (CDSE openEO): `sar_backscatter` with Copernicus DEM (`COPERNICUS_30`) terrain correction, speckle filter, pre-stack median, log-ratio VV/VH
-- [ ] download as int16 GeoTIFF (local UTM, adaptive resolution, retries, job size limits) + cache
-- [ ] `thresholds`: water-like decrease / debris increase / non-dark decrease; Otsu + bimodality check + fixed fallback; min mapping unit
-- [ ] `viz`: full + focus PNGs, RGB change composite, attribution footer
-- [ ] ablation PNGs (no speckle, single pre, VV vs VH, fixed vs Otsu)
-- [ ] pairing smoke run on Melamchi 2021-06-15, Sikkim 2023-10-04, and a no-flood case
-- [ ] unit tests (pairing, thresholds, fixtures for offline end-to-end)
-- [ ] explainer `docs/explainers/M1_s1_change_detection.md`
+### M1 — Sentinel-1 change detection on Trishuli (Oct 11) — DONE, owner GO 2026-10-11
+- [x] `s1_pairing`: same-track (relative orbit + pass) pre/post selection from the CDSE catalogue, slice merge, coverage ranking, clean failure
+- [x] `s1_change` (CDSE openEO): `sar_backscatter` with Copernicus DEM (`COPERNICUS_30`) terrain correction, pre-event median on CDSE (one request), local speckle filter, log-ratio VV/VH
+- [x] download as float32 GeoTIFF (local UTM, adaptive resolution, 429 wait+retry, resumable per-image fallback) + cache (238 s first run → 15 s cached)
+- [x] `thresholds`: water-like decrease / debris increase / non-dark decrease; Otsu + bimodality check + fixed fallback; min mapping unit
+- [x] `viz`: full + focus PNGs, RGB change composite, attribution footer
+- [x] ablation PNGs (no speckle, single pre, VV vs VH, fixed vs Otsu) — `scripts/ablation_s1.py`
+- [x] full s1 runs on Melamchi 2021-06-15, Sikkim 2023-10-04 and a no-flood case: all OK, no crash
+- [x] unit tests (pairing 12, thresholds 8, local processing + rendering 8)
+- [x] explainer `docs/explainers/M1_s1_change_detection.md`
+- [ ] offline end-to-end fixture test (moved to M2 together with the terrain stage)
+- Proposals for owner: **P16** VH also for decreases; **P17** optional scene-shift correction (see explainer §7c)
 
 Known Trishuli pairs (CDSE catalogue, 2026-10-11): track 85 ascending 16 Aug → 28 Aug;
 track 121 descending 19 Aug → 31 Aug; track 19 descending 24 Aug → 5 Sep (all Sentinel-1D, VV+VH).

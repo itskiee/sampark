@@ -6,6 +6,14 @@ from floodmap import pipeline
 from floodmap.config import load_config
 
 
+@pytest.fixture(scope="session", autouse=True)
+def _isolated_logging(tmp_path_factory):
+    """Configure logging once, into a temp folder, so tests never write to the repo's logs/."""
+    from floodmap.logging_setup import setup_logging
+
+    setup_logging(tmp_path_factory.mktemp("logs"), "WARNING")
+
+
 @pytest.fixture
 def tmp_config(tmp_path):
     """Default config with cache/outputs/logs redirected into a temporary folder."""

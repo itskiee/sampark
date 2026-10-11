@@ -66,15 +66,17 @@ def _cmd_run(args: argparse.Namespace) -> int:
         if args.event:
             event = load_event(args.event)
             aoi_spec = list(event.aoi.bbox) if event.aoi.bbox else event.aoi.geojson
-            event_date, name = event.event_date, event.name
+            event_date, name, focus = event.event_date, event.name, event.focus_bbox
         else:
             if args.date is None:
                 print("error: --date is required with --bbox", file=sys.stderr)
                 return 2
             event, aoi_spec, event_date, name = None, list(args.bbox), args.date, args.name
+            focus = None
         config = load_config(event, tuple(args.config))
         stages = [s.strip() for s in args.stages.split(",")] if args.stages else None
-        results = run_pipeline(aoi_spec, event_date, config, stages=stages, event_name=name)
+        results = run_pipeline(aoi_spec, event_date, config, stages=stages, event_name=name,
+                               focus_bbox=focus)
     except (AOIError, ConfigError, ValueError) as exc:
         print(f"error: {exc}", file=sys.stderr)
         return 2
