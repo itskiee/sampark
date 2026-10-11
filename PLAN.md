@@ -48,13 +48,18 @@ track 121 descending 19 Aug → 31 Aug; track 19 descending 24 Aug → 5 Sep (al
 **Done when / GO-NO-GO:** `run --stages s1` prints pair + stats, second run is served from cache, and
 the flood/debris path along the Bhote Koshi near Syabrubesi is clearly visible in the saved focus PNG.
 
-### M2 — DEM masks, flood path, S2, confidence (Oct 11–12)
-- [ ] slope, HAND (from GLO-30 via pysheds, locally), radar layover/shadow masks (local incidence angle)
-- [ ] permanent water from pre-event S1/S2 (no JRC)
-- [ ] flood-path tracing from any upstream point (official bonus; uses the same flow directions)
-- [ ] S2 L2A from CDSE: SCL cloud mask, NDWI/MNDWI change, brightness change; graceful "too cloudy"
-- [ ] asc + desc track fusion where available
-- [ ] confidence layer high/medium/low (S1 / S2 / model agreement)
+### M2 — DEM masks, flood path, S2, confidence (Oct 11–12) — DONE
+- [x] slope, HAND (from GLO-30 via pysheds, locally), radar layover/shadow masks (own geometry; CDSE has no LIA output)
+- [x] permanent water from pre-event S1 (no JRC)
+- [x] flood-path tracing from any upstream point (official bonus): Trishuli 81.9 km, 1,318 m drop, 50 % on detected change
+- [x] S2 L2A from CDSE: SCL cloud mask, MNDWI new water, NDVI vegetation loss; graceful "too cloudy"
+- [x] asc + desc track fusion (per-track layover/shadow)
+- [x] confidence layer high/medium/low + affected-area polygons (GeoJSON) + hillshade maps
+- [x] P16 (VH also for decreases) implemented; P17 re-assessed → not needed after masks → **dropped (owner decision 2026-10-11)**
+- [x] offline end-to-end pipeline test (CDSE faked) → CI tests the whole pipeline
+- [x] robustness: Melamchi, Sikkim, no-flood control all OK (see M2 explainer)
+- [x] explainer `docs/explainers/M2_terrain_s2_confidence.md`
+- Settlements along the flood path → M3 (needs pre-event OSM)
 
 **Done when:** masked flood map PNG visibly cleaner than M1; flood path lists settlements downstream
 (after M3); confidence raster produced; S2 absent → clear message, pipeline continues.
@@ -108,9 +113,9 @@ P11 own basemaps, folium · P12 smoke runs every milestone + offline fixtures in
 P13 `doctor` pre-flight · P14 hash-pinned deps + pip-audit · P15 no Earth Engine/geemap/osmnx.
 
 ## Owner actions
-- [ ] Set `git config user.email` to the GitHub noreply address (before the first commit)
+- [x] Set `git config user.email` to the GitHub noreply address (before the first commit)
 - [ ] **Copernicus Data Space account** (free, dataspace.copernicus.eu), then `python -m floodmap login`
-- [ ] Create **private** GitHub repo (empty), send URL
+- [x] Create **private** GitHub repo (empty), send URL → https://github.com/itskiee/floodmap.git
 - [ ] Post Discord questions (below)
 - [ ] Choose LLM provider + create key with spend limit (by M5)
 

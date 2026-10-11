@@ -70,6 +70,65 @@ def _rgb_composite(pre_db: np.ndarray, post_db: np.ndarray) -> np.ndarray:
     return rgb
 
 
+def hillshade(dem: np.ndarray, res: float, azimuth: float = 315.0,
+              altitude: float = 45.0) -> np.ndarray:
+    """Shaded relief (0..1) from the Copernicus DEM: our own basemap, no external tiles."""
+    dz_drow, dz_dcol = np.gradient(np.nan_to_num(dem.astype("float64")), res)
+    slope = np.arctan(np.hypot(dz_dcol, dz_drow))
+    aspect = np.arctan2(-dz_dcol, dz_drow)
+    az, alt = np.radians(360.0 - azimuth + 90.0), np.radians(altitude)
+    shade = np.sin(alt) * np.cos(slope) + np.cos(alt) * np.sin(slope) * np.cos(az - aspect)
+    return np.clip(shade, 0, 1)
+
+
+FINAL_COLORS = {2: "#1f63c6", 3: "#e69f00", 4: "#c51b7d", 5: "#08306b"}
+CONF_ALPHA = {1: 0.35, 2: 0.7, 3: 1.0}
+
+
+def render_flood_map(shade, final, conf, transform, title: str, info: str, out_png: Path,
+                     window: tuple[slice, slice] | None = None, path_xy=None) -> Path:
+    """Final flood/debris map over hillshade; colour = class, opacity = confidence."""
+    from floodmap.flood_map import CONF_NAMES, FINAL_CLASS_NAMES
+
+    rows, cols = window or (slice(0, final.shape[0]), slice(0, final.shape[1]))
+    ext = _extent_km(transform, rows, cols)
+    f, c, sh = final[rows, cols], conf[rows, cols], shade[rows, cols]
+    rgba = np.zeros(f.shape + (4,), dtype=float)
+    for code, color in FINAL_COLORS.items():
+        rgb = matplotlib.colors.to_rgb(color)
+        m = f == code
+        rgba[m, :3] = rgb
+        rgba[m, 3] = 0.9 if code == 5 else 0.0
+        for lvl, alpha in CONF_ALPHA.items():
+            rgba[m & (c == lvl), 3] = alpha
+    fig, (ax, side) = plt.subplots(1, 2, figsize=(15, 9), width_ratios=[3, 1],
+                                   constrained_layout=True)
+    ax.imshow(sh, cmap="gray", vmin=0, vmax=1, extent=ext, interpolation="bilinear")
+    ax.imshow(rgba, extent=ext, interpolation="nearest")
+    if path_xy is not None:
+        ax.plot(path_xy[:, 0] / 1000, path_xy[:, 1] / 1000, color="#00d0ff", lw=1.8,
+                label="traced flood path")
+        ax.plot(path_xy[0, 0] / 1000, path_xy[0, 1] / 1000, "o", color="#00d0ff", ms=8)
+    ax.set_xlim(ext[0], ext[1])
+    ax.set_ylim(ext[2], ext[3])
+    ax.set_xlabel("Easting (km)")
+    ax.set_ylabel("Northing (km)")
+    _scale_bar(ax, ext)
+    handles = [Patch(color=FINAL_COLORS[k], label=FINAL_CLASS_NAMES[k]) for k in (2, 3, 4, 5)]
+    handles += [Patch(color="#666666", alpha=a, label=f"confidence {CONF_NAMES[lvl]}")
+                for lvl, a in CONF_ALPHA.items()]
+    ax.legend(handles=handles, loc="lower right", fontsize=8, framealpha=0.9)
+    side.axis("off")
+    side.text(0, 1, info, va="top", ha="left", fontsize=9, family="monospace")
+    fig.suptitle(title, fontsize=13, fontweight="bold")
+    footer = "\n".join(textwrap.wrap(attribution.footer_text(), 190))
+    fig.text(0.5, -0.01, footer, ha="center", va="top", fontsize=7, color="#444444")
+    out_png.parent.mkdir(parents=True, exist_ok=True)
+    fig.savefig(out_png, dpi=110, bbox_inches="tight")
+    plt.close(fig)
+    return out_png
+
+
 def render_s1(pre_db, post_db, lr_db, classes, transform, title: str, subtitle: str,
               out_png: Path, window: tuple[slice, slice] | None = None) -> Path:
     rows, cols = window or (slice(0, classes.shape[0]), slice(0, classes.shape[1]))

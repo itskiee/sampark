@@ -78,6 +78,63 @@ s1:
   otsu_min_separability: 0.5
   # Changed patches smaller than this are removed as noise (2,000 m² = 5 pixels at 20 m).
   min_mapping_unit_m2: 2000
+  # Process the best pair AND the best pair from the opposite pass direction (ascending vs
+  # descending). The two look at the valley from opposite sides, so one sees what the
+  # other has in radar shadow/layover, and agreement between them raises confidence.
+  # 1 = only the best track (faster).
+  max_tracks: 2
+
+terrain:
+  # Copernicus DEM GLO-30 is processed at its native 30 m resolution.
+  dem_resolution_m: 30
+  # The DEM is fetched for the area plus this margin, so streams entering the area have
+  # some upstream catchment (otherwise their flow accumulation is cut off at the border).
+  buffer_m: 10000
+  # A cell is a "stream" when at least this much area drains through it. 5 km² keeps
+  # rivers and larger torrents; smaller values would turn every gully into a "river".
+  stream_area_km2: 5
+  # Plausible flood/debris zone: at most this high above the nearest stream. Glacial lake
+  # outburst / debris floods in gorges reach 10–20 m depth and deposit on terraces, so
+  # 30 m is generous; normal river floods would use ~10–15 m.
+  hand_max_m: 30
+  # ...and not steeper than this (water does not stand and thick deposits do not stay on
+  # steeper slopes; 30 m DEM slopes are smoothed, so the limit is set conservatively).
+  slope_max_deg: 30
+  # Permanent (pre-event) water: dark in the BEFORE images (open water is typically below
+  # about -18 dB in VV and -24 dB in VH) and inside the plausible zone. Shown separately so
+  # the normal river is not reported as "flooded".
+  permanent_water_vv_db: -18.0
+  permanent_water_vh_db: -24.0
+
+s2:
+  # Optical images are only useful when the sky is clear (often not in the monsoon).
+  pre_window_days: 60      # look this far back for a clear "before" image
+  post_window_days: 30     # and this far ahead for the first clear "after" image
+  # Skip catalogue scenes whose tile is cloudier than this (tile-level estimate).
+  max_tile_cloud_pct: 70
+  # After cloud masking (SCL band), at least this share of the area must be clear in BOTH
+  # images, otherwise the stage reports "too cloudy" and the pipeline continues without it.
+  min_clear_share: 0.10
+  # MNDWI = (green - SWIR) / (green + SWIR) > 0 is the standard open-water test.
+  water_mndwi: 0.0
+  # Mud/debris: vegetation removed (NDVI drop of at least this much) and little vegetation
+  # left afterwards.
+  ndvi_drop: 0.25
+  ndvi_post_max: 0.35
+
+confidence:
+  # Sources are compared within a small neighbourhood (1 pixel = 20 m) so that a tiny
+  # misregistration between tracks does not count as disagreement.
+  neighbourhood_px: 1
+  # A single-source detection counts as "medium" (not "low") when its patch is at least
+  # this large: coherent deposits are larger than residual speckle.
+  medium_min_patch_m2: 5000
+
+flood_path:
+  # A start point near (not exactly on) the river is moved to the channel within this radius.
+  snap_radius_m: 300
+  # Settlements within this distance of the traced path are listed as "along the path" (M3).
+  settlement_buffer_m: 1000
 
 network:
   # Per-request timeout for catalogue / ohsome HTTP calls. ohsome's own server timeout is

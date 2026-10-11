@@ -45,6 +45,8 @@ def _build_parser() -> argparse.ArgumentParser:
     run.add_argument("--date", type=_parse_date, help="flood date YYYY-MM-DD (with --bbox)")
     run.add_argument("--name", default="custom area", help="label for a --bbox run")
     run.add_argument("--stages", help="comma-separated stages (default: all)")
+    run.add_argument("--flood-path-start", type=float, nargs=2, metavar=("LON", "LAT"),
+                     help="upstream point for the flood-path bonus")
     run.add_argument("--config", type=Path, action="append", default=[], help="extra config YAML")
 
     sub.add_parser("login", help="log in to Copernicus Data Space (once; token in your profile)")
@@ -67,16 +69,19 @@ def _cmd_run(args: argparse.Namespace) -> int:
             event = load_event(args.event)
             aoi_spec = list(event.aoi.bbox) if event.aoi.bbox else event.aoi.geojson
             event_date, name, focus = event.event_date, event.name, event.focus_bbox
+            start = event.flood_path_start
         else:
             if args.date is None:
                 print("error: --date is required with --bbox", file=sys.stderr)
                 return 2
             event, aoi_spec, event_date, name = None, list(args.bbox), args.date, args.name
-            focus = None
+            focus, start = None, None
+        if args.flood_path_start:
+            start = tuple(args.flood_path_start)
         config = load_config(event, tuple(args.config))
         stages = [s.strip() for s in args.stages.split(",")] if args.stages else None
         results = run_pipeline(aoi_spec, event_date, config, stages=stages, event_name=name,
-                               focus_bbox=focus)
+                               focus_bbox=focus, flood_path_start=start)
     except (AOIError, ConfigError, ValueError) as exc:
         print(f"error: {exc}", file=sys.stderr)
         return 2

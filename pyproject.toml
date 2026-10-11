@@ -26,6 +26,7 @@ dependencies = [
     "pydantic>=2.6",
     "python-dotenv>=1.0",
     "requests>=2.32",
+    "pysheds>=0.4",  # DEM hydrology: pit filling, flow direction/accumulation, HAND
 ]
 
 [project.optional-dependencies]

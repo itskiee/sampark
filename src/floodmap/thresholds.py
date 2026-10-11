@@ -8,9 +8,9 @@ Log-ratio LR = 10*log10(after / before) in dB, per pixel:
 Classes (uint8):
   0 NODATA      outside the image / invalid
   1 NO_CHANGE
-  2 WATER       strong decrease AND dark after the event (open water reflects radar away)
-  3 DECREASE    strong decrease but not water-dark (wet mud, wet debris, damaged vegetation)
-  4 INCREASE    strong increase (rough debris, boulder deposits, collapsed structures)
+  2 WATER       strong decrease (VV or VH) AND dark VV after the event (open water)
+  3 DECREASE    strong decrease (VV or VH) but not water-dark (wet mud, wet debris)
+  4 INCREASE    strong increase in VV or VH (rough debris, boulder deposits, wreckage)
 
 Two threshold methods:
   fixed  ±3 dB (backscatter halved/doubled) — transparent and predictable on unseen areas.
@@ -114,8 +114,14 @@ def classify(
 
     decrease = valid & (lr_vv <= dec_t)
     increase = valid & (lr_vv >= inc_t)
-    if lr_vh is not None:  # VH is more sensitive to volume (vegetation, debris piles)
-        increase |= valid & np.isfinite(lr_vh) & (lr_vh >= inc_t) & ~decrease
+    if lr_vh is not None:
+        vh_ok = valid & np.isfinite(lr_vh)
+        # VH (cross-polarised) reacts strongly to volume scattering: vegetation, debris piles,
+        # rough banks. In the M1 ablation it traced the flooded channel far more continuously
+        # than VV, so a strong VH drop also counts as a decrease (owner decision P16).
+        decrease |= vh_ok & (lr_vh <= dec_t)
+        increase |= vh_ok & (lr_vh >= inc_t)
+        increase &= ~decrease  # conflicting signals: the drop wins (conservative for water)
     water = decrease & (post_vv_db <= p.water_post_vv_db)
     wet = decrease & ~water
 

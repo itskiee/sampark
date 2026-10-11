@@ -39,6 +39,7 @@ class Acquisition:
     footprint: BaseGeometry
     scene_ids: tuple[str, ...]
     coverage: float = 0.0  # fraction of the AOI covered, 0..1
+    incidence_angle: float | None = None  # mean of the slices (degrees), if known
 
     @property
     def track(self) -> tuple[int, str]:
@@ -134,7 +135,9 @@ def _to_acquisition(orbit: int, state: str, group: list[S1Scene]) -> Acquisition
     pols = set(group[0].polarizations)
     for s in group[1:]:
         pols &= set(s.polarizations)  # only polarisations every slice has
+    angles = [s.incidence_angle for s in group if s.incidence_angle is not None]
     return Acquisition(
+        incidence_angle=sum(angles) / len(angles) if angles else None,
         relative_orbit=orbit,
         orbit_state=state,
         start=group[0].acquired,

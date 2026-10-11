@@ -149,6 +149,7 @@ class ChangeLayers:
     transform: rasterio.Affine
     crs: rasterio.crs.CRS
     n_pre: int
+    pre_vh_db: np.ndarray | None = None
 
 
 def read_bands(path: Path, ref: rasterio.io.DatasetReader | None = None) -> dict[str, np.ndarray]:
@@ -237,7 +238,7 @@ def change_layers(pre: LinearImage, post: LinearImage, transform, crs, speckle_w
     if has_vh:
         lr_vh = np.where(valid & np.isfinite(pre_vh) & np.isfinite(post_vh),
                          post_vh - pre_vh, np.nan).astype("float32")
-    return ChangeLayers(pre_vv, post_vv, lr_vv, lr_vh, valid, transform, crs, n_pre)
+    return ChangeLayers(pre_vv, post_vv, lr_vv, lr_vh, valid, transform, crs, n_pre, pre_vh)
 
 
 def write_geotiff(path: Path, layers: dict[str, np.ndarray], transform, crs) -> Path:
