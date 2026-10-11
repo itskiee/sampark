@@ -1,0 +1,70 @@
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "floodmap"
+version = "0.1.0"
+description = "Flood and debris mapping, damage overlay and cut-off settlement analysis from Sentinel-1/2, Copernicus DEM and pre-event OpenStreetMap. Educational prototype."
+readme = "README.md"
+license = { file = "LICENSE" }
+requires-python = ">=3.11,<3.14"
+# Loose lower bounds only. The exact, hash-locked versions live in requirements.txt
+# (generated from this list with `uv pip compile`, see README "Updating dependencies").
+dependencies = [
+    "openeo>=0.40",  # official client for Copernicus Data Space Ecosystem processing
+    "numpy>=2.0",
+    "scipy>=1.13",
+    "scikit-image>=0.24",
+    "rasterio>=1.4",
+    "shapely>=2.0",
+    "pyproj>=3.6",
+    "geopandas>=1.0",
+    "pyogrio>=0.9",
+    "matplotlib>=3.9",
+    "pyyaml>=6.0",
+    "pydantic>=2.6",
+    "python-dotenv>=1.0",
+    "requests>=2.32",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "ruff>=0.6",
+    "pre-commit>=3.7",
+    "pip-audit>=2.7",
+    "uv>=0.4",
+]
+
+[project.scripts]
+floodmap = "floodmap.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+floodmap = ["py.typed"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+# Default run is fully offline. Live tests are opt-in:  pytest -m network  |  pytest -m cdse
+addopts = "-ra -m 'not cdse and not network'"
+markers = [
+    "network: needs internet access to public APIs, no login (skipped by default)",
+    "cdse: needs a Copernicus Data Space login (`python -m floodmap login`) (skipped by default)",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+extend-exclude = [".venv", "cache", "outputs", "logs"]
+
+[tool.ruff.lint]
+# E/W/F: pyflakes + style, I: import order, B: bugbear, UP: modern syntax,
+# S: bandit security rules (hard-coded secrets, unsafe subprocess/yaml/pickle, ...)
+select = ["E", "W", "F", "I", "B", "UP", "S"]
+
+[tool.ruff.lint.per-file-ignores]
+# assert is the pytest idiom; subprocess is used by tests to ask git about .gitignore
+"tests/**" = ["S101", "S603", "S607"]

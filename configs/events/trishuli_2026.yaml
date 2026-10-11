@@ -1,0 +1,19 @@
+# Case study: August 2026 Bhote Koshi – Trishuli corridor flood (Nepal).
+# This file is the ONLY Trishuli-specific input to the system.
+#
+# The boxes are drawn from general geography of the corridor named in the brief
+# (Rasuwagadhi -> Syabrubesi -> Dhunche -> Betrawati -> Trishuli Bazaar). They were NOT
+# derived from Copernicus EMS / EMSR927 products. Coordinates are approximate and are
+# checked in M1 against the Copernicus DEM valley lines.
+
+name: "Bhote Koshi - Trishuli corridor flood (case study)"
+event_date: 2026-08-26
+
+aoi:
+  # [min_lon, min_lat, max_lon, max_lat] in WGS84 degrees, ~35 km x 52 km (~1,800 km²)
+  bbox: [85.10, 27.85, 85.45, 28.32]
+
+# Smaller window around Syabrubesi used for close-up maps (M1 GO/NO-GO image).
+focus_bbox: [85.28, 28.10, 85.42, 28.30]
+
+config_overrides: {}

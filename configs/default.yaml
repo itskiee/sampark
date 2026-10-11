@@ -1,0 +1,33 @@
+# Default pipeline configuration — the single source of truth for every tunable value.
+# Event files (configs/events/*.yaml) may override any key under `config_overrides:`.
+# Every value has a comment saying WHY it has that value; keep it that way.
+
+limits:
+  # Largest area we accept. Bounds download size/time from Copernicus Data Space and ohsome
+  # so a live run cannot hang; ~2,500 km² covers a 50 km valley reach with margin
+  # (the Trishuli corridor box is ~1,800 km²). Larger areas get a clear error message.
+  max_aoi_km2: 2500
+  # Smallest area we accept: below ~0.5 km² there are too few pixels for statistics
+  # (e.g. Otsu thresholds) to be meaningful.
+  min_aoi_km2: 0.5
+
+cache:
+  # Cache intermediate results so re-runs (and the live demo) are fast. Keys include
+  # AOI hash + date + stage config + pipeline version, so changed settings never reuse
+  # stale results.
+  enabled: true
+  dir: cache            # relative to the repository root, git-ignored
+
+output:
+  dir: outputs          # per-run folders with maps, PNGs and results.json, git-ignored
+
+logging:
+  dir: logs             # full (redacted) log with tracebacks, git-ignored
+  level: INFO           # console verbosity
+
+network:
+  # Per-request timeout for catalogue / ohsome HTTP calls. ohsome's own server timeout is
+  # 600 s; we stop earlier so a stuck request cannot freeze a live demo.
+  timeout_s: 120
+  # Retries with backoff for transient network errors (HTTP 429/5xx, timeouts).
+  retries: 3
