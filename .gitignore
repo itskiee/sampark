@@ -1,0 +1,49 @@
+# ---------------------------------------------------------------
+# SECRETS — must never be committed (enforced by tests/test_data_rules.py
+# via `git check-ignore`, and by the gitleaks pre-commit hook)
+# ---------------------------------------------------------------
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+*.p12
+*service-account*.json
+*service_account*.json
+credentials*
+!**/credentials_example*
+
+# ---------------------------------------------------------------
+# Data and run products (large, regenerable, may contain licensed data)
+# ---------------------------------------------------------------
+cache/
+outputs/
+logs/
+validation/data/
+*.tif
+*.tiff
+!tests/fixtures/**/*.tif
+
+# Organizer documents — do not redistribute
+docs/*.pdf
+
+# ---------------------------------------------------------------
+# Python / tooling
+# ---------------------------------------------------------------
+.venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+.ipynb_checkpoints/
+
+# Editors / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
