@@ -68,11 +68,41 @@ class NetworkConfig(_Strict):
     retries: int = Field(ge=0, le=10)
 
 
+class S1Config(_Strict):
+    pre_window_days: int = Field(gt=0, le=120)
+    post_window_days: int = Field(gt=0, le=120)
+    max_pre_images: int = Field(ge=1, le=10)
+    min_coverage: float = Field(gt=0, le=1)
+    include_event_day_as_post: bool
+    same_pass_minutes: float = Field(gt=0, le=60)
+    resolution_m: float = Field(ge=10, le=200)
+    max_pixels: int = Field(gt=10_000)
+    speckle_window_px: int = Field(ge=1, le=15)
+    min_valid_db: float
+    sync_timeout_s: float = Field(gt=0)
+    threshold_method: str
+    decrease_db: float = Field(lt=0)
+    increase_db: float = Field(gt=0)
+    water_post_vv_db: float
+    otsu_decrease_bounds_db: tuple[float, float]
+    otsu_increase_bounds_db: tuple[float, float]
+    otsu_min_separability: float = Field(ge=0, le=1)
+    min_mapping_unit_m2: float = Field(ge=0)
+
+    @field_validator("threshold_method")
+    @classmethod
+    def _valid_method(cls, v: str) -> str:
+        if v not in {"fixed", "otsu"}:
+            raise ValueError("threshold_method must be 'fixed' or 'otsu'")
+        return v
+
+
 class PipelineConfig(_Strict):
     limits: LimitsConfig
     cache: CacheConfig
     output: OutputConfig
     logging: LoggingConfig
+    s1: S1Config
     network: NetworkConfig
 
     def resolve(self, path: Path) -> Path:
