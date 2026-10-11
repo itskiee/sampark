@@ -65,6 +65,7 @@ class StageContext:
     results: Results
     progress: ProgressFn
     focus_bbox: tuple[float, float, float, float] | None = None  # optional close-up window
+    flood_path_start: tuple[float, float] | None = None  # (lon, lat) for the flood-path bonus
 
 
 @dataclass(frozen=True)
@@ -120,6 +121,7 @@ def run_pipeline(
     settings: Settings | None = None,
     progress: ProgressFn | None = None,
     focus_bbox: tuple[float, float, float, float] | None = None,
+    flood_path_start: tuple[float, float] | None = None,
 ) -> Results:
     config = config or load_config()
     settings = settings or load_settings()
@@ -151,6 +153,7 @@ def run_pipeline(
         results=results,
         progress=progress,
         focus_bbox=focus_bbox,
+        flood_path_start=flood_path_start,
     )
 
     to_run = _expand_with_requirements(stages) if stages else list(STAGE_NAMES)

@@ -65,6 +65,28 @@ def test_vh_adds_increase_where_vv_is_quiet():
     assert (classes[62:68, 122:138] == INCREASE).all()
 
 
+def test_vh_drop_counts_as_decrease_p16():
+    post, lr, valid = synthetic_scene()
+    lr[110:125, 150:180] = 0.0  # VV quiet...
+    lr_vh = np.zeros_like(lr)
+    lr_vh[110:125, 150:180] = -6.0  # ...VH drops strongly (e.g. flooded vegetated bank)
+    post[110:125, 150:180] = -10.0  # not water-dark in VV
+    classes, _ = classify(post, lr, lr_vh, valid, P)
+    assert (classes[112:123, 152:178] == DECREASE).all()
+    post[110:125, 150:180] = -19.0  # dark in VV -> water
+    classes, _ = classify(post, lr, lr_vh, valid, P)
+    assert (classes[112:123, 152:178] == WATER).all()
+
+
+def test_conflicting_vv_increase_and_vh_drop_is_decrease():
+    post, lr, valid = synthetic_scene()
+    lr[110:125, 150:180] = 5.0
+    lr_vh = np.zeros_like(lr)
+    lr_vh[110:125, 150:180] = -5.0
+    classes, _ = classify(post, lr, lr_vh, valid, P)
+    assert not (classes[112:123, 152:178] == INCREASE).any()
+
+
 def test_otsu_on_bimodal_tail_is_used_and_bounded():
     rng = np.random.default_rng(1)
     vals = np.concatenate([rng.normal(-0.5, 0.3, 50_000), rng.normal(-7.0, 0.5, 20_000)])

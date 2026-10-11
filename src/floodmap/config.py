@@ -88,6 +88,7 @@ class S1Config(_Strict):
     otsu_increase_bounds_db: tuple[float, float]
     otsu_min_separability: float = Field(ge=0, le=1)
     min_mapping_unit_m2: float = Field(ge=0)
+    max_tracks: int = Field(ge=1, le=2)
 
     @field_validator("threshold_method")
     @classmethod
@@ -97,12 +98,46 @@ class S1Config(_Strict):
         return v
 
 
+class TerrainConfig(_Strict):
+    dem_resolution_m: float = Field(ge=10, le=200)
+    buffer_m: float = Field(ge=0, le=50_000)
+    stream_area_km2: float = Field(gt=0)
+    hand_max_m: float = Field(gt=0)
+    slope_max_deg: float = Field(gt=0, le=90)
+    permanent_water_vv_db: float
+    permanent_water_vh_db: float
+
+
+class S2Config(_Strict):
+    pre_window_days: int = Field(gt=0, le=365)
+    post_window_days: int = Field(gt=0, le=120)
+    max_tile_cloud_pct: float = Field(ge=0, le=100)
+    min_clear_share: float = Field(ge=0, le=1)
+    water_mndwi: float = Field(ge=-1, le=1)
+    ndvi_drop: float = Field(gt=0, le=2)
+    ndvi_post_max: float = Field(ge=-1, le=1)
+
+
+class ConfidenceConfig(_Strict):
+    neighbourhood_px: int = Field(ge=0, le=5)
+    medium_min_patch_m2: float = Field(ge=0)
+
+
+class FloodPathConfig(_Strict):
+    snap_radius_m: float = Field(ge=0)
+    settlement_buffer_m: float = Field(gt=0)
+
+
 class PipelineConfig(_Strict):
     limits: LimitsConfig
     cache: CacheConfig
     output: OutputConfig
     logging: LoggingConfig
     s1: S1Config
+    terrain: TerrainConfig
+    s2: S2Config
+    confidence: ConfidenceConfig
+    flood_path: FloodPathConfig
     network: NetworkConfig
 
     def resolve(self, path: Path) -> Path:
@@ -135,6 +170,7 @@ class EventSpec(_Strict):
     event_date: date
     aoi: AOISpec
     focus_bbox: BBox | None = None
+    flood_path_start: tuple[float, float] | None = None  # (lon, lat) upstream point
     config_overrides: dict[str, Any] = Field(default_factory=dict)
 
 
