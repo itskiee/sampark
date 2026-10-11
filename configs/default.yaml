@@ -136,6 +136,47 @@ flood_path:
   # Settlements within this distance of the traced path are listed as "along the path" (M3).
   settlement_buffer_m: 1000
 
+osm:
+  # Roads, places and health facilities are fetched for the area PLUS this margin: the
+  # nearest town or hospital may lie outside the area, and roads leaving the area must not
+  # look like dead ends (cut-off analysis, M4). Buildings are fetched for the area only.
+  network_buffer_m: 10000
+  # Length of the OSM full-history window that ends at the snapshot. Only versions still
+  # valid at the snapshot are kept; a short window keeps the download small.
+  history_window_hours: 24
+  # Large areas are split into tiles of at most this size. Each ohsome request has a fixed
+  # cost of ~15-35 s, so FEWER requests are faster (measured 2026-10-12, Trishuli: points of
+  # interest 10 tiles 6.4 min vs 1 request 16 s; roads 43 s vs 11 s; same counts). Dense
+  # buildings use medium tiles so one response never gets huge (107k buildings: 2 tiles 54 s,
+  # 5 tiles ~5 min). Sparse layers (roads, places, health facilities) use one request.
+  max_tile_km2_buildings: 1000
+  max_tile_km2_sparse: 10000
+  # Per-request timeout for ohsome feature downloads (large tiles take minutes).
+  timeout_s: 300
+  # OSM names are untrusted text: longer values are cut (display + language model safety).
+  max_text_length: 80
+  # Buildings are assigned to the nearest named place within this distance; the count is
+  # the brief's population proxy. 1 km covers a Himalayan village with its scattered houses.
+  settlement_radius_m: 1000
+  # "Road connection" for the cut-off analysis: OSM highway types a 4x4/truck can use.
+  # `track` is included: many hill villages are reached only by unpaved tracks.
+  # Footpaths/steps are kept in the data (the "all ways" variant in M4).
+  motorable_highways: [motorway, motorway_link, trunk, trunk_link, primary, primary_link,
+                       secondary, secondary_link, tertiary, tertiary_link, unclassified,
+                       residential, living_street, service, road, track]
+
+damage:
+  # Buffers tolerate the 20 m radar pixel and small OSM/satellite misregistration.
+  building_buffer_m: 10
+  road_buffer_m: 10
+  facility_buffer_m: 20
+  # Bridge logic (P8): flood/debris touching the deck or its approaches ...
+  bridge_approach_m: 30
+  # ... or a changed river reach just up/downstream (the channel itself was already water).
+  bridge_reach_m: 150
+  # How many entries the results.json keeps per list (full lists are in the GeoJSON files).
+  max_listed: 25
+
 network:
   # Per-request timeout for catalogue / ohsome HTTP calls. ohsome's own server timeout is
   # 600 s; we stop earlier so a stuck request cannot freeze a live demo.

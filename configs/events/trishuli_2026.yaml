@@ -16,9 +16,10 @@ aoi:
 # Smaller window around Syabrubesi used for close-up maps (M1 GO/NO-GO image).
 focus_bbox: [85.28, 28.10, 85.42, 28.30]
 
-# Upstream start point for the flood-path bonus: the Bhote Koshi near the northern edge
-# of the area (towards Rasuwagadhi). Any point near the river works; it is snapped to the
-# channel. (Approximate, from general geography; not from EMSR927.)
-flood_path_start: [85.37, 28.26]
+# Upstream start point for the flood-path bonus: the Bhote Koshi where it enters the area
+# near the border, upstream of Rasuwa Gadhi. Chosen on 2026-10-12 as the largest drainage
+# line (Copernicus DEM flow accumulation) crossing latitude 28.30; not from EMSR927.
+# Any point near the river works; it is snapped to the channel.
+flood_path_start: [85.401, 28.30]
 
 config_overrides: {}

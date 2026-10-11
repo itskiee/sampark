@@ -66,7 +66,7 @@ def _polygons(final, conf, transform, epsg, inside) -> gpd.GeoDataFrame:
     return gdf.drop(columns="code").to_crs(4326)
 
 
-@register_stage("confidence", requires=("s1", "terrain"))
+@register_stage("confidence", requires=("s1", "terrain"), uses=("s2",))
 def run_confidence(ctx: StageContext) -> StageResult:
     cfg, aoi = ctx.config.confidence, ctx.aoi
     s1 = ctx.results.stages["s1"].outputs

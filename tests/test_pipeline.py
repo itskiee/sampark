@@ -60,6 +60,25 @@ def test_stage_with_missing_input_is_skipped_not_crashed(tmp_config, clean_regis
     assert "s1" in results.stages["terrain"].message
 
 
+def test_optional_input_runs_along_and_its_failure_does_not_skip(tmp_config, clean_registry):
+    @register_stage("s1")
+    def s1(ctx):
+        return StageResult("s1", StageStatus.OK)
+
+    @register_stage("s2")
+    def cloudy(ctx):
+        return StageResult("s2", StageStatus.SKIPPED, "too cloudy")
+
+    @register_stage("confidence", requires=("s1",), uses=("s2",))
+    def confidence(ctx):
+        return StageResult("confidence", StageStatus.OK, f"s2 ran: {'s2' in ctx.results.stages}")
+
+    results = run_pipeline(FOCUS, DAY, tmp_config, stages=["confidence"])
+    assert list(results.stages) == ["s1", "s2", "confidence"]  # optional input pulled in
+    assert results.stages["confidence"].status == StageStatus.OK
+    assert results.stages["confidence"].message == "s2 ran: True"
+
+
 def test_invalid_aoi_raises_input_error(tmp_config, clean_registry):
     with pytest.raises(AOIError):
         run_pipeline([85.45, 27.85, 85.10, 28.32], DAY, tmp_config)

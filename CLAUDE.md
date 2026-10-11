@@ -51,6 +51,11 @@ educational prototype, not an operational tool (`floodmap.attribution.DISCLAIMER
   `https://openeo.dataspace.copernicus.eu` (NOT the `openeofed` federation endpoint).
   Collections only `SENTINEL1_GRD`, `SENTINEL2_L2A`, `COPERNICUS_30`, opened via
   `cdse_client.load_collection` (allowlist).
+- **Strict literal reading (owner rule 2026-10-12):** never use a method or data that goes
+  against or *beyond* the brief. Every input and method must be traceable to the brief's text
+  (data rules, dataset table, task). OSM content is limited to what the brief names:
+  buildings, roads, bridges, settlements/towns, hospitals/health facilities. If something is
+  not clearly covered: do not use it; ask the owner (and the organizers via Discord).
 - Enforced by `tests/test_data_rules.py` (static scanner + runtime guards + scanner
   self-tests). Never weaken it; extend it when adding sources.
 

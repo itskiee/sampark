@@ -64,10 +64,23 @@ the flood/debris path along the Bhote Koshi near Syabrubesi is clearly visible i
 **Done when:** masked flood map PNG visibly cleaner than M1; flood path lists settlements downstream
 (after M3); confidence raster produced; S2 absent → clear message, pipeline continues.
 
-### M3 — Pre-event OSM + damage overlay (Oct 12)
-- [ ] ohsome client: buildings, roads, bridges, place=*, hospitals/health facilities (snapshot rule)
-- [ ] intersect with flood/debris + confidence → "potentially affected"
-- [ ] bridge logic: deck/approaches buffer + crossing of a changed reach
+### M3 — Pre-event OSM + damage overlay (Oct 12) — DONE (awaiting owner review)
+- [x] ohsome client on the brief's v1 URL: v1 snapshot endpoints now return 403 (ohsome-api #346),
+      so the snapshot is rebuilt from `/elementsFullHistory` (versions valid at the snapshot);
+      verified equal to ohsome's own snapshot counts; post-snapshot guard; `pytest -m network` check
+- [x] layers: buildings (area), roads/bridges, places, health facilities (area + 10 km) — only what the brief names;
+      untrusted-text cleaning; no `population` tag; building counts per settlement (population proxy)
+- [x] per-layer tiling: first download 737 s → 109 s (same counts); cached ~14 s
+- [x] damage overlay: buildings, roads (affected length + pieces for M4), health facilities,
+      settlements; class/confidence inherited; "potentially affected" wording
+- [x] bridge logic (P8): deck/approach 30 m + changed reach 150 m, evidence per bridge
+- [x] flood path lists settlements (km, distance, height above river, low-lying flag, buildings);
+      Trishuli start moved to the Bhote Koshi entry point (DEM-derived)
+- [x] optional stage inputs (`uses=`): `--stages damage` now includes Sentinel-2 (bug found in M3)
+- [x] doctor checks the ohsome feature download; legends moved below maps
+- [x] tests: ohsome client 5, osm 7, damage 6, pipeline optional input, offline e2e incl. OSM/damage
+- [x] explainer `docs/explainers/M3_osm_damage.md` (ablation: buffers, bridge rule)
+- Proposals for owner: **P18** settlements from building clusters; **P19** "on the flood corridor" tag
 
 **Done when:** affected-asset counts and layers for Trishuli; empty OSM → clear message.
 
@@ -93,7 +106,7 @@ the flood/debris path along the Bhote Koshi near Syabrubesi is clearly visible i
 - [ ] 4+ unseen AOIs/dates (Himalayan + non-Himalayan); fix every crash; `validation/results.md`
 
 ### M8 — Extras (Oct 12–14, after core works)
-- [ ] helicopter landing-zone candidates
+- [ ] helicopter landing-zone candidates (from Copernicus DEM slope/flatness + Sentinel + allowed OSM layers only; no OSM helipad tags)
 - [ ] field exports: GeoJSON + KML of all layers; EN + NE PDF sit-rep
 - [ ] multi-date tracking (receding water / new ponding / debris-dammed lake flag)
 - [ ] segmentation model (Sen1Floods11 / Kuro Siwo subset), honest metrics on unseen Himalayan scenes
@@ -110,7 +123,10 @@ P6 flood path in M2 · P7 cache key incl. config + version · P8 bridge approach
 P9 buffered network + outside node + motorable/all-ways ·
 P10 **Copernicus Data Space only** (owner decision 2026-10-11, replaces the earlier GEE plan) ·
 P11 own basemaps, folium · P12 smoke runs every milestone + offline fixtures in CI ·
-P13 `doctor` pre-flight · P14 hash-pinned deps + pip-audit · P15 no Earth Engine/geemap/osmnx.
+P13 `doctor` pre-flight · P14 hash-pinned deps + pip-audit · P15 no Earth Engine/geemap/osmnx ·
+P16 VH also for decreases (M2) · P17 scene-shift correction — dropped (owner, 2026-10-11).
+OSM access: stay on the brief's v1 URL via full history; ohsome v2 (new host + key) NOT used
+(owner question 2026-10-12 "is it against the rules?" → stay literal).
 
 ## Owner actions
 - [x] Set `git config user.email` to the GitHub noreply address (before the first commit)
@@ -127,6 +143,13 @@ P13 `doctor` pre-flight · P14 hash-pinned deps + pip-audit · P15 no Earth Engi
 5. "Nearest town or hospital": which facilities count (hospital only, or health posts/clinics)? Is "town" = OSM `place=town/city`? Do roads leaving the analysis area count as connected?
 6. Which EMSR927 products should be compared (delineation vs grading, which AOIs)?
 7. Do references/appendix count toward the 6-page report limit?
+8. ohsome restricted the v1 snapshot endpoints in Aug 2026 (403). We rebuild the pre-event snapshot
+   from the v1 full-history endpoint at the brief's URL (versions valid at the snapshot date). Is this
+   acceptable, and if v1 is closed completely, may we use ohsome v2 (api.heigit.org, free API key)?
+9. The datasets table lists OSM use as "buildings, roads, bridges". For the cut-off task ("settlements …
+   nearest town or hospital") and the bonus ("list the settlements") we also use pre-event OSM place
+   names (village/town) and hospitals/health facilities from the same ohsome snapshot. Please confirm
+   this is fine.
 
 (Dropped: Earth Engine question — we use only Copernicus Data Space, the source named in the
 brief. "Which AI component is scored" — the brief says "choose one"; we declare the copilot.

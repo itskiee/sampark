@@ -37,3 +37,19 @@ def test_doctor_offline_runs_and_hides_secrets(monkeypatch, capsys):
     assert "sk-test-FAKE-doctor-key" not in out
     assert "set (hidden)" in out
     assert code in (0, 1)
+
+
+def test_console_output_never_crashes_on_legacy_code_page(monkeypatch):
+    """A Windows pipe with cp1252 used to crash the run summary on "→" / "²"."""
+    import io
+    import sys
+
+    from floodmap.cli import _utf8_console
+
+    raw = io.BytesIO()
+    legacy = io.TextIOWrapper(raw, encoding="cp1252")
+    monkeypatch.setattr(sys, "stdout", legacy)
+    _utf8_console()
+    print("Sentinel-2 2026-08-12 → 2026-08-27: 8.14 km² — नेपाल")
+    sys.stdout.flush()
+    assert "→".encode() in raw.getvalue()
