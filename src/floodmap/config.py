@@ -128,6 +128,26 @@ class FloodPathConfig(_Strict):
     settlement_buffer_m: float = Field(gt=0)
 
 
+class OSMConfig(_Strict):
+    network_buffer_m: float = Field(ge=0, le=50_000)
+    history_window_hours: float = Field(gt=0, le=24 * 31)
+    max_tile_km2_buildings: float = Field(gt=0)
+    max_tile_km2_sparse: float = Field(gt=0)
+    timeout_s: float = Field(gt=0)
+    max_text_length: int = Field(ge=10, le=500)
+    settlement_radius_m: float = Field(gt=0)
+    motorable_highways: tuple[str, ...]
+
+
+class DamageConfig(_Strict):
+    building_buffer_m: float = Field(ge=0)
+    road_buffer_m: float = Field(ge=0)
+    facility_buffer_m: float = Field(ge=0)
+    bridge_approach_m: float = Field(ge=0)
+    bridge_reach_m: float = Field(ge=0)
+    max_listed: int = Field(ge=1, le=1000)
+
+
 class PipelineConfig(_Strict):
     limits: LimitsConfig
     cache: CacheConfig
@@ -138,6 +158,8 @@ class PipelineConfig(_Strict):
     s2: S2Config
     confidence: ConfidenceConfig
     flood_path: FloodPathConfig
+    osm: OSMConfig
+    damage: DamageConfig
     network: NetworkConfig
 
     def resolve(self, path: Path) -> Path:

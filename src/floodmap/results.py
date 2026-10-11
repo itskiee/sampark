@@ -62,6 +62,8 @@ class Results:
         data["stages"] = {name: _relative_paths(asdict(s), self.run_dir) for name, s in
                           self.stages.items()}
         data["attributions"] = list(attribution.DATA_ATTRIBUTIONS)
+        if "osm" in self.stages:
+            data["data_licenses"] = {"openstreetmap": attribution.OSM_DATA_LICENSE}
         data["disclaimer"] = attribution.DISCLAIMER
         return data
 

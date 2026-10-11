@@ -12,6 +12,23 @@ COPERNICUS_DEM = (
     "all rights reserved."
 )
 OSM = "© OpenStreetMap contributors."
+# Brief, datasets table: "A modified version of the OSM data itself, if published, must
+# stay under ODbL." Written next to every OSM-derived output file and into results.json.
+OSM_DATA_LICENSE = (
+    "Contains information from OpenStreetMap (© OpenStreetMap contributors), pre-event "
+    "snapshot via the ohsome API, made available under the Open Database License (ODbL) "
+    "1.0. Any published modified version "
+    "of this OSM-derived data must remain under the ODbL."
+)
+
+
+def write_osm_license(folder) -> None:
+    """Licence notice beside OSM-derived files (GeoJSON/GeoPackage cannot carry one)."""
+    from pathlib import Path
+
+    Path(folder).mkdir(parents=True, exist_ok=True)
+    (Path(folder) / "LICENSE_OSM_DATA.txt").write_text(OSM_DATA_LICENSE + "\n",
+                                                       encoding="utf-8")
 
 # Cited when the corresponding training dataset is used (segmentation model, M8).
 KURO_SIWO_CITATION = (

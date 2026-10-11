@@ -37,8 +37,8 @@ STAGE_ORDER: tuple[tuple[str, str], ...] = (
     ("terrain", "M2"),  # Copernicus DEM: slope, HAND, layover/shadow masks
     ("s2", "M2"),  # Sentinel-2 optical change when cloud-free
     ("confidence", "M2"),  # agreement of S1 / S2 / model
-    ("flood_path", "M2"),  # bonus: downstream flow path from DEM
-    ("osm", "M3"),  # pre-event OSM via ohsome
+    ("osm", "M3"),  # pre-event OSM via ohsome (before flood_path: settlements along it)
+    ("flood_path", "M2"),  # bonus: downstream flow path from DEM (+ settlements from OSM)
     ("damage", "M3"),  # affected buildings / roads / bridges
     ("cutoff", "M4"),  # reachability to town / hospital, before vs after
     ("priority", "M4"),  # rescue priority ranking
@@ -72,26 +72,32 @@ class StageContext:
 class StageDef:
     name: str
     fn: Callable[[StageContext], StageResult]
-    requires: tuple[str, ...] = ()
+    requires: tuple[str, ...] = ()  # must be usable, otherwise this stage is skipped
+    uses: tuple[str, ...] = ()  # used when available (run along when requested stages need it)
 
 
 REGISTRY: dict[str, StageDef] = {}
 
 
-def register_stage(name: str, requires: tuple[str, ...] = ()):
-    """Decorator used by stage modules to plug themselves into the pipeline."""
+def register_stage(name: str, requires: tuple[str, ...] = (), uses: tuple[str, ...] = ()):
+    """Decorator used by stage modules to plug themselves into the pipeline.
+
+    `requires`: hard inputs (missing → this stage is skipped with the reason).
+    `uses`: optional inputs (e.g. Sentinel-2 for the confidence map). They are run along
+    when a user requests only some stages, so `--stages damage` gives the same numbers as
+    a full run; if they fail, this stage still runs without them."""
     if name not in STAGE_NAMES:
         raise ValueError(f"Unknown stage '{name}'")
 
     def decorator(fn: Callable[[StageContext], StageResult]):
-        REGISTRY[name] = StageDef(name=name, fn=fn, requires=requires)
+        REGISTRY[name] = StageDef(name=name, fn=fn, requires=requires, uses=uses)
         return fn
 
     return decorator
 
 
 def _expand_with_requirements(requested: list[str]) -> list[str]:
-    """Add the stages that requested stages depend on, keep pipeline order."""
+    """Add the stages that requested stages depend on (hard and optional), keep order."""
     needed: set[str] = set()
 
     def add(name: str) -> None:
@@ -99,7 +105,7 @@ def _expand_with_requirements(requested: list[str]) -> list[str]:
             return
         needed.add(name)
         stage = REGISTRY.get(name)
-        for req in stage.requires if stage else ():
+        for req in (*stage.requires, *stage.uses) if stage else ():
             add(req)
 
     for name in requested:

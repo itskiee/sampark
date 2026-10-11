@@ -86,8 +86,11 @@ CONF_ALPHA = {1: 0.35, 2: 0.7, 3: 1.0}
 
 
 def render_flood_map(shade, final, conf, transform, title: str, info: str, out_png: Path,
-                     window: tuple[slice, slice] | None = None, path_xy=None) -> Path:
-    """Final flood/debris map over hillshade; colour = class, opacity = confidence."""
+                     window: tuple[slice, slice] | None = None, path_xy=None,
+                     overlay=None) -> Path:
+    """Final flood/debris map over hillshade; colour = class, opacity = confidence.
+
+    `overlay(ax)` may draw extra layers (coordinates in km) and returns legend handles."""
     from floodmap.flood_map import CONF_NAMES, FINAL_CLASS_NAMES
 
     rows, cols = window or (slice(0, final.shape[0]), slice(0, final.shape[1]))
@@ -109,6 +112,7 @@ def render_flood_map(shade, final, conf, transform, title: str, info: str, out_p
         ax.plot(path_xy[:, 0] / 1000, path_xy[:, 1] / 1000, color="#00d0ff", lw=1.8,
                 label="traced flood path")
         ax.plot(path_xy[0, 0] / 1000, path_xy[0, 1] / 1000, "o", color="#00d0ff", ms=8)
+    extra = overlay(ax) if overlay is not None else []
     ax.set_xlim(ext[0], ext[1])
     ax.set_ylim(ext[2], ext[3])
     ax.set_xlabel("Easting (km)")
@@ -117,7 +121,10 @@ def render_flood_map(shade, final, conf, transform, title: str, info: str, out_p
     handles = [Patch(color=FINAL_COLORS[k], label=FINAL_CLASS_NAMES[k]) for k in (2, 3, 4, 5)]
     handles += [Patch(color="#666666", alpha=a, label=f"confidence {CONF_NAMES[lvl]}")
                 for lvl, a in CONF_ALPHA.items()]
-    ax.legend(handles=handles, loc="lower right", fontsize=8, framealpha=0.9)
+    handles += extra
+    # below the map, so it never hides data
+    ax.legend(handles=handles, loc="upper center", bbox_to_anchor=(0.5, -0.07), ncol=3,
+              fontsize=8, frameon=False)
     side.axis("off")
     side.text(0, 1, info, va="top", ha="left", fontsize=9, family="monospace")
     fig.suptitle(title, fontsize=13, fontweight="bold")

@@ -149,7 +149,7 @@ def _cmd_doctor(args: argparse.Namespace) -> int:
         check("disk space", "OK" if free_gb >= 5 else "WARN", f"{free_gb:,.0f} GB free")
 
     if args.offline:
-        for name in ("cdse catalogue", "cdse login", "ohsome api"):
+        for name in ("cdse catalogue", "cdse login", "ohsome api", "ohsome osm download"):
             check(name, "SKIP", "--offline")
     else:
         from datetime import UTC, datetime, timedelta
@@ -183,6 +183,17 @@ def _cmd_doctor(args: argparse.Namespace) -> int:
                                       f"Trishuli snapshot would be {snap:%Y-%m-%d}")
         except Exception as exc:
             check("ohsome api", "FAIL", str(exc)[:200])
+
+        from floodmap.data_rules import OHSOME_LATEST_KNOWN
+        from floodmap.ohsome_client import fetch_snapshot
+
+        try:  # the feature download itself (ohsome restricted some endpoints in 2026)
+            feats = fetch_snapshot("place=*", (85.31, 28.15, 85.33, 28.17), OHSOME_LATEST_KNOWN,
+                                   timeout_s=60, retries=1, window_hours=24, max_tile_km2=400)
+            check("ohsome osm download", "OK", f"pre-event snapshot download works "
+                                               f"({len(feats)} test features)")
+        except Exception as exc:
+            check("ohsome osm download", "FAIL", str(exc)[:200])
 
     check("llm key", "OK" if settings.llm_api_key else "WARN",
           "set (hidden)" if settings.llm_api_key else "not set (needed from milestone M5)")
@@ -226,7 +237,18 @@ def _cmd_login(args: argparse.Namespace) -> int:
     return 0
 
 
+def _utf8_console() -> None:
+    """Windows consoles/pipes may use a legacy code page (cp1252) that cannot print "→", "²"
+    or Nepali text; printing would then crash AFTER the pipeline finished. Always write
+    UTF-8 and replace anything a terminal still cannot show instead of raising."""
+    for stream in (sys.stdout, sys.stderr):
+        reconfigure = getattr(stream, "reconfigure", None)
+        if reconfigure is not None:
+            reconfigure(encoding="utf-8", errors="replace")
+
+
 def main(argv: list[str] | None = None) -> int:
+    _utf8_console()
     args = _build_parser().parse_args(argv)
     handlers = {"run": _cmd_run, "doctor": _cmd_doctor, "config-show": _cmd_config_show,
                 "login": _cmd_login}
