@@ -138,7 +138,7 @@ def run_confidence(ctx: StageContext) -> StageResult:
         "'potentially affected' — verify",
         "on the ground.",
     ])
-    title = f"Flood & debris map with confidence — event {ctx.event_date} — " \
+    title = f"Detected flood & debris (estimate) with confidence — event {ctx.event_date} — " \
             f"{ctx.results.event_name}"
     pngs = [render_flood_map(shade, final, conf, transform, title, info, out / "flood_map.png")]
     if ctx.focus_bbox:

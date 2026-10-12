@@ -35,8 +35,7 @@ POIS_FILTER = (f"place in ({', '.join(PLACE_TYPES)}) or amenity in (hospital, cl
 
 # Tags we keep (everything else is dropped on arrival).
 KEPT_TAGS = ("name", "name:en", "name:ne", "highway", "bridge", "building", "place",
-             "amenity", "healthcare", "ref", "surface", "tracktype", "layer",
-             "access", "motor_vehicle")
+             "amenity", "healthcare", "ref", "access", "motor_vehicle")
 _CONTROL = re.compile(r"[\x00-\x1f\x7f-\x9f​-‏‪-‮⁦-⁩]")
 
 
@@ -108,8 +107,11 @@ def split_pois(pois: gpd.GeoDataFrame) -> dict[str, gpd.GeoDataFrame]:
                        for _, r in places.iterrows()]
     health = pois[is_health].copy()
     health["category"] = np.where(is_hospital[is_health], "hospital", "health facility")
-    health["label"] = [display_name(r, f"unnamed {c}") for (_, r), c in
-                       zip(health.iterrows(), health["category"], strict=True)]
+    # unnamed facilities get coordinates: "unnamed hospital" tells a rescuer nothing
+    where = health.geometry.to_crs(4326) if not health.empty else health.geometry
+    health["label"] = [display_name(r, f"unnamed {c} at {p.y:.4f}°N {p.x:.4f}°E")
+                       for (_, r), c, p in zip(health.iterrows(), health["category"], where,
+                                               strict=True)]
     return {"places": places, "health": health}
 
 
@@ -146,3 +148,113 @@ def nearest_place(points: gpd.GeoDataFrame, places: gpd.GeoDataFrame,
     joined = gpd.sjoin_nearest(pts, places[["geometry"]], how="left", max_distance=radius_m)
     joined = joined[~joined.index.duplicated(keep="first")]
     return [None if pd.isna(v) else int(v) for v in joined["index_right"]]
+
+
+def building_groups(xy: np.ndarray, link_m: float, max_extent_m: float) -> np.ndarray:
+    """Group label per building: buildings within `link_m` of each other form one group
+    (connected components of the "near each other" graph). Groups wider than
+    `max_extent_m` are split on a grid of half that size, so a long chain of houses along a
+    valley never becomes one 10 km "settlement"."""
+    from scipy.sparse import coo_matrix
+    from scipy.sparse.csgraph import connected_components
+    from scipy.spatial import cKDTree
+
+    n = len(xy)
+    if n == 0:
+        return np.zeros(0, dtype=np.int64)
+    pairs = cKDTree(xy).query_pairs(link_m, output_type="ndarray")
+    graph = coo_matrix((np.ones(len(pairs)), (pairs[:, 0], pairs[:, 1])), shape=(n, n))
+    _, labels = connected_components(graph, directed=False)
+    out = labels.astype(np.int64)
+    next_label = int(out.max()) + 1
+    cell = max_extent_m / 2
+    for lab in np.unique(labels):
+        members = np.flatnonzero(labels == lab)
+        pts = xy[members]
+        if max(np.ptp(pts[:, 0]), np.ptp(pts[:, 1])) <= max_extent_m:
+            continue
+        keys = np.floor(pts / cell).astype(np.int64)
+        _, sub = np.unique(keys, axis=0, return_inverse=True)
+        out[members] = next_label + sub.ravel()
+        next_label += int(sub.max()) + 1
+    return out
+
+
+def make_settlements(buildings: gpd.GeoDataFrame, places: gpd.GeoDataFrame, aoi_utm,
+                     link_m: float, min_buildings: int, max_extent_m: float,
+                     name_radius_m: float, near_radius_m: float
+                     ) -> tuple[gpd.GeoDataFrame, np.ndarray]:
+    """Settlements (proposal P18): groups of pre-event OSM buildings, named from OSM places.
+
+    Returns (settlements, settlement_id per building; "" for isolated houses). Each
+    settlement: id, display name, how it was named, place type, building count (the brief's
+    population proxy) and a point on its central building. Named OSM places inside the area
+    with no mapped buildings nearby are kept too (buildings 0), so an unmapped village is
+    not silently dropped.
+    """
+    cols = ["settlement_id", "name", "named_from", "place", "building_count"]
+    centroids = buildings.geometry.centroid
+    xy = np.column_stack([centroids.x, centroids.y]) if len(buildings) else np.zeros((0, 2))
+    labels = building_groups(xy, link_m, max_extent_m)
+    counts = np.bincount(labels) if len(labels) else np.zeros(0, dtype=int)
+    keep = [lab for lab in range(len(counts)) if counts[lab] >= min_buildings]
+
+    reps, sizes = [], []
+    for lab in keep:  # representative point: the building nearest the group's mean
+        members = np.flatnonzero(labels == lab)
+        centre = xy[members].mean(axis=0)
+        reps.append(xy[members[np.argmin(((xy[members] - centre) ** 2).sum(axis=1))]])
+        sizes.append(int(counts[lab]))
+    groups = gpd.GeoDataFrame({"group": keep, "building_count": sizes},
+                              geometry=gpd.points_from_xy([p[0] for p in reps],
+                                                          [p[1] for p in reps]),
+                              crs=buildings.crs if len(buildings) else places.crs)
+    groups["name"], groups["named_from"], groups["place"] = None, "coordinates", None
+
+    named = places[places.geometry.within(aoi_utm)] if not places.empty else places
+    if not named.empty:  # only places with a real name can name a settlement
+        named = named[named["name"].notna() | named["name_en"].notna()]
+    if not groups.empty and not named.empty:
+        # 1) each named place gives its name to the nearest group within name_radius_m
+        near = gpd.sjoin_nearest(named[["label", "place", "geometry"]], groups[["geometry"]],
+                                 how="inner", max_distance=name_radius_m, distance_col="d")
+        near = near.sort_values("d").drop_duplicates("index_right")
+        for _, r in near.iterrows():
+            groups.loc[r["index_right"], ["name", "named_from", "place"]] = [
+                r["label"], "osm place", r["place"]]
+        # 2) other groups: "near <place>" within near_radius_m
+        rest = groups[groups["name"].isna()]
+        if not rest.empty:
+            near2 = gpd.sjoin_nearest(rest[["geometry"]], named[["label", "geometry"]],
+                                      how="inner", max_distance=near_radius_m)
+            near2 = near2[~near2.index.duplicated(keep="first")]
+            groups.loc[near2.index, "name"] = ["near " + v for v in near2["label"]]
+            groups.loc[near2.index, "named_from"] = "nearest osm place"
+        # 3) named places without any group nearby: unmapped buildings, keep as settlement
+        orphan = named[~named.index.isin(near.index)]
+        if not orphan.empty:
+            extra = gpd.GeoDataFrame({"group": -1, "building_count": 0, "name": orphan["label"],
+                                      "named_from": "osm place (no buildings mapped)",
+                                      "place": orphan["place"]},
+                                     geometry=orphan.geometry.values, crs=groups.crs)
+            groups = gpd.GeoDataFrame(pd.concat([groups, extra], ignore_index=True),
+                                      crs=groups.crs)
+    elif groups.empty and not named.empty:
+        groups = gpd.GeoDataFrame({"group": -1, "building_count": 0, "name": named["label"],
+                                   "named_from": "osm place (no buildings mapped)",
+                                   "place": named["place"]},
+                                  geometry=named.geometry.values, crs=named.crs)
+
+    if groups.empty:
+        empty = gpd.GeoDataFrame({c: [] for c in cols}, geometry=[], crs=places.crs)
+        return empty, np.full(len(buildings), "", dtype=object)
+    lonlat = groups.geometry.to_crs(4326)
+    unnamed = groups["name"].isna()
+    groups.loc[unnamed, "name"] = [f"settlement at {p.y:.4f}°N {p.x:.4f}°E"
+                                   for p in lonlat[unnamed]]
+    groups = groups.sort_values("building_count", ascending=False).reset_index(drop=True)
+    groups["settlement_id"] = [f"S{i + 1:05d}" for i in range(len(groups))]
+    id_of = {g: s for g, s in zip(groups["group"], groups["settlement_id"], strict=True)
+             if g >= 0}
+    per_building = np.array([id_of.get(int(lab), "") for lab in labels], dtype=object)
+    return groups[[*cols, "geometry"]], per_building

@@ -126,6 +126,7 @@ class ConfidenceConfig(_Strict):
 class FloodPathConfig(_Strict):
     snap_radius_m: float = Field(ge=0)
     settlement_buffer_m: float = Field(gt=0)
+    corridor_buffer_m: float = Field(gt=0)
 
 
 class OSMConfig(_Strict):
@@ -136,6 +137,10 @@ class OSMConfig(_Strict):
     timeout_s: float = Field(gt=0)
     max_text_length: int = Field(ge=10, le=500)
     settlement_radius_m: float = Field(gt=0)
+    settlement_link_m: float = Field(gt=0)
+    settlement_min_buildings: int = Field(ge=1)
+    settlement_max_extent_m: float = Field(gt=0)
+    settlement_near_radius_m: float = Field(gt=0)
     motorable_highways: tuple[str, ...]
 
 
@@ -146,6 +151,24 @@ class DamageConfig(_Strict):
     bridge_approach_m: float = Field(ge=0)
     bridge_reach_m: float = Field(ge=0)
     max_listed: int = Field(ge=1, le=1000)
+
+
+class CutoffConfig(_Strict):
+    break_min_confidence: str
+    snap_max_m: float = Field(gt=0)
+    densify_m: float = Field(gt=0)
+    boundary_margin_m: float = Field(ge=0)
+    town_places: tuple[str, ...]
+    detour_factor: float = Field(gt=1)
+    detour_min_extra_km: float = Field(ge=0)
+    max_listed: int = Field(ge=1, le=1000)
+
+    @field_validator("break_min_confidence")
+    @classmethod
+    def _valid_conf(cls, v: str) -> str:
+        if v not in {"low", "medium", "high"}:
+            raise ValueError("break_min_confidence must be low, medium or high")
+        return v
 
 
 class PipelineConfig(_Strict):
@@ -160,6 +183,7 @@ class PipelineConfig(_Strict):
     flood_path: FloodPathConfig
     osm: OSMConfig
     damage: DamageConfig
+    cutoff: CutoffConfig
     network: NetworkConfig
 
     def resolve(self, path: Path) -> Path:

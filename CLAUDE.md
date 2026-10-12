@@ -18,7 +18,9 @@ Given an area (bbox/polygon) and a flood date, answer for rescue teams:
 2. **What was damaged?** Pre-event OSM buildings/roads/bridges/settlements/health
    facilities overlaid → "potentially affected", with confidence. Never claim certainty.
 3. **Who is cut off?** Road-graph reachability to nearest town and hospital, before vs
-   after: "Village X: cut off from <hospital>; road broken at <segment/bridge>, <d> km away."
+   after: "Village X: likely cut off by road from <hospital>; road likely impassable at
+   <segment/bridge>, <d> km away (<confidence>). Needs field verification." Never stated as
+   certain (owner review 2026-10-12).
 Users: district emergency operations centres, army/police helicopter teams, disaster
 authorities, Red Cross. Judges test LIVE on areas/dates they choose: **robustness on unseen
 inputs is the top priority; a crash during judging loses the hackathon.**
