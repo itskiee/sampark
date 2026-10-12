@@ -60,7 +60,23 @@ def _sort_by_confidence(frame: pd.DataFrame, *extra: str) -> pd.DataFrame:
     return keys.sort_values(["_rank", *extra], ascending=False).drop(columns="_rank")
 
 
-@register_stage("damage", requires=("osm", "confidence", "terrain"))
+def _corridor(ctx: StageContext):
+    """P19: the traced flood path buffered by `corridor_buffer_m` (UTM), or None."""
+    fp = ctx.results.stages.get("flood_path")
+    if fp is None or not fp.usable:
+        return None
+    line = gpd.read_file(fp.outputs["files"]["path"]).to_crs(ctx.aoi.utm_epsg)
+    return line.geometry.iloc[0].buffer(ctx.config.flood_path.corridor_buffer_m)
+
+
+def _tag_corridor(gdf: gpd.GeoDataFrame, corridor) -> gpd.GeoDataFrame:
+    if corridor is None:
+        return gdf
+    flags = gdf.geometry.intersects(corridor).astype(bool) if not gdf.empty else []
+    return gdf.assign(on_flood_corridor=flags)
+
+
+@register_stage("damage", requires=("osm", "confidence", "terrain"), uses=("flood_path",))
 def run_damage(ctx: StageContext) -> StageResult:
     cfg, aoi = ctx.config.damage, ctx.aoi
     radius = ctx.config.osm.settlement_radius_m
@@ -75,7 +91,6 @@ def run_damage(ctx: StageContext) -> StageResult:
 
     # Buildings ----------------------------------------------------------------------
     hit_b = affected_buildings(buildings, flood, cfg.building_buffer_m)
-    hit_b["place_idx"] = nearest_place(hit_b, places, radius)
     # Roads and bridges -----------------------------------------------------------------
     hit_r = affected_roads(roads, flood, cfg.road_buffer_m)
     bridges = roads[roads["is_bridge"]]
@@ -87,13 +102,21 @@ def run_damage(ctx: StageContext) -> StageResult:
     # Facilities --------------------------------------------------------------------------
     hit_h = affected_points(health, flood, cfg.facility_buffer_m)
 
-    # Settlements ---------------------------------------------------------------------------
-    sett = places.copy()
-    counts = hit_b.groupby("place_idx").size() if not hit_b.empty else pd.Series(dtype=int)
-    high = hit_b[hit_b["confidence"] == "high"].groupby("place_idx").size() \
-        if not hit_b.empty else pd.Series(dtype=int)
-    sett["affected_buildings"] = [int(counts.get(i, 0)) for i in sett.index]
-    sett["affected_high"] = [int(high.get(i, 0)) for i in sett.index]
+    # P19: on the traced flood corridor or elsewhere -------------------------------------
+    corridor = _corridor(ctx)
+    hit_b, hit_r, hit_br, hit_h = (_tag_corridor(g, corridor)
+                                   for g in (hit_b, hit_r, hit_br, hit_h))
+
+    # Settlements (P18 building groups) ---------------------------------------------------
+    sett = layers["settlements"].copy()
+    sett["label"] = sett["name"]
+    sid = hit_b["settlement_id"] if "settlement_id" in hit_b else pd.Series(dtype=object)
+    is_high = hit_b["confidence"] == "high" if not hit_b.empty else pd.Series(dtype=bool)
+    counts = sid[sid != ""].value_counts()
+    high = sid[(sid != "") & is_high].value_counts()
+    sett["affected_buildings"] = [int(counts.get(i, 0)) for i in sett["settlement_id"]]
+    sett["affected_high"] = [int(high.get(i, 0)) for i in sett["settlement_id"]]
+    sett = _tag_corridor(sett, corridor)
     total = pd.to_numeric(sett["building_count"], errors="coerce")
     sett["affected_share"] = np.where(total > 0, (sett["affected_buildings"] / total).round(3),
                                       np.nan)
@@ -110,7 +133,7 @@ def run_damage(ctx: StageContext) -> StageResult:
         "facilities": out / "facilities_affected.geojson",
         "settlements": out / "settlements_affected.geojson",
     }
-    _save(hit_b.drop(columns="place_idx"), files["buildings"])
+    _save(hit_b, files["buildings"])
     _save(hit_r, files["roads"])
     _save(hit_br, files["bridges"])
     _save(hit_h, files["facilities"])
@@ -164,8 +187,11 @@ def run_damage(ctx: StageContext) -> StageResult:
             for (_, r), ll in zip(hit_h.iterrows(), _lonlat(hit_h), strict=True)],
         "settlements": {
             "with_affected_buildings": len(sett_hit),
+            "affected_buildings_outside_settlements": int((sid == "").sum()),
             "most_affected": [
-                {"name": r["label"], "place": r["place"],
+                {"settlement_id": r["settlement_id"], "name": r["label"], "place": r["place"],
+                 **({"on_flood_corridor": bool(r["on_flood_corridor"])}
+                    if corridor is not None else {}),
                  "buildings": None if pd.isna(r["building_count"]) else int(r["building_count"]),
                  "potentially_affected_buildings": int(r["affected_buildings"]),
                  "of_which_high_confidence": int(r["affected_high"]),
@@ -180,6 +206,20 @@ def run_damage(ctx: StageContext) -> StageResult:
                       "bridge_reach": cfg.bridge_reach_m},
         "status_wording": "potentially affected (estimate; verify on the ground)",
     }
+    if corridor is not None:  # P19 summary
+        def on(frame):
+            return int(frame["on_flood_corridor"].sum()) if not frame.empty else 0
+        outputs["flood_corridor"] = {
+            "buffer_m": ctx.config.flood_path.corridor_buffer_m,
+            "buildings_on_corridor": on(hit_b),
+            "buildings_elsewhere": len(hit_b) - on(hit_b),
+            "bridges_on_corridor": on(hit_br),
+            "road_km_on_corridor": round(float(hit_r.loc[hit_r["on_flood_corridor"],
+                                                         "affected_m"].sum() / 1000), 2)
+            if not hit_r.empty else 0.0,
+            "meaning": "on corridor = within the buffer of the traced flood path (most likely "
+                       "this event); elsewhere = other rivers/fields, check separately",
+        }
     pngs = _render(ctx, conf_out, buildings, roads, hit_b, hit_r, hit_br, health, sett_hit,
                    outputs, out)
     outputs["files"] = {**files, "png": pngs}
@@ -196,7 +236,7 @@ def run_damage(ctx: StageContext) -> StageResult:
 def _render(ctx, conf_out, buildings, roads, hit_b, hit_r, hit_br, health, sett_hit, outputs,
             out):
     from floodmap.stages.confidence import _read_band_by_name
-    from floodmap.viz import crop_window, hillshade, render_flood_map
+    from floodmap.viz import crop_window, draw_lines, hillshade, render_flood_map
 
     terr = ctx.results.stages["terrain"].outputs
     with rasterio.open(conf_out["files"]["flood_map"]) as src:
@@ -206,16 +246,9 @@ def _render(ctx, conf_out, buildings, roads, hit_b, hit_r, hit_br, health, sett_
     shade = hillshade(dem, abs(transform.a))
 
     def overlay(ax):
-        def lines(gdf, **kw):
-            for geom in gdf.geometry:
-                for part in getattr(geom, "geoms", [geom]):
-                    if part.geom_type == "LineString" and not part.is_empty:
-                        x, y = part.xy
-                        ax.plot(np.asarray(x) / 1000, np.asarray(y) / 1000, **kw)
-
-        lines(roads[~roads["motorable"]], color="#8c8c8c", lw=0.3)
-        lines(roads[roads["motorable"]], color="#404040", lw=0.7)
-        lines(hit_r, color="#d7191c", lw=1.6)
+        draw_lines(ax, roads.geometry[~roads["motorable"]], colors="#8c8c8c", linewidths=0.3)
+        draw_lines(ax, roads.geometry[roads["motorable"]], colors="#404040", linewidths=0.7)
+        draw_lines(ax, hit_r.geometry, colors="#d7191c", linewidths=1.6)
         if not buildings.empty:
             c = buildings.geometry.centroid
             ax.scatter(c.x / 1000, c.y / 1000, s=0.3, color="#525252", linewidths=0)

@@ -30,8 +30,12 @@ from floodmap.thresholds import DECREASE, INCREASE, NO_CHANGE, NODATA, WATER
 
 PERMANENT_WATER, MASKED = 5, 6
 FINAL_CLASS_NAMES = {NODATA: "no data", NO_CHANGE: "no significant change",
-                     WATER: "new water-like", DECREASE: "wet mud / debris (decrease)",
-                     INCREASE: "rough debris (increase)", PERMANENT_WATER: "permanent water",
+                     WATER: "new water-like",
+                     # radar measures darker/brighter, not the material: mud/debris is the
+                     # LIKELY cause (crops, soil moisture or construction can do the same)
+                     DECREASE: "backscatter decrease (likely wet mud / debris)",
+                     INCREASE: "backscatter increase (likely rough debris)",
+                     PERMANENT_WATER: "permanent water",
                      MASKED: "outside plausible zone"}
 CONF_NONE, CONF_LOW, CONF_MEDIUM, CONF_HIGH = 0, 1, 2, 3
 CONF_NAMES = {CONF_LOW: "low", CONF_MEDIUM: "medium", CONF_HIGH: "high"}

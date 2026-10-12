@@ -136,6 +136,20 @@ def render_flood_map(shade, final, conf, transform, title: str, info: str, out_p
     return out_png
 
 
+def draw_lines(ax, geoms, **kw) -> None:
+    """Draw many line geometries (UTM metres) in km as ONE LineCollection: tens of thousands
+    of OSM ways in a single draw call instead of one call per way (measured: the per-way
+    version took ~half of the cut-off stage's time on Trishuli)."""
+    from matplotlib.collections import LineCollection
+    from shapely import get_parts
+
+    parts = [p for p in get_parts(np.asarray(list(geoms), dtype=object))
+             if p is not None and p.geom_type == "LineString" and not p.is_empty]
+    if parts:
+        ax.add_collection(LineCollection([np.asarray(p.coords)[:, :2] / 1000 for p in parts],
+                                         **kw))
+
+
 def render_s1(pre_db, post_db, lr_db, classes, transform, title: str, subtitle: str,
               out_png: Path, window: tuple[slice, slice] | None = None) -> Path:
     rows, cols = window or (slice(0, classes.shape[0]), slice(0, classes.shape[1]))

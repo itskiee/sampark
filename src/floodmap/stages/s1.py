@@ -30,7 +30,14 @@ from floodmap.s1_change import (
     write_geotiff,
 )
 from floodmap.s1_pairing import NoPairError, TrackPair, rank_pairs, to_utm
-from floodmap.thresholds import ThresholdParams, class_areas_km2, classify
+from floodmap.thresholds import (
+    CLASS_NAMES,
+    INCREASE,
+    WATER,
+    ThresholdParams,
+    class_areas_km2,
+    classify,
+)
 from floodmap.viz import crop_window, render_s1
 
 log = logging.getLogger("floodmap.stages.s1")
@@ -215,8 +222,8 @@ def run_s1(ctx: StageContext) -> StageResult:
         "s1",
         StageStatus.PARTIAL if warnings else StageStatus.OK,
         f"{track_names}; primary after {primary['pair']['post']['start_utc'][:10]}: "
-        f"water-like {areas['new water-like']:.2f} km², debris/rough "
-        f"{areas['strong increase (rough debris)']:.2f} km² (before terrain masks)",
+        f"water-like {areas[CLASS_NAMES[WATER]]:.2f} km², rough/debris-like "
+        f"{areas[CLASS_NAMES[INCREASE]]:.2f} km² (before terrain masks)",
         outputs={
             "tracks": tracks,
             "unused_tracks": [p.describe()["track"] for p in pairs

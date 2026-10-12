@@ -27,8 +27,8 @@ from scipy import ndimage
 
 NODATA, NO_CHANGE, WATER, DECREASE, INCREASE = 0, 1, 2, 3, 4
 CLASS_NAMES = {NODATA: "no data", NO_CHANGE: "no significant change", WATER: "new water-like",
-               DECREASE: "strong decrease (wet mud / debris)",
-               INCREASE: "strong increase (rough debris)"}
+               DECREASE: "strong decrease (likely wet mud / debris)",
+               INCREASE: "strong increase (likely rough debris)"}
 
 
 @dataclass(frozen=True)

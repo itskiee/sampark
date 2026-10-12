@@ -109,10 +109,12 @@ def fake_osm_world(aoi):
 
     houses = [feat(Point(vx + dx, cy + dy).buffer(5, cap_style="square"), f"way/{i}",
                    building="yes")
-              for i, (dx, dy) in enumerate([(0, 0), (50, 80), (-60, -40), (2000, 0),
-                                            (2050, 60)])]
-    roads = [feat(LineString([(vx, miny + 200), (vx, maxy - 200)]), "way/100",
-                  highway="secondary", name="Valley Road"),
+              for i, (dx, dy) in enumerate([(0, 0), (50, 80), (-60, -40), (40, -60),
+                                            (-30, 50), (10, 110),  # 6 on the floor
+                                            (2000, 0), (2050, 60), (2010, -50),
+                                            (1960, 40), (2040, -30)])]  # 5 on the slope
+    roads = [feat(LineString([(vx, miny + 200), (vx, cy - 3000), (vx, maxy - 200)]),
+                  "way/100", highway="secondary", name="Valley Road"),
              feat(LineString([(vx - 150, cy + 1500), (vx + 150, cy + 1500)]), "way/101",
                   highway="tertiary", bridge="yes", name="Valley Bridge"),
              feat(LineString([(vx, cy - 3000), (vx + 2000, cy - 3000), (vx + 2000, cy)]),
@@ -164,7 +166,7 @@ def test_full_pipeline_offline(tmp_path, offline_world):
     start = (85.35, 28.215)
     results = run_pipeline(AOI_BBOX, EVENT, config, event_name="synthetic valley",
                            stages=["s1", "s2", "terrain", "confidence", "osm", "flood_path",
-                                   "damage"],
+                                   "damage", "cutoff", "priority"],
                            focus_bbox=(85.33, 28.14, 85.37, 28.20), flood_path_start=start)
     st = results.stages
     assert st["s1"].status == StageStatus.OK, st["s1"].message
@@ -180,20 +182,38 @@ def test_full_pipeline_offline(tmp_path, offline_world):
 
     # pre-event OSM + damage overlay
     assert st["osm"].status == StageStatus.OK, (st["osm"].message, st["osm"].warnings)
-    assert st["osm"].outputs["buildings"] == 5 and st["osm"].outputs["hospitals"] == 1
+    assert st["osm"].outputs["buildings"] == 11 and st["osm"].outputs["hospitals"] == 1
+    assert st["osm"].outputs["settlements"]["total"] == 2  # P18: floor + slope groups
     assert st["damage"].status == StageStatus.OK, (st["damage"].message, st["damage"].warnings)
     dmg = st["damage"].outputs
-    assert dmg["buildings"]["potentially_affected"] == 3  # the 3 houses on the valley floor
-    assert dmg["buildings"]["by_confidence"]["high"] == 3  # both tracks agree
+    assert dmg["buildings"]["potentially_affected"] == 6  # the 6 houses on the valley floor
+    assert dmg["buildings"]["by_confidence"]["high"] == 6  # both tracks agree
     assert dmg["bridges"]["list"][0]["name"] == "Valley Bridge"
     assert dmg["roads"]["affected_km_motorable"] > 5  # the valley road
     assert dmg["health_facilities"] == []  # hospital on the slope is safe
     top = dmg["settlements"]["most_affected"]
-    assert [s["name"] for s in top] == ["Floorvillage"] and top[0]["buildings"] == 3
+    assert [s["name"] for s in top] == ["Floorvillage"] and top[0]["buildings"] == 6
+    assert top[0]["on_flood_corridor"] is True  # P19
+    assert dmg["flood_corridor"]["buildings_on_corridor"] == 6
     for folder in ("osm", "damage"):  # brief: published OSM-derived data stays ODbL
         assert "ODbL" in (results.run_dir / folder / "LICENSE_OSM_DATA.txt").read_text("utf-8")
     saved = json.loads((results.run_dir / "results.json").read_text(encoding="utf-8"))
     assert "ODbL" in saved["data_licenses"]["openstreetmap"]
+    # cut-off: the valley road is under water, the slope village keeps its track to the hospital
+    assert st["cutoff"].status == StageStatus.OK, (st["cutoff"].message, st["cutoff"].warnings)
+    road = st["cutoff"].outputs["by_network"]["motorable"]
+    assert road["likely cut off"] == 1 and road["connected"] == 1
+    assert road["lost_hospital_access"] == 1
+    cut = st["cutoff"].outputs["cut_off_settlements"][0]
+    assert cut["name"] == "Floorvillage" and cut["buildings"] == 6
+    assert cut["sentence"].startswith("Floorvillage: likely cut off by road from Hill "
+                                      "Hospital; its own road (Valley Road) lies in detected "
+                                      "flood/debris (high confidence)")
+    assert cut["sentence"].endswith("Needs field verification.")
+    assert st["cutoff"].outputs["key_breaks"][0]["buildings_cut_off"] == 6
+    top = st["priority"].outputs["top"][0]
+    assert top["name"] == "Floorvillage" and top["tier"] == 1 and top["rank"] == 1
+    assert "on the traced flood corridor" in top["reasons"]
     along = st["flood_path"].outputs["settlements_along_path"]
     assert [s["name"] for s in along] == ["Floorvillage"]  # slope village is 2 km away
     assert abs(along[0]["height_above_river_m"]) < 20
@@ -201,7 +221,8 @@ def test_full_pipeline_offline(tmp_path, offline_world):
     data = json.loads((results.run_dir / "results.json").read_text(encoding="utf-8"))
     assert data["stages"]["confidence"]["outputs"]["files"]["polygons"].endswith(".geojson")
     for png in ("s1/s1_overview.png", "confidence/flood_map.png", "terrain/terrain.png",
-                "flood_path/flood_path.png", "damage/damage_map.png"):
+                "flood_path/flood_path.png", "damage/damage_map.png",
+                "cutoff/cutoff_map.png"):
         assert (results.run_dir / png).stat().st_size > 10_000
 
     # second run is served from the cache and gives identical numbers

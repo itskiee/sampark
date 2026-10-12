@@ -135,6 +135,9 @@ flood_path:
   snap_radius_m: 300
   # Settlements within this distance of the traced path are listed as "along the path" (M3).
   settlement_buffer_m: 1000
+  # P19: an affected asset within this distance of the traced path is tagged "on the flood
+  # corridor" (damage most likely from THIS event), others "elsewhere" (other rivers, fields).
+  corridor_buffer_m: 1000
 
 osm:
   # Roads, places and health facilities are fetched for the area PLUS this margin: the
@@ -158,6 +161,17 @@ osm:
   # Buildings are assigned to the nearest named place within this distance; the count is
   # the brief's population proxy. 1 km covers a Himalayan village with its scattered houses.
   settlement_radius_m: 1000
+  # P18 settlements = groups of buildings, each building within this distance of the next.
+  # Measured on Trishuli (2026-10-12): 75 m → 2,848 groups covering 91 % of buildings, the
+  # largest 2.9 km across (a town); 150 m chains whole hillsides into 12 km blobs.
+  settlement_link_m: 75
+  # Smaller groups are isolated houses (still counted in totals, not listed as settlements).
+  settlement_min_buildings: 5
+  # Safety: a group wider than this is split on a grid of half this size.
+  settlement_max_extent_m: 3000
+  # Naming: the group nearest to a named OSM place within `settlement_radius_m` takes its
+  # name; other groups within this distance are "near <place>"; the rest get coordinates.
+  settlement_near_radius_m: 3000
   # "Road connection" for the cut-off analysis: OSM highway types a 4x4/truck can use.
   # `track` is included: many hill villages are reached only by unpaved tracks.
   # Footpaths/steps are kept in the data (the "all ways" variant in M4).
@@ -175,6 +189,30 @@ damage:
   # ... or a changed river reach just up/downstream (the channel itself was already water).
   bridge_reach_m: 150
   # How many entries the results.json keeps per list (full lists are in the GeoJSON files).
+  max_listed: 25
+
+cutoff:
+  # A road piece/bridge counts as BROKEN only when the flood/debris touching it has at
+  # least this confidence. The no-flood control run (M3) showed low-confidence specks near
+  # 9 bridges; breaking roads on them would raise false "cut off" alarms. Low-confidence
+  # breaks are still reported as a worst case ("possibly cut off").
+  break_min_confidence: medium
+  # Settlements, hospitals and towns are joined to the nearest road node within this
+  # distance; farther away = "no road access" (e.g. trail-only villages).
+  snap_max_m: 500
+  # Roads are split into pieces of at most this length before building the graph, so a
+  # settlement can join a long straight road anywhere (OSM vertices can be ~1 km apart) and
+  # breaks are located to within this distance.
+  densify_m: 50
+  # Road nodes outside the downloaded network area (shrunk by this margin) count as
+  # "outside": the road continues to the wider network, so it is not a dead end (P9).
+  boundary_margin_m: 200
+  # Place types that count as a "town" (brief: "nearest town or hospital").
+  town_places: [town, city]
+  # A route that still exists but became much longer is a "detour" when at least this many
+  # times longer AND at least `detour_min_extra_km` longer.
+  detour_factor: 1.5
+  detour_min_extra_km: 2.0
   max_listed: 25
 
 network:

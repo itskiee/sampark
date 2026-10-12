@@ -26,6 +26,7 @@ from floodmap.osm import (
     POIS_FILTER,
     ROADS_FILTER,
     features_to_gdf,
+    make_settlements,
     prepare_roads,
     settlement_building_counts,
     split_pois,
@@ -102,6 +103,10 @@ def run_osm(ctx: StageContext) -> StageResult:
     places, unassigned = settlement_building_counts(poi["places"], buildings,
                                                     cfg.settlement_radius_m, aoi_utm)
     health = poi["health"]
+    settle, settle_ids = make_settlements(
+        buildings, places, aoi_utm, cfg.settlement_link_m, cfg.settlement_min_buildings,
+        cfg.settlement_max_extent_m, cfg.settlement_radius_m, cfg.settlement_near_radius_m)
+    buildings = buildings.assign(settlement_id=settle_ids)
 
     if buildings.empty:
         warnings.append("no buildings mapped in OSM here: building counts are 0 because of "
@@ -116,23 +121,36 @@ def run_osm(ctx: StageContext) -> StageResult:
     write_osm_license(out)
     gpkg = out / "osm_pre_event.gpkg"
     _write_layers(gpkg, {"buildings": buildings, "roads": roads, "places": places,
-                         "health": health})
+                         "health": health, "settlements": settle})
     settlements = out / "settlements.geojson"
-    places.to_crs(4326).to_file(settlements, driver="GeoJSON")
+    settle.to_crs(4326).to_file(settlements, driver="GeoJSON")
+    places_file = out / "places.geojson"
+    places.to_crs(4326).to_file(places_file, driver="GeoJSON")
 
     in_aoi_roads = roads[roads.geometry.intersects(aoi_utm)]
     bridges = in_aoi_roads[in_aoi_roads["is_bridge"]]
     place_counts = places["place"].value_counts()
     msg = (f"snapshot {snapshot:%Y-%m-%d %H:%M}Z: {len(buildings):,} buildings, "
            f"{in_aoi_roads.length.sum() / 1000:,.0f} km of roads/paths in the area "
-           f"({len(bridges)} bridges), {len(places)} places, "
-           f"{int((health['category'] == 'hospital').sum())} hospitals")
+           f"({len(bridges)} bridges), {len(settle):,} settlements, {len(places)} named "
+           f"places, {int((health['category'] == 'hospital').sum())} hospitals")
     return StageResult("osm", StageStatus.PARTIAL if warnings else StageStatus.OK, msg,
                        warnings=warnings, outputs={
         "snapshot_utc": snapshot.isoformat(),
         "method": "ohsome v1 full history, versions valid at the snapshot",
         "buildings": len(buildings),
         "buildings_outside_named_places": unassigned,
+        "settlements": {
+            "total": len(settle),
+            "named_from_osm_place": int((settle["named_from"] == "osm place").sum()),
+            "near_osm_place": int((settle["named_from"] == "nearest osm place").sum()),
+            "named_by_coordinates": int((settle["named_from"] == "coordinates").sum()),
+            "osm_place_without_buildings": int(settle["named_from"].astype(str).str.contains(
+                "no buildings").sum()),
+            "buildings_in_settlements": int((settle_ids != "").sum()),
+            "isolated_buildings": int((settle_ids == "").sum()),
+            "method": f"groups of >= {cfg.settlement_min_buildings} buildings each within "
+                      f"{cfg.settlement_link_m:g} m of the next (P18)"},
         "roads_in_area_km": {
             "motorable": round(float(in_aoi_roads.loc[in_aoi_roads["motorable"]].length.sum()
                                      / 1000), 1),
@@ -143,7 +161,7 @@ def run_osm(ctx: StageContext) -> StageResult:
         "hospitals": int((health["category"] == "hospital").sum()),
         "other_health_facilities": int((health["category"] != "hospital").sum()),
         "network_buffer_m": cfg.network_buffer_m,
-        "files": {"gpkg": gpkg, "settlements": settlements},
+        "files": {"gpkg": gpkg, "settlements": settlements, "places": places_file},
     })
 
 
@@ -151,12 +169,15 @@ def load_layers(osm_outputs: dict) -> dict[str, gpd.GeoDataFrame]:
     """Read the processed OSM layers written by this stage (used by later stages)."""
     gpkg = osm_outputs["files"]["gpkg"]
     layers = {name: _read_layer(gpkg, name) for name in
-              ("buildings", "roads", "places", "health")}
+              ("buildings", "roads", "places", "health", "settlements")}
     for name in ("roads",):
         for col in ("motorable", "is_bridge"):
             if col in layers[name]:
                 layers[name][col] = layers[name][col].astype(bool)
-    if "building_count" in layers["places"]:
-        layers["places"]["building_count"] = pd.to_numeric(layers["places"]["building_count"],
+    for name in ("places", "settlements"):
+        if "building_count" in layers[name]:
+            layers[name]["building_count"] = pd.to_numeric(layers[name]["building_count"],
                                                            errors="coerce")
+    if "settlement_id" in layers["buildings"]:
+        layers["buildings"]["settlement_id"] = layers["buildings"]["settlement_id"].fillna("")
     return layers

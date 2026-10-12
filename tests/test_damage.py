@@ -16,7 +16,8 @@ from floodmap.damage import (
 )
 
 EPSG = 32645
-WATER, MUD, DEBRIS = "new water-like", "wet mud / debris (decrease)", "rough debris (increase)"
+WATER, MUD, DEBRIS = ("new water-like", "backscatter decrease (likely wet mud / debris)",
+                      "backscatter increase (likely rough debris)")
 
 
 @pytest.fixture

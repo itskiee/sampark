@@ -64,7 +64,7 @@ the flood/debris path along the Bhote Koshi near Syabrubesi is clearly visible i
 **Done when:** masked flood map PNG visibly cleaner than M1; flood path lists settlements downstream
 (after M3); confidence raster produced; S2 absent → clear message, pipeline continues.
 
-### M3 — Pre-event OSM + damage overlay (Oct 12) — DONE (awaiting owner review)
+### M3 — Pre-event OSM + damage overlay (Oct 12) — DONE, committed 08532a7
 - [x] ohsome client on the brief's v1 URL: v1 snapshot endpoints now return 403 (ohsome-api #346),
       so the snapshot is rebuilt from `/elementsFullHistory` (versions valid at the snapshot);
       verified equal to ohsome's own snapshot counts; post-snapshot guard; `pytest -m network` check
@@ -80,14 +80,29 @@ the flood/debris path along the Bhote Koshi near Syabrubesi is clearly visible i
 - [x] doctor checks the ohsome feature download; legends moved below maps
 - [x] tests: ohsome client 5, osm 7, damage 6, pipeline optional input, offline e2e incl. OSM/damage
 - [x] explainer `docs/explainers/M3_osm_damage.md` (ablation: buffers, bridge rule)
-- Proposals for owner: **P18** settlements from building clusters; **P19** "on the flood corridor" tag
+- Proposals P18 (settlements from building clusters) and P19 (flood-corridor tag): approved, built in M4
 
 **Done when:** affected-asset counts and layers for Trishuli; empty OSM → clear message.
 
-### M4 — Cut-off analysis + priority ranking (Oct 12)
-- [ ] networkx road graph (motorable vs all ways), buffered network area, virtual "outside" node
-- [ ] before/after reachability to nearest town and hospital; broken segment + distance
-- [ ] rescue priority ranking (building count, distance to reachable road, health access)
+### M4 — Cut-off analysis + priority ranking (Oct 12) — DONE (awaiting owner review)
+- [x] P18 settlements: groups of >= 5 buildings each within 75 m (split above 3 km), named from OSM places
+- [x] P19 "on the flood corridor" tag on affected buildings/roads/bridges/settlements
+- [x] road graph (scipy sparse, no new dependency; roads densified to 50 m), motorable vs all ways,
+      buffered network area + virtual "outside" node (P9); over/under-passes not joined
+- [x] before/after reachability to nearest town / hospital / road leaving the area; first break on the
+      old route + distance; sentence in the brief's form; key breaks ranked by buildings cut off
+- [x] breaks only at medium/high confidence (config); low-confidence = "possibly cut off" (worst case)
+- [x] owner review: wording "likely cut off / likely impassable (confidence) / needs field verification";
+      destinations defined explicitly; settlement link sensitivity 50/75/100/150 m (buildings stable)
+- [x] faster maps (one LineCollection for all roads): cutoff 35 s → 13 s, damage 42 s → 22 s
+- [x] owner audit of M1–M3 (2026-10-12): no data-rule violation found (hosts, collections, EMSR isolation,
+      population proxy, footers all checked); wording hedged: classes "backscatter decrease/increase
+      (likely wet mud / debris / rough debris)", map title "Detected flood & debris (estimate)";
+      unused OSM tags dropped; one unsourced outside-knowledge sentence removed from the M4 explainer
+- [x] rescue priority: transparent tiers + reasons; priority.csv for field teams
+- [x] tests: brief's A/B/C/D example, detour via trail, low-confidence, outside node, overpass, P18 groups,
+      offline e2e incl. cutoff/priority
+- [x] explainer `docs/explainers/M4_cutoff_priority.md`
 
 **Done when:** output in the brief's form ("Village X cut off from <hospital>; road broken at …").
 
@@ -132,7 +147,7 @@ OSM access: stay on the brief's v1 URL via full history; ohsome v2 (new host + k
 - [x] Set `git config user.email` to the GitHub noreply address (before the first commit)
 - [ ] **Copernicus Data Space account** (free, dataspace.copernicus.eu), then `python -m floodmap login`
 - [x] Create **private** GitHub repo (empty), send URL → https://github.com/itskiee/floodmap.git
-- [ ] Post Discord questions (below)
+- [ ] Post Discord questions (ready to paste: `docs/discord_questions.md`, 1,376 characters)
 - [ ] Choose LLM provider + create key with spend limit (by M5)
 
 ## Discord questions (copy-paste)

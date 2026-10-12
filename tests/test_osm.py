@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import geopandas as gpd
+import numpy as np
 from shapely.geometry import LineString, Point, Polygon, box, mapping
 
 from floodmap.osm import (
@@ -86,3 +87,33 @@ def test_building_counts_by_nearest_place():
     assert counted["building_count"].tolist() == [3, 2, None]  # outside the area: unknown
     assert unassigned == 1  # the house at 5 km is near no named place
     assert nearest_place(buildings, places, 1000) == [0, 0, 0, 1, 1, None]
+
+
+def test_settlements_from_building_groups_p18():
+    from floodmap.osm import building_groups, make_settlements
+
+    # group 1: 6 houses at x≈0 (named place "Gatlang" nearby); group 2: 5 houses 2 km east
+    # (only "near Gatlang"); group 3: 5 houses 10 km away (coordinates); 2 isolated houses
+    xs = [0, 30, 60, 90, 120, 150] + [2000 + 30 * i for i in range(5)] + \
+         [10_000 + 30 * i for i in range(5)] + [5000, 7000]
+    buildings = gpd.GeoDataFrame(geometry=[box(x, 0, x + 8, 8) for x in xs], crs=EPSG)
+    places = gpd.GeoDataFrame({"label": ["Gatlang", "unnamed hamlet", "Ghost village"],
+                               "name": ["Gatlang", None, "Ghost village"],
+                               "name_en": [None, None, None],
+                               "place": ["village", "hamlet", "hamlet"]},
+                              geometry=[Point(100, 200), Point(2100, 100), Point(20_000, 0)],
+                              crs=EPSG)
+    aoi = box(-1000, -1000, 25_000, 1000)
+    sett, per_building = make_settlements(buildings, places, aoi, 75, 5, 3000, 1000, 3000)
+    by_name = dict(zip(sett["name"], sett["building_count"], strict=True))
+    assert by_name["Gatlang"] == 6
+    assert by_name["near Gatlang"] == 5  # the unnamed hamlet does not give a name
+    assert any(n.startswith("settlement at ") and c == 5 for n, c in by_name.items())
+    assert by_name["Ghost village"] == 0  # named place without mapped buildings is kept
+    assert (per_building == "").sum() == 2  # isolated houses
+    assert sett["settlement_id"].is_unique
+
+    # a 6 km chain of houses 50 m apart is split, never one giant settlement
+    chain = np.column_stack([np.arange(0, 6000, 50), np.zeros(120)])
+    labels = building_groups(chain, 75, 3000)
+    assert len(np.unique(labels)) >= 3
