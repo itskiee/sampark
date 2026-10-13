@@ -4,7 +4,7 @@ Brief: "Map the August 2026 Trishuli flood and compare your results with the off
 Copernicus Emergency Management Service maps for this event (activation EMSR927)."
 EMSR927 is NOT an input: this script only reads our finished run outputs and the reference
 packages, and writes metrics. Our method was frozen before the reference data were opened
-(configs/default.yaml unchanged since commit 048c725, SHA-256 prefix f6062fb0f6df0693).
+(configs/default.yaml unchanged since commit 281fd85, SHA-256 prefix f6062fb0f6df0693).
 
 Usage:
   python -I validation/compare_emsr927.py outputs/<case study run> [outputs/<extra run> ...]
@@ -267,7 +267,7 @@ def main() -> int:
               f"extent IoU {fe.get('iou')}  P {fe.get('precision')}  R {fe.get('recall')}")
     OUT.mkdir(parents=True, exist_ok=True)
     (OUT / "metrics.json").write_text(json.dumps({
-        "method_frozen": {"config_sha256_prefix": "f6062fb0f6df0693", "commit": "048c725"},
+        "method_frozen": {"config_sha256_prefix": "f6062fb0f6df0693", "commit": "281fd85"},
         "credit": attribution.EMS_VALIDATION_CREDIT, "products": results}, indent=2),
         encoding="utf-8")
     print(f"wrote {OUT / 'metrics.json'}")

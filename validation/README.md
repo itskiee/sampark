@@ -25,5 +25,5 @@ Credit: "European Union, Copernicus Emergency Management Service data".
 4. `python -I validation/make_results_md.py`: writes `results.md` from the metrics (no
    hand-typed numbers).
 
-The method was frozen before step 2 (configs/default.yaml unchanged since commit 048c725,
+The method was frozen before step 2 (configs/default.yaml unchanged since commit 281fd85,
 SHA-256 prefix f6062fb0f6df0693). Nothing in `src/` was changed because of these results.

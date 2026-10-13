@@ -2,7 +2,7 @@
 
 Deadline: Devpost **Oct 15 2026, 00:15 IST** (end of Oct 14). Full scope, nothing cut.
 Order of work is core first (M0–M7), then extras (M8), so the system is always demo-able.
-Rule hierarchy and working rules: see [CLAUDE.md](CLAUDE.md).
+Rule hierarchy and data rules, line by line against the brief: [docs/compliance.md](docs/compliance.md).
 
 **Data sources (owner decision 2026-10-11: follow the brief literally, no risk):** Sentinel-1,
 Sentinel-2 and Copernicus DEM only from the **Copernicus Data Space Ecosystem** (named in the
@@ -13,7 +13,7 @@ brief); OpenStreetMap only from the **ohsome API** (named in the brief). No Goog
 ### M0 — Setup (Oct 10–11)
 - [x] git repo, `.gitignore`, `.gitattributes`, `.python-version`, venv (Python 3.12)
 - [x] dependencies pinned with SHA-256 hashes (`requirements*.txt` via `uv pip compile --universal`)
-- [x] CLAUDE.md, PLAN.md, README skeleton, SECURITY.md, LICENSE, `.env.example`
+- [x] working rules, PLAN.md, README skeleton, SECURITY.md, LICENSE, `.env.example`
 - [x] package skeleton: config, aoi, results, cache, data_rules, net, catalogue, cdse_client,
       ohsome_client, logging_setup (redaction), attribution, pipeline (`run_pipeline`),
       CLI (`run`, `login`, `doctor`, `config-show`)
@@ -133,7 +133,7 @@ Owner decision 2026-10-13 after re-reading both PDFs ("AI COMPONENT — choose o
 - [x] explainer `docs/explainers/M6_sitrep_dashboard.md`
 
 ### M7 — EMSR927 comparison + robustness (Oct 13) — DONE (awaiting owner review)
-- [x] rules check before opening the reference (compliance.md §11); method frozen (commit 048c725, config f6062fb0…)
+- [x] rules check before opening the reference (compliance.md §11); method frozen (commit 281fd85, config f6062fb0…)
 - [x] `validation/`: safe extraction, checksums, comparison (extent IoU/precision/recall per confidence + own U-Net,
       buildings, roads, cut-off key breaks, reasons for misses), maps, `results.md` generated from metrics.json
 - [x] results: precision 0.91–1.00 everywhere; Bidur IoU 0.78 / Phosretar 0.68; gorge recall ~0.30 (66–72 % of misses
@@ -179,9 +179,10 @@ deliverable checked.
 - [ ] deliverables matrix (compliance.md §9) all ✅; Devpost text drafted; owner makes repo public + submits
 - [x] display name **Sampark** (सम्पर्क, "connection"; owner decision 2026-10-13): README, report, video, Devpost,
       dashboard, field package (code stays `floodmap`)
-- [ ] low-key AI attribution (owner decision 2026-10-13, run only on the owner's word, before going public):
-      backup → drop co-author trailers from history → untrack CLAUDE.md/.claude/ → update refs to 048c725 →
-      checks → force-push while private; one honest "Acknowledgements" line in the README
+- [x] AI-assistance attribution kept low-key (owner decision 2026-10-13, done 2026-10-14 before going public):
+      co-author lines removed from commit messages (message-only rewrite: every commit's files and dates
+      unchanged, backup kept locally); local assistant notes untracked; one honest "Acknowledgements" line
+      in the README; frozen-method commit renamed 048c725 → 281fd85 (same files, config SHA-256 f6062fb0…)
 
 ## Approved proposals (from planning)
 P1 numbers-by-construction copilot · P2 template sit-rep with LLM narrative + fallback ·

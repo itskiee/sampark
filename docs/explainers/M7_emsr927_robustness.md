@@ -12,7 +12,7 @@ date the judges choose."*
   `validation/data/` (git-ignored); the scripts live only in `validation/`.
 - **Pipeline code cannot read them:** pipeline code (`src/`, `app/`, `scripts/`) is blocked
   from them by the data-rules scanner. It even rejected the word in a code comment.
-- **Frozen before opening:** `configs/default.yaml` unchanged since commit 048c725 (SHA-256
+- **Frozen before opening:** `configs/default.yaml` unchanged since commit 281fd85 (SHA-256
   prefix `f6062fb0f6df0693`). No threshold, mask, event area or flood-path start was changed
   afterwards.
   - The larger AI model in training was started before the download and is chosen on

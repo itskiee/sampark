@@ -286,7 +286,7 @@ not allow.
 EMSR927 is used **only to check** results, never as an input (disqualification rule). The
 comparison code and results live in [validation/](validation/); the pipeline code cannot
 read that folder (enforced by a test). The method (`configs/default.yaml`) was frozen at
-commit `048c725` before the reference files were opened; afterwards the config only gained
+commit `281fd85` before the reference files were opened; afterwards the config only gained
 new sections for the extras, and no flood, damage or cut-off value changed.
 
 | EMS area | Extent IoU | Precision | Recall | EMS-damaged buildings we flagged |
@@ -391,6 +391,10 @@ flood algorithms for Sentinel-1. CVPR Workshops 2020. (Kuro Siwo is not used.)
 No images of victims are used anywhere. This is an educational prototype, not an
 operational tool: every map, report and export says so, and every result must be verified
 on the ground.
+
+## Acknowledgements
+Developed with the help of an AI coding assistant (Claude, Anthropic); design decisions,
+data-rule choices and validation by the author.
 
 ## License
 Code: MIT (see [LICENSE](LICENSE)). Data derived from OpenStreetMap: Open Database License

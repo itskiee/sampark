@@ -1,10 +1,10 @@
 # Case study: comparison with the official Copernicus EMS maps (EMSR927)
 
 *Checking only. EMSR927 was never an input: our system was frozen before the reference data
-were opened (configs/default.yaml unchanged since commit 048c725,
+were opened (configs/default.yaml unchanged since commit 281fd85,
 SHA-256 prefix f6062fb0f6df0693). Nothing was tuned afterwards.
 Later the config only gained new sections for the extras (landing_zones, multidate); no
-flood, damage or cut-off value changed (`git diff 048c725 -- configs/default.yaml`).*
+flood, damage or cut-off value changed (`git diff 281fd85 -- configs/default.yaml`).*
 Credit: **European Union, Copernicus Emergency Management Service data.**
 
 ## What was compared

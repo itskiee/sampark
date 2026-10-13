@@ -59,7 +59,7 @@ text = f"""# Case study: comparison with the official Copernicus EMS maps (EMSR9
 were opened (configs/default.yaml unchanged since commit {M['method_frozen']['commit']},
 SHA-256 prefix {M['method_frozen']['config_sha256_prefix']}). Nothing was tuned afterwards.
 Later the config only gained new sections for the extras (landing_zones, multidate); no
-flood, damage or cut-off value changed (`git diff 048c725 -- configs/default.yaml`).*
+flood, damage or cut-off value changed (`git diff 281fd85 -- configs/default.yaml`).*
 Credit: **{M['credit']}**
 
 ## What was compared
