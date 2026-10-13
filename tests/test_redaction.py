@@ -70,12 +70,12 @@ def test_ordinary_text_is_untouched():
     assert redact(text) == text
 
 
-def test_settings_never_print_the_api_key(monkeypatch):
+def test_settings_never_expose_environment_secrets(monkeypatch):
+    """floodmap needs no secret; a key lying around in the environment is never shown."""
     monkeypatch.setenv("LLM_API_KEY", FAKE_KEY)
     settings = load_settings()
     assert FAKE_KEY not in repr(settings)
     assert FAKE_KEY not in str(settings.summary())
-    assert settings.llm_api_key.get_secret_value() == FAKE_KEY
 
 
 def test_config_show_masks_the_api_key(monkeypatch, capsys):

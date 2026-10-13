@@ -1,0 +1,13 @@
+# Unseen-place test (M9): never used before in this project; robustness + plausibility only.
+# Why chosen: Himalayan valley flood with destroyed roads and bridges.
+# The box is approximate, drawn from general geography (towns and rivers), NOT from any
+# published flood or damage map.
+
+name: "Beas river flood, Kullu-Manali, Himachal Pradesh (India)"
+event_date: 2023-07-10
+
+aoi:
+  # [min_lon, min_lat, max_lon, max_lat] in WGS84 degrees
+  bbox: [77.05, 31.9, 77.25, 32.28]
+
+config_overrides: {}

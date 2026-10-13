@@ -28,3 +28,7 @@ Data licences (not covered by the MIT licence above)
   published modified version of the OSM data must remain under the ODbL.
 - Copernicus Sentinel data and Copernicus DEM are subject to their own terms
   (see README "Attributions").
+- The segmentation model in models/segmentation/ was trained on Sen1Floods11
+  (Bonafilia et al., CVPR Workshops 2020). Per the hackathon brief, Sen1Floods11 is
+  "fine for non-commercial educational use": the model weights are shared for
+  non-commercial educational use only.

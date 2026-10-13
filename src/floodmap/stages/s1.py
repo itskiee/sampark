@@ -229,7 +229,7 @@ def run_s1(ctx: StageContext) -> StageResult:
             "unused_tracks": [p.describe()["track"] for p in pairs
                               if p.describe()["track"] not in track_names],
             "resolution_m": resolution,
-            # convenience copies of the primary track (used by later stages and the copilot)
+            # convenience copies of the primary track (used by later stages)
             "pair": primary["pair"],
             "areas_km2": areas,
             "files": primary["files"],

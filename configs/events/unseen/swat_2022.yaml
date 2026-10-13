@@ -1,0 +1,13 @@
+# Unseen-place test (M9): never used before in this project; robustness + plausibility only.
+# Why chosen: narrow Hindu Kush valley flood.
+# The box is approximate, drawn from general geography (towns and rivers), NOT from any
+# published flood or damage map.
+
+name: "Swat river flood, Kalam-Bahrain, Khyber Pakhtunkhwa (Pakistan)"
+event_date: 2022-08-26
+
+aoi:
+  # [min_lon, min_lat, max_lon, max_lat] in WGS84 degrees
+  bbox: [72.45, 35.1, 72.65, 35.52]
+
+config_overrides: {}

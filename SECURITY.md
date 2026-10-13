@@ -9,7 +9,7 @@ and how. Every control listed here is implemented and, where possible, tested.
 | Asset | Risk | Controls |
 |---|---|---|
 | Copernicus Data Space login | Account misuse, credit theft | Interactive login (`floodmap login`); the openEO client keeps the refresh token in the user profile, never in the repo. The pipeline only reuses it non-interactively and never prints it. |
-| LLM API key (from M5) | Cost abuse | Only in `.env` (git-ignored) or environment variables; held as `SecretStr`; registered for log redaction; provider-side spend limit. |
+| Your data | Leaving the machine | No external AI or language-model service is used (owner decision 2026-10-13). Our own model runs locally with onnxruntime; the only outbound connections are the allowlisted data sources (Copernicus Data Space, ohsome). |
 | Personal information | Exposure in a public repo | Commits use a GitHub *noreply* email; `results.json` stores only relative paths (tested). |
 | Integrity of results | Disqualifying data use, stale results | Data-rule allowlist enforced at runtime (`data_rules.py`) and statically (`tests/test_data_rules.py`); cache keys include config + code version; half-written cache entries are never reused. |
 | Third-party material | Redistribution | Organizer PDFs and raw validation data are git-ignored. |
@@ -43,9 +43,8 @@ and how. Every control listed here is implemented and, where possible, tested.
 - Judge-provided areas (bbox / GeoJSON) are validated, size-capped and never used as
   file paths (`aoi.py`).
 - YAML is read with `yaml.safe_load` only.
-- From M5: OpenStreetMap tag values (user-generated) are sanitised and passed to the LLM as
-  quoted data; the LLM has read-only lookups over our results, no actions, no network,
-  no file access. Its output is validated against the results before display.
+- OpenStreetMap tag values (user-generated) are sanitised (control and bidirectional
+  characters removed, length capped) before they appear in maps, reports and exports.
 
 **Supply chain**
 - Every dependency is pinned to an exact version **and SHA-256 hash**; installation uses
@@ -63,7 +62,7 @@ and how. Every control listed here is implemented and, where possible, tested.
 ## Operational checklist (maintainer)
 - [ ] Repository private until submission; branch protection on `main` requiring CI.
 - [ ] Secret scanning / push protection enabled where the GitHub plan allows.
-- [ ] LLM provider spend limit set; CDSE account used only for this project.
+- [ ] CDSE account used only for this project; enough processing credit left for live judging.
 - [ ] Demo video / screenshots: no `.env`, no terminal showing tokens, no signed-in tabs.
 - [ ] Rotate / revoke all keys after the hackathon.
 

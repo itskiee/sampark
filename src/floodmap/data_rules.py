@@ -43,8 +43,22 @@ OHSOME_API_URL = "https://api.ohsome.org/v1"
 
 # Hosts our own HTTP client (floodmap/net.py) may call. The openEO client library talks to
 # CDSE_OPENEO_URL and the CDSE login service itself; we only ever hand it CDSE_OPENEO_URL.
-# The LLM provider host is added in milestone M5.
+# No other host: no external AI / language-model service is used (owner decision 2026-10-13).
 ALLOWED_HTTP_HOSTS: frozenset[str] = frozenset({"api.ohsome.org", "stac.dataspace.copernicus.eu"})
+
+# --- Training data (listed in the brief: Kuro Siwo, Sen1Floods11) -----------------------
+# Only the hand-labelled Sentinel-1 chips, their labels and the official split lists of
+# Sen1Floods11, from the dataset's official bucket (linked from its GitHub page). Used ONLY
+# by scripts/fetch_sen1floods11.py to train our own segmentation model, never at pipeline
+# run time. The JRC water folder of the same bucket is a forbidden dataset and is refused.
+SEN1FLOODS11_BUCKET = "sen1floods11"
+SEN1FLOODS11_LIST_URL = "https://storage.googleapis.com/storage/v1/b/sen1floods11/o"
+ALLOWED_TRAINING_PREFIXES: tuple[str, ...] = (
+    "v1.1/data/flood_events/HandLabeled/S1Hand/",
+    "v1.1/data/flood_events/HandLabeled/LabelHand/",
+    "v1.1/splits/flood_handlabeled/",
+)
+TRAINING_DOWNLOAD_HOST = "storage.googleapis.com"
 
 # Latest OSM data in ohsome, checked on 2026-10-06 via GET /v1/metadata
 # (extractRegion.temporalExtent.toTimestamp). Used only as a fallback when the live
@@ -85,6 +99,15 @@ def check_http_url(url: str) -> str:
             f"Allowed hosts (HTTPS only): {sorted(ALLOWED_HTTP_HOSTS)}"
         )
     return url
+
+
+def check_training_object(object_name: str) -> str:
+    """Return `object_name` if it is an allowed Sen1Floods11 object, otherwise raise."""
+    if "jrc" in object_name.lower() or not object_name.startswith(ALLOWED_TRAINING_PREFIXES):
+        raise DataRuleViolation(
+            f"Training object '{object_name}' is not allowed. Allowed prefixes: "
+            f"{list(ALLOWED_TRAINING_PREFIXES)} (JRC data is never allowed)")
+    return object_name
 
 
 def ohsome_snapshot(event_date: date, latest_available: datetime | None = None) -> datetime:

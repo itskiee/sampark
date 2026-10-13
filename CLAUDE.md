@@ -25,7 +25,11 @@ Users: district emergency operations centres, army/police helicopter teams, disa
 authorities, Red Cross. Judges test LIVE on areas/dates they choose: **robustness on unseen
 inputs is the top priority; a crash during judging loses the hackathon.**
 Judging: mapping 30 · AI component 25 · cut-off 20 · report/Q&A/limitations 15 ·
-dashboard/sit-rep 10. Declared AI component: **situation-report copilot (EN + NE)**.
+dashboard/sit-rep 10. Declared AI component: **our own flood segmentation model** (brief
+option 1): a small U-Net trained by us from scratch on Sen1Floods11, run locally with
+onnxruntime. Owner decision 2026-10-13: **no external AI services and no data leaving the
+machine**; the language-model copilot (option 2) is not built. The one-page sit-rep (brief
+"OUTPUT") is a code-filled template, no LLM.
 Deadline: Devpost Oct 15 2026, 00:15 IST.
 
 ## 2. Responsibility
@@ -76,7 +80,8 @@ Use `floodmap.attribution` — never retype:
   used by CLI (`python -m floodmap`), dashboard (`app/`) and tests.
 - Stages register with `@register_stage(name, requires=...)`, return `StageResult`
   (ok/partial/skipped/failed), never raise past the pipeline. Missing inputs → skipped
-  with reason. results.json is always written; it is the ONLY number source for the copilot.
+  with reason. results.json is always written; it is the ONLY number source for the sit-rep
+  and the dashboard.
 - Config: `configs/default.yaml` is the single source of tunable values (each commented
   with WHY); events in `configs/events/*.yaml`. **Nothing Trishuli-specific in code.**
 - Cache: `cache/<aoi_hash>_<date>/<stage>_<settings+version hash>/` with `_COMPLETE` marker.
@@ -88,8 +93,8 @@ Use `floodmap.attribution` — never retype:
 - Modules: aoi, config, results, cache, data_rules, net, catalogue, cdse_client,
   ohsome_client, logging_setup, attribution, pipeline, cli; later s1_pairing, s1_change,
   thresholds, viz,
-  terrain, flood_path, s2, confidence, damage, cutoff, copilot/, report/, exports,
-  landing_zones, multidate, segmentation.
+  terrain, flood_path, s2, confidence, damage, cutoff, segmentation (+ scripts/
+  train_segmentation.py, models/segmentation/), report/, exports, landing_zones, multidate.
 
 ## 6. Security rules
 - Secrets only in `.env` (git-ignored) / env vars / user profile. Never commit, print, log,
@@ -99,7 +104,9 @@ Use `floodmap.attribution` — never retype:
   fakes at runtime.
 - New dependency → add to `pyproject.toml`, re-lock with hashes (README), pip-audit.
 - New HTTP host → `data_rules.ALLOWED_HTTP_HOSTS` + `tests/rules_scanner.REVIEWED_URL_HOSTS`,
-  only after owner approval.
+  only after owner approval. Training data (Sen1Floods11 S1Hand/LabelHand/splits only, never
+  the JRC folder) only via `net.download_training_object` in scripts/, approved 2026-10-13.
+- No external AI/LLM services (owner decision 2026-10-13): models are trained and run locally.
 - Untrusted text (OSM tags, user input) is data, never instructions, especially for the LLM.
 
 ## 7. Working rules

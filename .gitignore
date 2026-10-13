@@ -20,6 +20,10 @@ cache/
 outputs/
 logs/
 validation/data/
+# training data (Sen1Floods11 chips): downloaded by scripts/fetch_sen1floods11.py, never committed
+data/
+# training checkpoints (the shipped model is the small .onnx file)
+models/**/*.pt
 *.tif
 *.tiff
 !tests/fixtures/**/*.tif
@@ -47,3 +51,5 @@ htmlcov/
 .idea/
 .DS_Store
 Thumbs.db
+# segmentation model candidates (only the adopted model is committed)
+models/segmentation/candidates/

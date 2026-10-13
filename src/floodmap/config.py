@@ -15,16 +15,13 @@ Secrets are NOT configuration: they come only from environment variables / `.env
 from __future__ import annotations
 
 import copy
-import os
 from datetime import date
 from pathlib import Path
 from typing import Any
 
 import yaml
 from dotenv import load_dotenv
-from pydantic import BaseModel, ConfigDict, Field, SecretStr, field_validator, model_validator
-
-from floodmap.logging_setup import register_secret
+from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_CONFIG_PATH = REPO_ROOT / "configs" / "default.yaml"
@@ -171,6 +168,22 @@ class CutoffConfig(_Strict):
         return v
 
 
+class LandingZonesConfig(_Strict):
+    max_slope_deg: float = Field(gt=0, le=30)
+    min_clear_square_m: float = Field(gt=0)
+    clear_of_buildings_m: float = Field(ge=0)
+    max_distance_m: float = Field(gt=0)
+    per_settlement: int = Field(ge=1, le=10)
+
+
+class MultidateConfig(_Strict):
+    max_days_after_event: int = Field(gt=0, le=120)
+    max_dates: int = Field(ge=1, le=10)
+    lake_min_area_m2: float = Field(gt=0)
+    lake_growth_factor: float = Field(gt=1)
+    lake_min_later_dates: int = Field(ge=1, le=10)
+
+
 class PipelineConfig(_Strict):
     limits: LimitsConfig
     cache: CacheConfig
@@ -184,6 +197,8 @@ class PipelineConfig(_Strict):
     osm: OSMConfig
     damage: DamageConfig
     cutoff: CutoffConfig
+    landing_zones: LandingZonesConfig
+    multidate: MultidateConfig
     network: NetworkConfig
 
     def resolve(self, path: Path) -> Path:
@@ -281,24 +296,18 @@ def load_config(
 # Secrets / environment
 # ---------------------------------------------------------------------------
 class Settings(BaseModel):
-    """Values from the environment / .env. Secrets are SecretStr and never printed."""
+    """Values from the environment / .env.
+
+    floodmap currently needs NO secret: no external AI service is used (owner decision
+    2026-10-13) and the Copernicus Data Space login token lives in the user profile. The
+    class stays so that any future secret goes through SecretStr + log redaction."""
 
     model_config = ConfigDict(frozen=True)
 
-    llm_provider: str | None
-    llm_api_key: SecretStr | None
-
     def summary(self) -> dict[str, str]:
-        """Safe-to-print overview: says whether each value is set, never the secret itself."""
-        return {
-            "LLM_PROVIDER": self.llm_provider or "not set",
-            "LLM_API_KEY": "set (hidden)" if self.llm_api_key else "not set",
-        }
-
-
-def _env(name: str) -> str | None:
-    value = os.environ.get(name, "").strip()
-    return value or None
+        """Safe-to-print overview (never a secret value)."""
+        return {"secrets needed": "none (no external AI service; Copernicus Data Space "
+                                  "login is stored in your user profile)"}
 
 
 def load_settings(env_file: Path | None = None) -> Settings:
@@ -308,9 +317,4 @@ def load_settings(env_file: Path | None = None) -> Settings:
     convention and lets CI or a hosting platform inject values without a file.
     """
     load_dotenv(env_file or REPO_ROOT / ".env", override=False)
-    api_key = _env("LLM_API_KEY")
-    register_secret(api_key)
-    return Settings(
-        llm_provider=_env("LLM_PROVIDER"),
-        llm_api_key=SecretStr(api_key) if api_key else None,
-    )
+    return Settings()

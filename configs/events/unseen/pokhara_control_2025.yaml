@@ -1,0 +1,13 @@
+# Unseen-place test (M9): never used before in this project; robustness + plausibility only.
+# Why chosen: control: no flood expected, should report little or nothing.
+# The box is approximate, drawn from general geography (towns and rivers), NOT from any
+# published flood or damage map.
+
+name: "No-flood control, Pokhara (Nepal), dry season"
+event_date: 2025-01-15
+
+aoi:
+  # [min_lon, min_lat, max_lon, max_lat] in WGS84 degrees
+  bbox: [83.9, 28.15, 84.1, 28.3]
+
+config_overrides: {}

@@ -1,0 +1,13 @@
+# Unseen-place test (M9): never used before in this project; robustness + plausibility only.
+# Why chosen: desert city: unusual surfaces for radar.
+# The box is approximate, drawn from general geography (towns and rivers), NOT from any
+# published flood or damage map.
+
+name: "Record rainfall flooding, Dubai (United Arab Emirates)"
+event_date: 2024-04-16
+
+aoi:
+  # [min_lon, min_lat, max_lon, max_lat] in WGS84 degrees
+  bbox: [55.15, 25.0, 55.45, 25.25]
+
+config_overrides: {}

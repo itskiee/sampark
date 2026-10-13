@@ -15,6 +15,7 @@ just up/downstream.
 from __future__ import annotations
 
 import geopandas as gpd
+import numpy as np
 import pandas as pd
 import shapely
 
@@ -59,6 +60,27 @@ def affected_buildings(buildings: gpd.GeoDataFrame, flood: gpd.GeoDataFrame,
     return buildings.loc[match.index].join(match)
 
 
+def road_pieces_in(lines: np.ndarray, zones: np.ndarray) -> np.ndarray:
+    """Part of each line inside the union of `zones`.
+
+    Same result as intersecting every line with one merged zone, but each line is cut by
+    the merge of only the few zones it touches (merging polygons is numerically robust;
+    merging overlapping line pieces is not: near-identical pieces from overlapping zones
+    would be counted twice, which a test caught). Measured on Valencia 2024 (2,448 km of
+    roads, thousands of flood polygons): 345 s with one merged zone.
+    """
+    out = np.array([shapely.LineString()] * len(lines), dtype=object)
+    if len(lines) == 0 or len(zones) == 0:
+        return out
+    li, zi = shapely.STRtree(zones).query(lines, predicate="intersects")
+    order = np.argsort(li, kind="stable")
+    li, zi = li[order], zi[order]
+    starts = np.flatnonzero(np.r_[True, li[1:] != li[:-1]])
+    for s, e in zip(starts, np.r_[starts[1:], len(li)], strict=True):
+        out[li[s]] = shapely.intersection(lines[li[s]], shapely.union_all(zones[zi[s:e]]))
+    return out
+
+
 def affected_roads(roads: gpd.GeoDataFrame, flood: gpd.GeoDataFrame, buffer_m: float
                    ) -> gpd.GeoDataFrame:
     """Affected road ways with the length inside detected flood/debris (`affected_m`) and
@@ -68,9 +90,9 @@ def affected_roads(roads: gpd.GeoDataFrame, flood: gpd.GeoDataFrame, buffer_m: f
         cols = [*roads.columns, "flood_class", "confidence", "affected_m"]
         return gpd.GeoDataFrame(columns=cols, geometry="geometry", crs=roads.crs)
     hit = roads.loc[match.index].join(match)
-    flood_zone = shapely.union_all(flood.geometry.buffer(buffer_m).values)
-    pieces = shapely.intersection(hit.geometry.values, flood_zone)
-    hit = hit.set_geometry(gpd.GeoSeries(pieces, index=hit.index, crs=roads.crs))
+    hit = hit.set_geometry(gpd.GeoSeries(road_pieces_in(hit.geometry.values,
+                                                        flood.geometry.buffer(buffer_m).values),
+                                         index=hit.index, crs=roads.crs))
     hit["affected_m"] = hit.geometry.length.round(1)
     return hit[hit["affected_m"] > 0]
 

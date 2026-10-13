@@ -40,7 +40,7 @@ _CONTROL = re.compile(r"[\x00-\x1f\x7f-\x9f​-‏‪-‮⁦-⁩]")
 
 
 def clean_text(value: Any, max_len: int) -> str | None:
-    """Untrusted OSM text → safe display/LLM string (no control or bidi characters)."""
+    """Untrusted OSM text → safe display string (no control or bidi characters)."""
     if value is None:
         return None
     text = unicodedata.normalize("NFC", str(value))

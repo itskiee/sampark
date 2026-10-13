@@ -106,30 +106,72 @@ the flood/debris path along the Bhote Koshi near Syabrubesi is clearly visible i
 
 **Done when:** output in the brief's form ("Village X cut off from <hospital>; road broken at …").
 
-### M5 — Copilot (EN + NE) + validator + sit-rep (Oct 13)
-- [ ] numbers-by-construction slots filled from results.json; Devanagari digit formatting
-- [ ] validator (numbers + place names vs JSON), adversarial tests, "not in our data" path
-- [ ] one-page sit-rep: deterministic template + LLM narrative; template-only fallback
-- [ ] Nepali PDF with correct Devanagari shaping
+### M5 — Own flood segmentation model = declared AI component (Oct 13) — DONE (awaiting owner review)
+Owner decision 2026-10-13 after re-reading both PDFs ("AI COMPONENT — choose one"): option 1,
+**train our own model**; no external AI services, nothing leaves the machine. The LLM copilot
+(option 2) is not built; proposals P1–P3 (copilot) are withdrawn.
+- [x] Sen1Floods11 hand-labelled S1 chips + labels + official splits (896 files, 0.73 GB, MD5-checked);
+      JRC folder refused by the data-rules guard; download only via scripts/fetch_sen1floods11.py
+- [x] deps: onnxruntime (runtime), torch CPU (train extra, requirements-train.txt), hash-locked, audited
+- [x] small U-Net trained from scratch on CPU (482,593 parameters, 20 m, 30 epochs, 40.8 min), ONNX 1.9 MB
+- [x] evaluation: test IoU 0.649 (threshold rule 0.445); unseen Bolivia event IoU 0.648 (rule 0.581); model card
+- [x] improvement attempts (rule: validation +0.005): bigger model 0.6285, weight averaging 0.6247, + brightness
+      augmentation 0.6242 vs current 0.6293 → current kept; Bolivia varies 0.536–0.648 between trainings (experiments.json)
+- [x] pipeline stage `segmentation`: water before/after → new water in plausible zone; agreement with change detection;
+      not counted as an independent confidence source (same image); doctor checks the model file
+- [x] Himalayan unseen scenes: poor transfer (radar shadow taken as water, narrow corridor missed), no false
+      new water in the no-flood control; EMSR927 comparison of the model in M7
+- [x] explainer `docs/explainers/M5_segmentation_model.md`; tests (preprocessing, tiling, real-model smoke, e2e)
 
-### M6 — Dashboard end-to-end (Oct 13)
-- [ ] Streamlit: AOI draw/enter + date → run → layers, tables, copilot chat, sit-rep download
-- [ ] progress messages, attribution footer, prototype disclaimer; own basemaps (hillshade/S1/S2)
+### M6 — Dashboard + one-page sit-rep (Oct 13–14) — DONE (awaiting owner review)
+- [x] sit-rep: stage `report` + `floodmap report`: A4 PDF/PNG + plain text, numbers only from results.json,
+      "not available (reason)" for missing stages, attributions + disclaimer + training citation
+- [x] Streamlit dashboard (`floodmap dashboard`): new analysis (event or bbox + date + flood-path point) with live
+      progress, previous runs, tabs per brief question, downloads (PDF/CSV/GeoJSON+ODbL), attribution footer
+- [x] privacy/safety config: no usage statistics, localhost only, no error details in the browser (tested)
+- [x] own maps only (no external tiles); headless tests (no runs, partial run); in-app browser check
+- [x] explainer `docs/explainers/M6_sitrep_dashboard.md`
 
-### M7 — EMSR927 comparison + robustness (Oct 14)
-- [ ] `validation/`: IoU / precision / recall, affected-building agreement, disagreement analysis
-- [ ] 4+ unseen AOIs/dates (Himalayan + non-Himalayan); fix every crash; `validation/results.md`
+### M7 — EMSR927 comparison + robustness (Oct 13) — DONE (awaiting owner review)
+- [x] rules check before opening the reference (compliance.md §11); method frozen (commit 048c725, config f6062fb0…)
+- [x] `validation/`: safe extraction, checksums, comparison (extent IoU/precision/recall per confidence + own U-Net,
+      buildings, roads, cut-off key breaks, reasons for misses), maps, `results.md` generated from metrics.json
+- [x] results: precision 0.91–1.00 everywhere; Bidur IoU 0.78 / Phosretar 0.68; gorge recall ~0.30 (66–72 % of misses
+      outside the terrain zone; trade-off documented, not re-tuned); 39/52 key breaks on EMS-damaged roads
+- [x] robustness: Phosretar, Melamchi, Sikkim, Derna, Valencia, no-flood control: no crash, no failed stage
+- [x] speed bug (Valencia damage 388 s → 31 s, identical results, equality test)
+- [x] explainer `docs/explainers/M7_emsr927_robustness.md`
 
-### M8 — Extras (Oct 12–14, after core works)
-- [ ] helicopter landing-zone candidates (from Copernicus DEM slope/flatness + Sentinel + allowed OSM layers only; no OSM helipad tags)
-- [ ] field exports: GeoJSON + KML of all layers; EN + NE PDF sit-rep
-- [ ] multi-date tracking (receding water / new ponding / debris-dammed lake flag)
-- [ ] segmentation model (Sen1Floods11 / Kuro Siwo subset), honest metrics on unseen Himalayan scenes
-- [ ] confidence map summary in dashboard + report
+### M8 — Extras from the owner's original list (Oct 13) — DONE (awaiting owner review)
+Rules checked before building (compliance.md §11): allowed inputs only, no new source/host/service.
+- [x] helicopter landing-zone candidates (DEM slope, our flood map, pre-event OSM buildings; no helipad tags):
+      Trishuli 172 of 215 likely cut-off settlements served, 43 none (steep gorge); "verify on site"
+- [x] field package zip: GeoPackage + KML + GPX waypoints (tiers 1–3, landing zones, breaks, possible lakes)
+      + sit-rep + README + attributions + ODbL; no new library
+- [x] multi-date tracking: same track, same pre composite, same thresholds; receding / new ponding / possible
+      lakes forming (persistence rule against wet snow/noise); Trishuli 4 dates, 3 possible lakes (verify)
+- [x] sit-rep + dashboard integration; report ordered after all analysis stages
+- [x] tests: landing zones, multi-date, e2e incl. extras; explainer `docs/explainers/M8_extras.md`
+- (already built earlier: flood path M2/M3, rescue priority M4, confidence map M2, segmentation model M5)
 
-### M9 — README, report, video, submit (Oct 14)
-- [ ] README run-from-scratch guide; report ≤6 pages incl. limitations; 3-min video script
-- [ ] final checks (fresh clone, doctor, tests, attributions), make repo public, submit
+### M9 — README, report, video, unseen-place testing, submit (Oct 13–14; target submit Oct 14 20:00 IST)
+Owner decisions 2026-10-13: report laid out by the owner in Word/Google Docs from our draft;
+video with the owner's voice AND captions; test on more than 10 unseen places; every
+deliverable checked.
+- [ ] README: what it does, run from scratch, **any area + date** (live judging), dashboard, sit-rep, run times,
+      limits, troubleshooting, how to read results, results summary, AI model + reproduction, rules, attributions
+- [ ] report draft (`report/`): full text, every number generated from results.json / metrics.json / model card,
+      figures as PNG; HTML that opens in Word; ≤ 6 pages incl. references (owner lays out, checks page count)
+- [ ] video: timed script (narration) + captions file (.srt) + title/end cards from `floodmap.attribution`;
+      maps/screens only, no victim images; owner records
+- [ ] unseen-place campaign: ≥ 12 places never used before (mountain + lowland + edge cases), full pipeline,
+      per-stage status and time, maps checked by eye; plus invalid inputs (future date, sea, tiny/huge area,
+      pre-Sentinel date); fix anything that fails, document everything
+- [ ] final checks: fresh clone → hashed install → tests → pre-commit (gitleaks whole history) → doctor → live run;
+      CI green (browser); attributions + prototype label on every output; no local paths/secrets;
+      remove leftover LLM-key settings in code (config.Settings, cli doctor text, data_rules comment,
+      redaction tests keep a generic fake secret); dashboard lists configs/events/unseen/ too
+- [ ] deliverables matrix (compliance.md §9) all ✅; Devpost text drafted; owner makes repo public + submits
 
 ## Approved proposals (from planning)
 P1 numbers-by-construction copilot · P2 template sit-rep with LLM narrative + fallback ·
@@ -147,8 +189,9 @@ OSM access: stay on the brief's v1 URL via full history; ohsome v2 (new host + k
 - [x] Set `git config user.email` to the GitHub noreply address (before the first commit)
 - [ ] **Copernicus Data Space account** (free, dataspace.copernicus.eu), then `python -m floodmap login`
 - [x] Create **private** GitHub repo (empty), send URL → https://github.com/itskiee/floodmap.git
-- [ ] Post Discord questions (ready to paste: `docs/discord_questions.md`, 1,376 characters)
-- [ ] Choose LLM provider + create key with spend limit (by M5)
+- [x] ~~Post Discord questions~~ — Discord not found (owner, 2026-10-13): open questions decided conservatively
+      by the PDF text, see `docs/compliance.md` §10
+- [x] ~~Choose LLM provider~~ — not needed: no external AI (owner decision 2026-10-13)
 
 ## Discord questions (copy-paste)
 1. Live evaluation format: our machine via screen share, a hosted URL, or judges cloning the repo? Time limit per run? Expected AOI size and date range?

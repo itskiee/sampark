@@ -1,0 +1,78 @@
+{
+ "rule": "adopt a candidate only if its validation IoU beats the current model by >= 0.005; test and Bolivia are reported once, never used to choose",
+ "decision": "keep current model",
+ "experiments": [
+  {
+   "key": "current",
+   "label": "current model (base 16, 30 epochs)",
+   "architecture": "U-Net, 3 levels, base 16 channels, 482,593 parameters",
+   "training": {
+    "epochs": 30,
+    "batch": 8,
+    "lr": 0.002,
+    "seed": 2026,
+    "device": "CPU",
+    "minutes": 40.8
+   },
+   "valid_iou": 0.6293,
+   "test_iou": 0.649,
+   "bolivia_iou": 0.6477,
+   "summary": "Improvement attempts, decided in advance by validation IoU only (adopt if at least 0.005 better; test and Bolivia never used to choose): 4x larger (base 32, 50 epochs): validation 0.6285, Bolivia 0.536; weight averaging (EMA 0.995 with warm-up): validation 0.6247, Bolivia 0.585; weight averaging + brightness augmentation (+-1.5 dB): validation 0.6242, Bolivia 0.590. None beat the current model (validation 0.6293), so it was kept. Across the four variants the unseen-event (Bolivia, 15 chips) IoU ranges 0.536-0.648: that estimate varies a lot between trainings, so our 0.648 is likely at the favourable end. The limit is the training data, not the model size or training procedure."
+  },
+  {
+   "key": "base32_e50",
+   "label": "4x larger (base 32, 50 epochs)",
+   "architecture": "U-Net, 3 levels, base 32 channels, 1,926,721 parameters",
+   "training": {
+    "epochs": 50,
+    "batch": 8,
+    "lr": 0.002,
+    "seed": 2026,
+    "device": "CPU",
+    "minutes": 221.4
+   },
+   "valid_iou": 0.6285,
+   "test_iou": 0.6577,
+   "bolivia_iou": 0.5356,
+   "summary": ""
+  },
+  {
+   "key": "v1_ema",
+   "label": "weight averaging (EMA 0.995 with warm-up)",
+   "architecture": "U-Net, 3 levels, base 16 channels, 482,593 parameters",
+   "training": {
+    "epochs": 30,
+    "batch": 8,
+    "lr": 0.002,
+    "weight_average_decay": 0.995,
+    "gain_augmentation_db": 0.0,
+    "seed": 2026,
+    "device": "CPU",
+    "minutes": 49.1
+   },
+   "valid_iou": 0.6247,
+   "test_iou": 0.6517,
+   "bolivia_iou": 0.5853,
+   "summary": ""
+  },
+  {
+   "key": "v2_ema_gain",
+   "label": "weight averaging + brightness augmentation (+-1.5 dB)",
+   "architecture": "U-Net, 3 levels, base 16 channels, 482,593 parameters",
+   "training": {
+    "epochs": 30,
+    "batch": 8,
+    "lr": 0.002,
+    "weight_average_decay": 0.995,
+    "gain_augmentation_db": 1.5,
+    "seed": 2026,
+    "device": "CPU",
+    "minutes": 44.8
+   },
+   "valid_iou": 0.6242,
+   "test_iou": 0.6538,
+   "bolivia_iou": 0.5897,
+   "summary": ""
+  }
+ ]
+}

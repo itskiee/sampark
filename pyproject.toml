@@ -27,6 +27,8 @@ dependencies = [
     "python-dotenv>=1.0",
     "requests>=2.32",
     "pysheds>=0.4",  # DEM hydrology: pit filling, flow direction/accumulation, HAND
+    "onnxruntime>=1.18",  # runs OUR trained segmentation model locally (no external AI)
+    "streamlit>=1.38",  # local map dashboard (M6); usage statistics disabled in .streamlit/
 ]
 
 [project.optional-dependencies]
@@ -36,6 +38,13 @@ dev = [
     "pre-commit>=3.7",
     "pip-audit>=2.7",
     "uv>=0.4",
+]
+
+# Only for training the segmentation model on the owner's laptop (CPU). Not needed to run
+# the pipeline, the dashboard or CI: the trained model ships as a small ONNX file.
+train = [
+    "torch>=2.4",
+    "onnx>=1.16",  # needed by torch.onnx.export to write the model file
 ]
 
 [project.scripts]
@@ -69,3 +78,5 @@ select = ["E", "W", "F", "I", "B", "UP", "S"]
 [tool.ruff.lint.per-file-ignores]
 # assert is the pytest idiom; subprocess is used by tests to ask git about .gitignore
 "tests/**" = ["S101", "S603", "S607"]
+# generates Markdown tables, whose rows must stay on one line
+"validation/make_results_md.py" = ["E501"]

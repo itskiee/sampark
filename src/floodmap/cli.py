@@ -56,7 +56,44 @@ def _build_parser() -> argparse.ArgumentParser:
 
     show = sub.add_parser("config-show", help="print the effective configuration")
     show.add_argument("--event", type=Path)
+
+    rep = sub.add_parser("report", help="rebuild the one-page situation report of a run")
+    rep.add_argument("--run", type=Path, help="run folder (default: the newest in outputs/)")
+
+    sub.add_parser("dashboard", help="open the local map dashboard (Streamlit)")
     return parser
+
+
+def _newest_run() -> Path | None:
+    from floodmap.config import load_config
+
+    out = load_config().resolve(load_config().output.dir)
+    runs = sorted((p for p in out.glob("*/results.json")), key=lambda p: p.stat().st_mtime)
+    return runs[-1].parent if runs else None
+
+
+def _cmd_report(args: argparse.Namespace) -> int:
+    from floodmap.sitrep import build
+
+    run_dir = args.run or _newest_run()
+    if run_dir is None or not (run_dir / "results.json").is_file():
+        print("No run found. Run the pipeline first: python -m floodmap run ...")
+        return 1
+    data = json.loads((run_dir / "results.json").read_text(encoding="utf-8"))
+    files = build(data, run_dir, run_dir / "report")
+    for kind, path in files.items():
+        print(f"  {kind:<4} {path}")
+    return 0
+
+
+def _cmd_dashboard(args: argparse.Namespace) -> int:
+    import subprocess  # noqa: S404 - fixed command, no user input in it
+
+    from floodmap.config import REPO_ROOT
+
+    app = REPO_ROOT / "app" / "streamlit_app.py"
+    return subprocess.call([sys.executable, "-m", "streamlit", "run", str(app)],  # noqa: S603
+                           cwd=REPO_ROOT)
 
 
 def _cmd_run(args: argparse.Namespace) -> int:
@@ -129,7 +166,7 @@ def _cmd_doctor(args: argparse.Namespace) -> int:
 
     has_env = (REPO_ROOT / ".env").is_file()
     check(".env", "OK" if has_env else "INFO",
-          "found" if has_env else "not present (only needed for the LLM key from M5)")
+          "found" if has_env else "not present (not needed: floodmap needs no secrets)")
     for key, value in settings.summary().items():
         check(f"  {key}", "INFO", value)
 
@@ -195,8 +232,11 @@ def _cmd_doctor(args: argparse.Namespace) -> int:
         except Exception as exc:
             check("ohsome osm download", "FAIL", str(exc)[:200])
 
-    check("llm key", "OK" if settings.llm_api_key else "WARN",
-          "set (hidden)" if settings.llm_api_key else "not set (needed from milestone M5)")
+    from floodmap.segmentation import MODEL_PATH, available
+
+    check("segmentation model", "OK" if available() else "WARN",
+          f"our U-Net found ({MODEL_PATH.stat().st_size / 1e6:.1f} MB, runs locally)"
+          if available() else "missing: run scripts/train_segmentation.py")
 
     print("floodmap doctor — secrets are never displayed\n")
     for name, status, detail in rows:
@@ -251,5 +291,5 @@ def main(argv: list[str] | None = None) -> int:
     _utf8_console()
     args = _build_parser().parse_args(argv)
     handlers = {"run": _cmd_run, "doctor": _cmd_doctor, "config-show": _cmd_config_show,
-                "login": _cmd_login}
+                "login": _cmd_login, "report": _cmd_report, "dashboard": _cmd_dashboard}
     return handlers[args.command](args)

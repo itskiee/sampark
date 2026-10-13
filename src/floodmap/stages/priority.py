@@ -7,7 +7,7 @@ Transparent tiers instead of an opaque weighted score, so every rank can be expl
   4  possibly cut off (low-confidence breaks only) or long detour
 Within a tier: more potentially affected buildings (high confidence first), then more
 buildings in total (the brief's population proxy: pre-event OSM building count).
-Each entry carries its reasons, which the copilot (M5) quotes instead of inventing them.
+Each entry carries its reasons, which the situation report and dashboard quote.
 Outputs: priority/priority.csv (for field teams), priority/priority.geojson.
 """
 

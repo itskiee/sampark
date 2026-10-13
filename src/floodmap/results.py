@@ -3,8 +3,7 @@
 Every stage returns a `StageResult` with an explicit status instead of raising, so a
 failure in one stage (e.g. "no cloud-free Sentinel-2 image") is reported clearly while the
 rest of the pipeline continues with what it has. `Results.to_json()` writes results.json,
-which is also what the situation-report copilot (M5) reads: it is the only source of
-numbers the copilot may use.
+which is the only source of numbers for the one-page situation report and the dashboard.
 """
 
 from __future__ import annotations
@@ -62,6 +61,8 @@ class Results:
         data["stages"] = {name: _relative_paths(asdict(s), self.run_dir) for name, s in
                           self.stages.items()}
         data["attributions"] = list(attribution.DATA_ATTRIBUTIONS)
+        if "segmentation" in self.stages and self.stages["segmentation"].usable:
+            data["training_data_citations"] = [attribution.SEN1FLOODS11_CITATION]
         if "osm" in self.stages:
             data["data_licenses"] = {"openstreetmap": attribution.OSM_DATA_LICENSE}
         data["disclaimer"] = attribution.DISCLAIMER

@@ -1,0 +1,412 @@
+{
+  "method_frozen": {
+    "config_sha256_prefix": "f6062fb0f6df0693",
+    "commit": "048c725"
+  },
+  "credit": "European Union, Copernicus Emergency Management Service data.",
+  "products": [
+    {
+      "product": "EMSR927_AOI01_GRA_PRODUCT_v1",
+      "run": "20261013T073521Z_6d540fab",
+      "coverage_of_reference_area": 1.0,
+      "reference_event_types": [
+        "Landslide"
+      ],
+      "flood_extent": {
+        "all_confidence": {
+          "iou": 0.305,
+          "precision": 0.983,
+          "recall": 0.306,
+          "f1": 0.467,
+          "ours_km2": 0.346,
+          "reference_km2": 1.108
+        },
+        "medium_and_high": {
+          "iou": 0.294,
+          "precision": 0.982,
+          "recall": 0.295,
+          "f1": 0.454,
+          "ours_km2": 0.333,
+          "reference_km2": 1.108
+        },
+        "high_only": {
+          "iou": 0.232,
+          "precision": 0.982,
+          "recall": 0.233,
+          "f1": 0.377,
+          "ours_km2": 0.263,
+          "reference_km2": 1.108
+        },
+        "own_unet_new_water": {
+          "iou": 0.0,
+          "precision": null,
+          "recall": 0.0,
+          "f1": null,
+          "ours_km2": 0.0,
+          "reference_km2": 1.108
+        }
+      },
+      "missed_reference_pixels_by_reason": {
+        "no valid radar view (layover/shadow, all tracks)": 0.005,
+        "no significant change": 0.272,
+        "already water before (permanent water)": 0.003,
+        "outside our terrain-plausible zone (HAND/slope)": 0.721
+      },
+      "buildings": {
+        "reference_destroyed_or_damaged": 355,
+        "reference_possibly_damaged": 78,
+        "ours_potentially_affected": 114,
+        "reference_damaged_found_by_us": 170,
+        "recall": 0.479,
+        "ours_near_any_reference_graded_building": 103,
+        "precision_proxy": 0.904,
+        "tolerance_m": 15
+      },
+      "roads": {
+        "reference_destroyed_or_damaged_km": 6.15,
+        "share_of_it_inside_our_detected_area": 0.654,
+        "ours_affected_km": 4.92,
+        "share_of_ours_near_reference_damage": 0.857
+      },
+      "cutoff_key_breaks": {
+        "in_reference_area": 4,
+        "within_100m_of_reference_damaged_road": 4
+      }
+    },
+    {
+      "product": "EMSR927_AOI02_GRA_PRODUCT_v2",
+      "run": "20261013T073521Z_6d540fab",
+      "coverage_of_reference_area": 1.0,
+      "reference_event_types": [
+        "Landslide"
+      ],
+      "flood_extent": {
+        "all_confidence": {
+          "iou": 0.299,
+          "precision": 1.0,
+          "recall": 0.299,
+          "f1": 0.46,
+          "ours_km2": 0.387,
+          "reference_km2": 1.295
+        },
+        "medium_and_high": {
+          "iou": 0.296,
+          "precision": 1.0,
+          "recall": 0.296,
+          "f1": 0.457,
+          "ours_km2": 0.383,
+          "reference_km2": 1.295
+        },
+        "high_only": {
+          "iou": 0.208,
+          "precision": 1.0,
+          "recall": 0.208,
+          "f1": 0.344,
+          "ours_km2": 0.27,
+          "reference_km2": 1.295
+        },
+        "own_unet_new_water": {
+          "iou": 0.0,
+          "precision": null,
+          "recall": 0.0,
+          "f1": null,
+          "ours_km2": 0.0,
+          "reference_km2": 1.295
+        }
+      },
+      "missed_reference_pixels_by_reason": {
+        "no valid radar view (layover/shadow, all tracks)": 0.024,
+        "no significant change": 0.315,
+        "outside our terrain-plausible zone (HAND/slope)": 0.661
+      },
+      "buildings": {
+        "reference_destroyed_or_damaged": 405,
+        "reference_possibly_damaged": 26,
+        "ours_potentially_affected": 133,
+        "reference_damaged_found_by_us": 131,
+        "recall": 0.323,
+        "ours_near_any_reference_graded_building": 104,
+        "precision_proxy": 0.782,
+        "tolerance_m": 15
+      },
+      "roads": {
+        "reference_destroyed_or_damaged_km": 9.52,
+        "share_of_it_inside_our_detected_area": 0.425,
+        "ours_affected_km": 4.74,
+        "share_of_ours_near_reference_damage": 0.633
+      },
+      "cutoff_key_breaks": {
+        "in_reference_area": 4,
+        "within_100m_of_reference_damaged_road": 4
+      }
+    },
+    {
+      "product": "EMSR927_AOI03_GRA_MONIT01_v1",
+      "run": "20261013T073521Z_6d540fab",
+      "coverage_of_reference_area": 1.0,
+      "reference_event_types": [
+        "Landslide"
+      ],
+      "flood_extent": {
+        "all_confidence": {
+          "iou": 0.775,
+          "precision": 0.94,
+          "recall": 0.815,
+          "f1": 0.873,
+          "ours_km2": 6.082,
+          "reference_km2": 7.016
+        },
+        "medium_and_high": {
+          "iou": 0.778,
+          "precision": 0.946,
+          "recall": 0.814,
+          "f1": 0.875,
+          "ours_km2": 6.041,
+          "reference_km2": 7.016
+        },
+        "high_only": {
+          "iou": 0.764,
+          "precision": 0.953,
+          "recall": 0.794,
+          "f1": 0.866,
+          "ours_km2": 5.844,
+          "reference_km2": 7.016
+        },
+        "own_unet_new_water": {
+          "iou": 0.045,
+          "precision": 0.999,
+          "recall": 0.045,
+          "f1": 0.086,
+          "ours_km2": 0.318,
+          "reference_km2": 7.016
+        }
+      },
+      "missed_reference_pixels_by_reason": {
+        "no significant change": 0.574,
+        "already water before (permanent water)": 0.016,
+        "outside our terrain-plausible zone (HAND/slope)": 0.411
+      },
+      "buildings": {
+        "reference_destroyed_or_damaged": 2725,
+        "reference_possibly_damaged": 333,
+        "ours_potentially_affected": 2013,
+        "reference_damaged_found_by_us": 2190,
+        "recall": 0.804,
+        "ours_near_any_reference_graded_building": 1753,
+        "precision_proxy": 0.871,
+        "tolerance_m": 15
+      },
+      "roads": {
+        "reference_destroyed_or_damaged_km": 41.2,
+        "share_of_it_inside_our_detected_area": 0.915,
+        "ours_affected_km": 50.0,
+        "share_of_ours_near_reference_damage": 0.784
+      },
+      "cutoff_key_breaks": {
+        "in_reference_area": 28,
+        "within_100m_of_reference_damaged_road": 26
+      }
+    },
+    {
+      "product": "EMSR927_AOI03_GRA_PRODUCT_v1",
+      "run": "20261013T073521Z_6d540fab",
+      "coverage_of_reference_area": 1.0,
+      "reference_event_types": [
+        "Landslide"
+      ],
+      "flood_extent": {
+        "all_confidence": {
+          "iou": 0.777,
+          "precision": 0.933,
+          "recall": 0.824,
+          "f1": 0.875,
+          "ours_km2": 5.198,
+          "reference_km2": 5.887
+        },
+        "medium_and_high": {
+          "iou": 0.781,
+          "precision": 0.939,
+          "recall": 0.823,
+          "f1": 0.877,
+          "ours_km2": 5.159,
+          "reference_km2": 5.887
+        },
+        "high_only": {
+          "iou": 0.769,
+          "precision": 0.948,
+          "recall": 0.804,
+          "f1": 0.87,
+          "ours_km2": 4.993,
+          "reference_km2": 5.887
+        },
+        "own_unet_new_water": {
+          "iou": 0.054,
+          "precision": 0.999,
+          "recall": 0.054,
+          "f1": 0.102,
+          "ours_km2": 0.318,
+          "reference_km2": 5.887
+        }
+      },
+      "missed_reference_pixels_by_reason": {
+        "no significant change": 0.625,
+        "already water before (permanent water)": 0.02,
+        "outside our terrain-plausible zone (HAND/slope)": 0.355
+      },
+      "buildings": {
+        "reference_destroyed_or_damaged": 2046,
+        "reference_possibly_damaged": 297,
+        "ours_potentially_affected": 1565,
+        "reference_damaged_found_by_us": 1662,
+        "recall": 0.812,
+        "ours_near_any_reference_graded_building": 1357,
+        "precision_proxy": 0.867,
+        "tolerance_m": 15
+      },
+      "roads": {
+        "reference_destroyed_or_damaged_km": 31.57,
+        "share_of_it_inside_our_detected_area": 0.935,
+        "ours_affected_km": 42.23,
+        "share_of_ours_near_reference_damage": 0.75
+      },
+      "cutoff_key_breaks": {
+        "in_reference_area": 22,
+        "within_100m_of_reference_damaged_road": 19
+      }
+    },
+    {
+      "product": "EMSR927_AOI05_GRA_MONIT01_v2",
+      "run": "20261013T084115Z_5dc84a98",
+      "coverage_of_reference_area": 1.0,
+      "reference_event_types": [
+        "Landslide"
+      ],
+      "flood_extent": {
+        "all_confidence": {
+          "iou": 0.693,
+          "precision": 0.927,
+          "recall": 0.733,
+          "f1": 0.819,
+          "ours_km2": 5.052,
+          "reference_km2": 6.388
+        },
+        "medium_and_high": {
+          "iou": 0.695,
+          "precision": 0.939,
+          "recall": 0.727,
+          "f1": 0.82,
+          "ours_km2": 4.947,
+          "reference_km2": 6.388
+        },
+        "high_only": {
+          "iou": 0.662,
+          "precision": 0.954,
+          "recall": 0.684,
+          "f1": 0.797,
+          "ours_km2": 4.582,
+          "reference_km2": 6.388
+        },
+        "own_unet_new_water": {
+          "iou": 0.269,
+          "precision": 0.991,
+          "recall": 0.269,
+          "f1": 0.423,
+          "ours_km2": 1.736,
+          "reference_km2": 6.388
+        }
+      },
+      "missed_reference_pixels_by_reason": {
+        "no significant change": 0.706,
+        "already water before (permanent water)": 0.204,
+        "outside our terrain-plausible zone (HAND/slope)": 0.09
+      },
+      "buildings": {
+        "reference_destroyed_or_damaged": 500,
+        "reference_possibly_damaged": 225,
+        "ours_potentially_affected": 583,
+        "reference_damaged_found_by_us": 332,
+        "recall": 0.664,
+        "ours_near_any_reference_graded_building": 340,
+        "precision_proxy": 0.583,
+        "tolerance_m": 15
+      },
+      "roads": {
+        "reference_destroyed_or_damaged_km": 20.57,
+        "share_of_it_inside_our_detected_area": 0.816,
+        "ours_affected_km": 26.49,
+        "share_of_ours_near_reference_damage": 0.616
+      },
+      "cutoff_key_breaks": {
+        "in_reference_area": 26,
+        "within_100m_of_reference_damaged_road": 15
+      }
+    },
+    {
+      "product": "EMSR927_AOI05_GRA_PRODUCT_v3",
+      "run": "20261013T084115Z_5dc84a98",
+      "coverage_of_reference_area": 1.0,
+      "reference_event_types": [
+        "Landslide"
+      ],
+      "flood_extent": {
+        "all_confidence": {
+          "iou": 0.675,
+          "precision": 0.909,
+          "recall": 0.724,
+          "f1": 0.806,
+          "ours_km2": 3.811,
+          "reference_km2": 4.789
+        },
+        "medium_and_high": {
+          "iou": 0.677,
+          "precision": 0.923,
+          "recall": 0.718,
+          "f1": 0.808,
+          "ours_km2": 3.723,
+          "reference_km2": 4.789
+        },
+        "high_only": {
+          "iou": 0.645,
+          "precision": 0.94,
+          "recall": 0.673,
+          "f1": 0.784,
+          "ours_km2": 3.433,
+          "reference_km2": 4.789
+        },
+        "own_unet_new_water": {
+          "iou": 0.262,
+          "precision": 0.993,
+          "recall": 0.262,
+          "f1": 0.415,
+          "ours_km2": 1.266,
+          "reference_km2": 4.789
+        }
+      },
+      "missed_reference_pixels_by_reason": {
+        "no significant change": 0.73,
+        "already water before (permanent water)": 0.178,
+        "outside our terrain-plausible zone (HAND/slope)": 0.092
+      },
+      "buildings": {
+        "reference_destroyed_or_damaged": 361,
+        "reference_possibly_damaged": 248,
+        "ours_potentially_affected": 488,
+        "reference_damaged_found_by_us": 264,
+        "recall": 0.731,
+        "ours_near_any_reference_graded_building": 335,
+        "precision_proxy": 0.686,
+        "tolerance_m": 15
+      },
+      "roads": {
+        "reference_destroyed_or_damaged_km": 16.34,
+        "share_of_it_inside_our_detected_area": 0.776,
+        "ours_affected_km": 19.0,
+        "share_of_ours_near_reference_damage": 0.633
+      },
+      "cutoff_key_breaks": {
+        "in_reference_area": 22,
+        "within_100m_of_reference_damaged_road": 12
+      }
+    }
+  ]
+}

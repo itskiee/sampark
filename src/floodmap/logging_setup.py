@@ -2,7 +2,7 @@
 
 Every log line, including exception tracebacks, passes through `redact()` before it is
 written to the console or the log file. Two layers:
-1. exact secret values registered at start-up (e.g. the LLM API key read from .env);
+1. exact secret values registered at start-up (any key a future feature reads from .env);
 2. patterns that look like credentials even if we did not register them
    (private-key blocks, Google OAuth tokens, "api_key=..." style assignments, ...).
 
@@ -28,7 +28,7 @@ _SECRET_PATTERNS: tuple[re.Pattern[str], ...] = (
     re.compile(r"ya29\.[0-9A-Za-z_\-]{20,}"),
     re.compile(r"1//[0-9A-Za-z_\-]{30,}"),
     re.compile(r"AIza[0-9A-Za-z_\-]{35}"),
-    # Common LLM provider key prefixes
+    # Common API key prefixes (defence in depth)
     re.compile(r"sk-[A-Za-z0-9_\-]{16,}"),
     # key=value / key: value assignments for secret-looking names
     re.compile(

@@ -1,0 +1,13 @@
+# Unseen-place test (M9): never used before in this project; robustness + plausibility only.
+# Why chosen: very large lowland flood.
+# The box is approximate, drawn from general geography (towns and rivers), NOT from any
+# published flood or damage map.
+
+name: "Storm Daniel floods, Karditsa-Palamas, Thessaly (Greece)"
+event_date: 2023-09-06
+
+aoi:
+  # [min_lon, min_lat, max_lon, max_lat] in WGS84 degrees
+  bbox: [21.85, 39.3, 22.25, 39.6]
+
+config_overrides: {}

@@ -84,3 +84,21 @@ def test_empty_inputs_are_handled(flood):
     no_flood = flood.iloc[0:0]
     pts = gpd.GeoDataFrame(geometry=[Point(0, 0)], crs=EPSG)
     assert affected_points(pts, no_flood, 20).empty
+
+
+def test_fast_road_cutting_equals_merged_zone_method():
+    """road_pieces_in must give exactly what intersecting with one merged zone gives."""
+    import numpy as np
+    import shapely
+
+    from floodmap.damage import road_pieces_in
+
+    rng = np.random.default_rng(3)
+    zones = np.array([shapely.Point(x, y).buffer(r) for x, y, r in
+                      zip(rng.uniform(0, 2000, 60), rng.uniform(0, 2000, 60),
+                          rng.uniform(20, 150, 60), strict=True)], dtype=object)
+    lines = np.array([shapely.LineString(rng.uniform(0, 2000, (5, 2))) for _ in range(80)],
+                     dtype=object)
+    fast = road_pieces_in(lines, zones)
+    slow = shapely.intersection(lines, shapely.union_all(zones))
+    np.testing.assert_allclose(shapely.length(fast), shapely.length(slow), atol=1e-6)
