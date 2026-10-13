@@ -102,3 +102,28 @@ def test_fast_road_cutting_equals_merged_zone_method():
     fast = road_pieces_in(lines, zones)
     slow = shapely.intersection(lines, shapely.union_all(zones))
     np.testing.assert_allclose(shapely.length(fast), shapely.length(slow), atol=1e-6)
+
+
+def test_road_cutting_with_huge_jagged_flood_polygon_is_unchanged():
+    """Clipping zones to each road's box (speed fix for huge floods, 2026-10-13) must not
+    change any length: a 4,000-vertex polygon with holes, roads inside, across and outside."""
+    import numpy as np
+    import shapely
+
+    from floodmap.damage import road_pieces_in
+
+    rng = np.random.default_rng(11)
+    a = np.linspace(0, 2 * np.pi, 4000, endpoint=False)
+    r = 5000 + 1200 * np.sin(a * 41) + rng.uniform(0, 200, a.size)
+    holes = [shapely.Point(x, y).buffer(150).exterior.coords
+             for x, y in rng.uniform(-2500, 2500, (25, 2))]
+    big = shapely.Polygon(np.column_stack([r * np.cos(a), r * np.sin(a)]), holes)
+    big = shapely.make_valid(big)
+    zones = np.array([big] + [shapely.box(x, y, x + 300, y + 300)
+                              for x, y in rng.uniform(-8000, 8000, (30, 2))], dtype=object)
+    lines = np.array([shapely.LineString(rng.uniform(-8000, 8000, (6, 2))) for _ in range(150)],
+                     dtype=object)
+    fast = road_pieces_in(lines, zones)
+    slow = shapely.intersection(lines, shapely.union_all(zones))
+    assert shapely.length(slow).sum() > 10_000  # really exercises the big polygon
+    np.testing.assert_allclose(shapely.length(fast), shapely.length(slow), atol=1e-6)

@@ -1,15 +1,31 @@
-# Devpost submission text (draft for the owner to paste)
+# Devpost submission: what to paste in each field
 
-Numbers are copied from README.md / validation/results.md (case-study run
-`20261013T103517Z_6d540fab`). Items marked [pending] are filled in after the unseen-place
-campaign and the model decision.
+Numbers come from README.md / validation/results.md (case-study run `20261013T103517Z_6d540fab`).
+Paste field by field.
 
 ---
 
-**Project name:** floodmap
+## Step 2: Project overview
 
-**Tagline:** Where did the flood hit, what was damaged, and who is cut off: from free satellite
-data, for any area and date.
+**Project name** (56 of 60 characters):
+```
+Sampark: who is cut off after a flood, mapped from space
+```
+
+**Elevator pitch** (190 of 200 characters):
+```
+Give it an area and a flood date. Using free Sentinel radar, our own AI flood model and pre-event OpenStreetMap, Sampark maps where the flood hit, what was damaged and who is likely cut off.
+```
+
+**Thumbnail** (Edit thumbnail): `report/devpost/thumbnail.png` (3:2, our own map).
+
+---
+
+## Step 3: Project details
+
+**About the project** (Markdown; copy everything between the two lines):
+
+---------- copy from here ----------
 
 ## Inspiration
 After a Himalayan debris flood, the first hours decide who gets help. District emergency centres,
@@ -19,7 +35,7 @@ every valley every few days, but turning raw radar into those answers takes spec
 a tool that does it for any area and date, explains every result, and never pretends to be certain.
 
 ## What it does
-Give floodmap an area and a flood date. From Sentinel-1 radar, Sentinel-2 (when clear), the
+Give Sampark (सम्पर्क, Hindi and Nepali for "connection") an area and a flood date. From Sentinel-1 radar, Sentinel-2 (when clear), the
 Copernicus DEM and OpenStreetMap as it was before the event, it produces:
 - a **flood and debris map** with a confidence level for every area;
 - **potentially affected buildings, roads, bridges and health facilities**;
@@ -69,7 +85,12 @@ On the August 2026 Bhote Koshi – Trishuli flood: 15.60 km² potentially affect
 - Our model clearly beats a radar threshold rule on held-out test images (IoU 0.649 vs 0.445);
   on a whole flood event it never saw it is level or better (0.54–0.65 across trainings vs
   0.58), and we report honestly that it transfers poorly to gorges.
-- Tested on [pending] places the system had never seen, plus invalid inputs, with no crash.
+- Tested on 13 places the system had never seen, on four continents, plus 8 invalid inputs: no
+  crash, and where data was missing (no radar pair over Porto Alegre 2024, no elevation data
+  over the open sea) it said so in plain words instead of inventing a map. The tests also
+  found and fixed three real problems: huge floods were slow (Storm Daniel: an hour became
+  minutes, same results), one dropped connection could fail a step (now retried), and a
+  dense city (454,718 buildings in Kathmandu) ran out of memory (now batched).
 - Every number in the report, the situation report and the dashboard is read from the system's
   own results, never typed by hand.
 
@@ -80,17 +101,42 @@ geometry) matters as much as the classifier. And for rescue use, the wording ("p
 affected", "likely cut off … needs field verification") matters as much as the map.
 
 ## What's next
-Training on Kuro Siwo's before/after pairs, terrain inputs for the model, automatic alerts when a
+A Sentinel-2-only flood map for places without a radar before/after pair, training on Kuro
+Siwo's before/after pairs, terrain inputs for the model, automatic alerts when a
 new Sentinel-1 pass arrives, and a Nepali-language situation report.
 
-**Built with:** python, sentinel-1, sentinel-2, copernicus-dem, openstreetmap, ohsome, openeo,
-pytorch, onnxruntime, geopandas, rasterio, scipy, streamlit
+## Responsibility
+Educational prototype, not an operational tool; no images of victims. Data: Contains modified
+Copernicus Sentinel data 2026. Produced using Copernicus WorldDEM-30 © DLR e.V. 2010–2014 and
+© Airbus Defence and Space GmbH 2014–2018 provided under COPERNICUS by the European Union and
+ESA; all rights reserved. © OpenStreetMap contributors. Training data: Bonafilia et al., CVPR
+Workshops 2020 (Sen1Floods11). Validation (checking only): European Union, Copernicus Emergency
+Management Service data.
 
-**Links:** GitHub https://github.com/itskiee/floodmap · video [YouTube/Vimeo link]
+---------- copy until here ----------
 
-**Responsibility:** educational prototype, not an operational tool; no images of victims.
-Attributions: Contains modified Copernicus Sentinel data 2026. Produced using Copernicus
-WorldDEM-30 © DLR e.V. 2010–2014 and © Airbus Defence and Space GmbH 2014–2018 provided under
-COPERNICUS by the European Union and ESA; all rights reserved. © OpenStreetMap contributors.
-Training data: Bonafilia et al., CVPR Workshops 2020 (Sen1Floods11). Validation: European Union,
-Copernicus Emergency Management Service data.
+**Built with** (one tag at a time):
+python, pytorch, onnxruntime, streamlit, numpy, scipy, geopandas, shapely, rasterio, matplotlib,
+openeo, copernicus-data-space, sentinel-1, sentinel-2, copernicus-dem, openstreetmap, ohsome
+
+**"Try it out" links:**
+- https://github.com/itskiee/floodmap
+
+**Image gallery** (in this order; 3:2 PNGs, each well under 5 MB, all our own maps with
+attributions): `report/devpost/gallery_01.png` … `gallery_09.png`
+
+**Video demo link:** the YouTube or Vimeo link of the 3-minute video. Set it to **Public** (or
+Unlisted, if the hackathon rules allow it) so the judges can play it.
+
+---
+
+## Step 4: Additional info (judges and organizers only)
+
+- **Team Name:** your choice, e.g. `Sampark` (solo entry: Nandika Agarwal)
+- **Track Selection:** Track B, "Mapping Flood Damage from Space"
+- **GitHub repository link:** `https://github.com/itskiee/floodmap`. It must be **public**
+  before you submit (the field says "public GitHub repository URL").
+- **Team leader email:** your email
+- **Live demo link (optional):** leave empty. The system runs locally (README explains how);
+  hosting it would need our Copernicus login on a server, which we do not do.
+- If more fields appear below these, send a screenshot and I will draft them.

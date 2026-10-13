@@ -22,4 +22,8 @@ focus_bbox: [85.28, 28.10, 85.42, 28.30]
 # Any point near the river works; it is snapped to the channel.
 flood_path_start: [85.401, 28.30]
 
-config_overrides: {}
+# The case study looks back at an event weeks old, so the later radar passes exist: track
+# them (receding water, possible lakes forming). Off by default for a new analysis.
+config_overrides:
+  multidate:
+    enabled: true

@@ -47,3 +47,27 @@ def test_nearest_within_distance():
     assert [i for i, _ in picks[0]] == [0, 1]
     assert [i for i, _ in picks[1]] == [2]  # 1 km away; the others are beyond 3 km
     assert nearest_for(np.array([[0.0, 0.0]]), np.zeros((0, 2)), 3000, 2) == [[]]
+
+
+def test_building_mask_in_batches_equals_one_call():
+    """Batching (memory fix for dense cities, 2026-10-14) must give exactly the same mask."""
+    import numpy as np
+    import shapely
+    from rasterio.features import rasterize
+    from rasterio.transform import from_origin
+
+    from floodmap.stages.landing_zones import near_buildings_mask
+
+    rng = np.random.default_rng(5)
+    geoms = np.array([shapely.box(x, y, x + 15, y + 12) for x, y in rng.uniform(0, 4000, (500, 2))]
+                     + [shapely.Point(x, y) for x, y in rng.uniform(0, 4000, (200, 2))],
+                     dtype=object)
+    transform, shape = from_origin(0, 4000, 20, 20), (200, 200)
+    import geopandas as gpd
+
+    # the ORIGINAL method (geopandas buffer, one call): the 2026-10-14 Trishuli comparison
+    # found 747 -> 746 sites when shapely's default circle resolution was used instead
+    one = rasterize(list(gpd.GeoSeries(geoms).buffer(30)), out_shape=shape,
+                    transform=transform).astype(bool)
+    batched = near_buildings_mask(geoms, 30, shape, transform, batch=37)
+    assert one.sum() > 1000 and np.array_equal(one, batched)

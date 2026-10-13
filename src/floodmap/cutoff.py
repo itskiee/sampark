@@ -99,14 +99,18 @@ def edge_confidence(graph: RoadGraph, flood: gpd.GeoDataFrame, buffer_m: float,
     rank = np.zeros(len(graph.u), dtype=np.int8)
     real = np.flatnonzero(graph.way >= 0)
     if len(real) and not flood.empty:
-        segments = graph.segments()
+        # The tree holds the many short segments and each flood polygon is the (prepared)
+        # query: a huge flood polygon is then prepared once instead of being re-scanned for
+        # every segment (Storm Daniel test, 2026-10-13: > 40 min before, identical result;
+        # "intersects" is symmetric, see test_edge_confidence_matches_reference).
+        seg_tree = shapely.STRtree(graph.segments())
         levels = flood["confidence"].map(CONF_RANK).fillna(0).astype(int)
         for level in (1, 2, 3):
             polys = flood[levels == level]
             if polys.empty:
                 continue
-            tree = shapely.STRtree(polys.geometry.buffer(buffer_m).values)
-            seg_idx, _ = tree.query(segments, predicate="intersects")
+            _, seg_idx = seg_tree.query(polys.geometry.buffer(buffer_m).values,
+                                        predicate="intersects")
             hit = real[np.unique(seg_idx)]
             rank[hit] = np.maximum(rank[hit], level)
     if bridge_rank:

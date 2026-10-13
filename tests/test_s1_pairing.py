@@ -124,3 +124,14 @@ def test_describe_is_json_ready():
     assert info["track"] == "85 ascending" and info["post_delay_days"] == 2
     assert info["post"]["start_utc"].startswith("2026-08-28")
     assert isinstance(datetime.now(UTC), datetime)
+
+
+def test_no_scene_message_explains_dates_outside_sentinel1():
+    import pytest
+
+    for day, words in ((date(2012, 6, 1), "before Sentinel-1"),
+                       (date.today() + timedelta(days=30), "in the future")):
+        with pytest.raises(NoPairError, match=words):
+            rank_pairs([], day, AOI, EPSG, pre_window_days=36, post_window_days=24,
+                       max_pre_images=3, min_coverage=0.5, include_event_day_as_post=False,
+                       same_pass_minutes=10)

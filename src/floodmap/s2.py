@@ -60,7 +60,7 @@ def choose_dates(scenes: list[S2Scene], event_date: date, aoi_geom, utm_epsg: in
 
 def fetch_pair(conn, aoi, pre_day: date, post_day: date, resolution: float, out_path):
     """One CDSE request: both days, mosaicked per day, merged into one GeoTIFF."""
-    from floodmap.cdse_client import load_collection
+    from floodmap.cdse_client import download, load_collection
 
     w, s, e, n = aoi.bounds
     extent = {"west": w, "south": s, "east": e, "north": n}
@@ -76,10 +76,7 @@ def fetch_pair(conn, aoi, pre_day: date, post_day: date, resolution: float, out_
         return cube.rename_labels("bands", [f"{prefix}_{b}" for b in BANDS])
 
     merged = day_cube(pre_day, "pre").merge_cubes(day_cube(post_day, "post"))
-    part = out_path.with_name(out_path.name + ".part")
-    merged.download(str(part), format="GTiff")
-    part.replace(out_path)
-    return out_path
+    return download(merged, out_path)  # safe retries for busy server / broken connection
 
 
 def read_pair(path) -> tuple[dict, dict, object, object]:

@@ -44,6 +44,10 @@ from floodmap.stages.s1 import threshold_params  # noqa: E402
 from floodmap.thresholds import classify  # noqa: E402
 
 VERIFY = "possible lake forming: verify (e.g. a debris dam); not confirmed"
+NOT_REQUESTED = ("Not requested: tracking later satellite passes (is the water going down, is a "
+                 "lake forming behind debris?) is an optional follow-up that adds about 4-8 "
+                 "minutes. Switch it on with 'Track later satellite passes' in the dashboard or "
+                 "--later-passes on the command line.")
 
 
 def later_passes(ctx: StageContext, track: dict, post_start: datetime):
@@ -68,6 +72,8 @@ def run_multidate(ctx: StageContext) -> StageResult:
     from floodmap.stages.confidence import _read_band_by_name
 
     cfg, aoi, s1cfg = ctx.config.multidate, ctx.aoi, ctx.config.s1
+    if not cfg.enabled:
+        return StageResult("multidate", StageStatus.SKIPPED, NOT_REQUESTED)
     s1 = ctx.results.stages["s1"].outputs
     track = s1["tracks"][0]
     pair = track["pair"]

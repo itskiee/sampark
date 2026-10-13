@@ -14,7 +14,6 @@ from __future__ import annotations
 
 import logging
 import math
-import time
 from dataclasses import dataclass
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
@@ -25,7 +24,7 @@ from rasterio.warp import Resampling, reproject
 from scipy import ndimage
 
 from floodmap.aoi import AOI
-from floodmap.cdse_client import load_collection
+from floodmap.cdse_client import download, load_collection
 from floodmap.s1_pairing import Acquisition, TrackPair, to_utm
 
 log = logging.getLogger("floodmap.s1")
@@ -46,26 +45,10 @@ def _openeo_time(when) -> str:
     return when.astimezone(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
-def _download(cube, out_path: Path, max_wait_retries: int = 6) -> Path:
-    """Synchronous download; waits and retries when CDSE answers 429 (too many requests).
-
-    The file is written under a temporary name and renamed only when complete, so an
-    interrupted download never looks like a finished one (safe resume).
-    """
-    part = out_path.with_name(out_path.name + ".part")
-    for attempt in range(max_wait_retries + 1):
-        try:
-            cube.download(str(part), format="GTiff")
-            part.replace(out_path)
-            return out_path
-        except Exception as exc:
-            if getattr(exc, "http_status_code", None) != 429 or attempt == max_wait_retries:
-                part.unlink(missing_ok=True)
-                raise
-            wait = 10 * (attempt + 1)
-            log.warning("CDSE busy (429 Too Many Requests); retrying in %ss", wait)
-            time.sleep(wait)
-    raise RuntimeError("unreachable")
+def _download(cube, out_path: Path) -> Path:
+    """Synchronous download with safe retries (busy server, broken connection): see
+    `cdse_client.download`."""
+    return download(cube, out_path)
 
 
 def _midnight(day) -> datetime:

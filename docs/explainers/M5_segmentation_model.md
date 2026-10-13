@@ -140,6 +140,7 @@ Each cell is IoU / precision / recall / F1.
 | Bigger | 4× parameters (base 32), 50 epochs: the classic cure for underfitting | 0.6285 | 0.658 | 0.536 |
 | V1 | weight averaging (EMA of the weights, warm-up) | 0.6247 | 0.652 | 0.585 |
 | V2 | V1 + random brightness shifts ±1.5 dB (sensor/region differences) | 0.6242 | 0.654 | 0.590 |
+| Ensemble | average of current, V1, V2 (no training; `scripts/eval_ensemble.py`) | 0.6281 | 0.654 | 0.607 |
 
 - **Decision: keep the current model.** No candidate passes the rule.
 - **What this shows:**

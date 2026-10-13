@@ -84,8 +84,9 @@ def _stages(r: dict) -> dict:
             for k, v in r["stages"].items()}
 
 
-def run_place(path: Path) -> dict:
-    code, stdout, stderr, secs = _floodmap(["--event", str(path.relative_to(REPO_ROOT))])
+def run_place(path: Path, later_passes: bool = False) -> dict:
+    code, stdout, stderr, secs = _floodmap(["--event", str(path.relative_to(REPO_ROOT))]
+                                           + (["--later-passes"] if later_passes else []))
     rec = {"place": path.stem, "exit_code": code, "wall_seconds": secs,
            "traceback": "Traceback (most recent call last)" in stderr}
     m = re.search(r"^Run (\S+) ", stdout, re.MULTILINE)
@@ -103,10 +104,16 @@ def run_invalid(label: str, args: list[str]) -> dict:
     code, stdout, stderr, secs = _floodmap(args)
     text = (stderr.strip() or stdout.strip()).splitlines()
     statuses = re.findall(r"^\s{2}(\w+)\s+(ok|partial|skipped|failed)\s", stdout, re.MULTILINE)
+    answer = text[-1] if text else ""
+    m = re.search(r"^Run (\S+) ", stdout, re.MULTILINE)
+    if m:  # the run went ahead: the answer is the first stage that could not do its work
+        r = json.loads((REPO_ROOT / "outputs" / m.group(1) / "results.json").read_text("utf-8"))
+        bad = [v for v in r["stages"].values() if v["status"] == "failed"]
+        answer = (f"run completed; {bad[0]['name']} failed: {bad[0]['message']}" if bad
+                  else "run completed")
     return {"case": label, "args": " ".join(args), "exit_code": code, "wall_seconds": secs,
             "traceback": "Traceback (most recent call last)" in stderr + stdout,
-            "answer": (text[-1] if text else "")[:300],
-            "stage_statuses": dict(statuses)}
+            "answer": answer[:300], "stage_statuses": dict(statuses)}
 
 
 def write_markdown(data: dict) -> None:
@@ -143,9 +150,16 @@ def write_markdown(data: dict) -> None:
             f"| {f(k['buildings_potentially_affected'])} "
             f"({f(k.get('buildings_high_confidence'))}) / {f(k['buildings_in_area'])} "
             f"| {f(k['settlements_likely_cut_off'])} / {f(k['settlements_assessed'])} |")
-    lines += ["", "## Stages that were not ok", ""]
+    notes = [f"- **{r['place']}**: {r['note']}" for r in data["places"].values() if r.get("note")]
+    if notes:
+        lines += ["", "## Notes", "", *notes]
+    lines += ["", "## Stages that were not ok", "",
+              "(The flood-path bonus is skipped everywhere: no upstream start point was given in "
+              "these test files. It is not listed below.)", ""]
     for rec in data["places"].values():
         for name, s in (rec.get("stages") or {}).items():
+            if name == "flood_path" and "No upstream start point" in s["message"]:
+                continue
             if s["status"] != "ok":
                 why = "; ".join(s.get("warnings") or [])
                 lines.append(f"- **{rec['place']} / {name}** ({s['status']}): {s['message']}"
@@ -165,6 +179,8 @@ def main() -> int:
     ap.add_argument("--only", nargs="*", help="place keys (file names without .yaml)")
     ap.add_argument("--invalid-only", action="store_true")
     ap.add_argument("--skip-invalid", action="store_true")
+    ap.add_argument("--later-passes", action="store_true",
+                    help="also track later passes (the first campaign ran with them on)")
     ap.add_argument("--refresh-only", action="store_true",
                     help="recompute key numbers from the saved runs and rewrite the summary")
     args = ap.parse_args()
@@ -179,7 +195,7 @@ def main() -> int:
             if res.is_file():
                 r = json.loads(res.read_text("utf-8"))
                 rec["key"], rec["stages"] = _key_numbers(r), _stages(r)
-        store.write_text(json.dumps(data, indent=1), encoding="utf-8")
+        store.write_text(json.dumps(data, indent=1) + chr(10), encoding="utf-8")
         write_markdown(data)
         print(f"refreshed {OUT / 'unseen_places.md'}")
         return 0
@@ -194,8 +210,8 @@ def main() -> int:
             files = [known[k] for k in args.only]
         for path in files:
             print(f"--- {path.stem}", flush=True)
-            data["places"][path.stem] = rec = run_place(path)
-            store.write_text(json.dumps(data, indent=1), encoding="utf-8")
+            data["places"][path.stem] = rec = run_place(path, args.later_passes)
+            store.write_text(json.dumps(data, indent=1) + chr(10), encoding="utf-8")
             print(f"    exit {rec['exit_code']} in {rec['wall_seconds']} s; "
                   + (", ".join(f"{k}={v['status']}" for k, v in rec["stages"].items())
                      if "stages" in rec else rec.get("error", "")), flush=True)
@@ -204,7 +220,7 @@ def main() -> int:
             data["invalid"][label] = rec = run_invalid(label, cli_args)
             print(f"--- invalid: {label}: exit {rec['exit_code']}, traceback "
                   f"{rec['traceback']}: {rec['answer'][:120]}", flush=True)
-            store.write_text(json.dumps(data, indent=1), encoding="utf-8")
+            store.write_text(json.dumps(data, indent=1) + chr(10), encoding="utf-8")
     write_markdown(data)
     print(f"wrote {OUT / 'unseen_places.md'}")
     return 0

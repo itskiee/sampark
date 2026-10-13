@@ -166,10 +166,15 @@ def test_full_pipeline_offline(tmp_path, offline_world):
     start = (85.35, 28.215)
     results = run_pipeline(AOI_BBOX, EVENT, config, event_name="synthetic valley",
                            stages=["s1", "s2", "terrain", "confidence", "osm", "flood_path",
-                                   "damage", "cutoff", "priority", "landing_zones", "report",
-                                   "exports"],
+                                   "damage", "cutoff", "priority", "landing_zones",
+                                   "multidate", "report", "exports"],
                            focus_bbox=(85.33, 28.14, 85.37, 28.20), flood_path_start=start)
     st = results.stages
+    # later passes are an optional follow-up: off by default, with a clear explanation
+    from floodmap.stages.multidate import NOT_REQUESTED
+
+    assert st["multidate"].status == StageStatus.SKIPPED
+    assert st["multidate"].message == NOT_REQUESTED
     assert st["s1"].status == StageStatus.OK, st["s1"].message
     assert len(st["s1"].outputs["tracks"]) == 2  # ascending + descending
     assert st["s2"].status == StageStatus.SKIPPED and "monsoon" in st["s2"].message

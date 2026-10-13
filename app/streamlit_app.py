@@ -19,7 +19,7 @@ import streamlit as st
 from floodmap import attribution
 from floodmap.config import REPO_ROOT, load_config, load_event
 
-st.set_page_config(page_title="floodmap — educational prototype", layout="wide")
+st.set_page_config(page_title="Sampark — educational prototype", layout="wide")
 
 
 # --- helpers -------------------------------------------------------------------------------
@@ -62,6 +62,33 @@ def download(run: Path, rel: str | None, label: str, mime: str) -> None:
                            key=f"dl-{rel}")
 
 
+def start_analysis(aoi, event_date, name, focus, flood_start, event, later_passes: bool) -> None:
+    """Run the pipeline with live progress, then show the new run (one code path for the
+    sidebar and for 'Track later passes for this area')."""
+    from floodmap.aoi import AOIError
+    from floodmap.config import ConfigError
+    from floodmap.pipeline import run_pipeline
+
+    with st.status("Running the analysis (radar, terrain, OSM, damage, cut-off)…",
+                   expanded=True) as status:
+        def progress(stage_name: str, message: str) -> None:
+            status.write(f"**{stage_name}** — {message[:200]}")
+
+        try:
+            config = load_config(event, overrides={"multidate": {"enabled": later_passes}})
+            results = run_pipeline(aoi, event_date, config, event_name=name,
+                                   progress=progress, focus_bbox=focus,
+                                   flood_path_start=flood_start)
+            st.session_state["run"] = str(results.run_dir)
+            status.update(label="Analysis finished", state="complete")
+        except (AOIError, ConfigError, ValueError) as exc:
+            status.update(label="Input problem", state="error")
+            st.error(str(exc))
+            return
+    st.session_state["show_runs"] = True
+    st.rerun()
+
+
 def footer(res: dict | None) -> None:
     text = attribution.footer_text()
     if res and stage(res, "segmentation"):
@@ -71,9 +98,10 @@ def footer(res: dict | None) -> None:
 
 
 # --- sidebar: new analysis or previous run --------------------------------------------------
-st.sidebar.title("floodmap")
-st.sidebar.caption("Flood damage and cut-off settlements from space. Educational prototype — "
-                   "not an operational tool.")
+st.sidebar.title("Sampark")
+st.sidebar.caption("Who is cut off after a flood, mapped from space (\"sampark\" means "
+                   "connection in Hindi and Nepali; code package: floodmap). Educational "
+                   "prototype — not an operational tool.")
 if st.session_state.pop("show_runs", False):  # after a finished analysis (set before drawing)
     st.session_state["mode"] = "Open a previous run"
 mode = st.sidebar.radio("Mode", ["Open a previous run", "New analysis"], key="mode")
@@ -83,7 +111,7 @@ if mode == "New analysis":
     events = sorted(ev_dir.rglob("*.yaml"))  # includes configs/events/unseen/ test places
     choice = st.sidebar.selectbox("Area", ["Custom area"] + [
         e.relative_to(ev_dir).with_suffix("").as_posix() for e in events])
-    flood_start = None
+    flood_start, ev = None, None
     if choice == "Custom area":
         c1, c2 = st.sidebar.columns(2)
         min_lon = c1.number_input("min lon", value=85.28, format="%.4f")
@@ -109,28 +137,13 @@ if mode == "New analysis":
         flood_start = (lon, lat)
     else:
         flood_start = None
+    # optional follow-up (owner decision 2026-10-13): off for a new area, on in event files
+    # that ask for it (the case study); each event's own settings are used
+    track_later = st.sidebar.checkbox(
+        "Track later satellite passes: is the water going down, is a lake forming? "
+        "(adds about 4–8 min)", value=load_config(ev).multidate.enabled)
     if st.sidebar.button("Run analysis", type="primary"):
-        from floodmap.aoi import AOIError
-        from floodmap.config import ConfigError
-        from floodmap.pipeline import run_pipeline
-
-        with st.status("Running the analysis (radar, terrain, OSM, damage, cut-off)…",
-                       expanded=True) as status:
-            def progress(stage_name: str, message: str) -> None:
-                status.write(f"**{stage_name}** — {message[:200]}")
-
-            try:
-                results = run_pipeline(aoi, event_date, load_config(), event_name=name,
-                                       progress=progress, focus_bbox=focus,
-                                       flood_path_start=flood_start)
-                st.session_state["run"] = str(results.run_dir)
-                status.update(label="Analysis finished", state="complete")
-            except (AOIError, ConfigError, ValueError) as exc:
-                status.update(label="Input problem", state="error")
-                st.error(str(exc))
-        if "run" in st.session_state:
-            st.session_state["show_runs"] = True
-            st.rerun()
+        start_analysis(aoi, event_date, name, focus, flood_start, ev, track_later)
 
 runs = list_runs()
 if not runs:
@@ -281,6 +294,20 @@ with tabs[6]:
             st.warning("Growing water bodies flagged as POSSIBLE lakes forming (e.g. behind "
                        "debris): verify.")
             st.dataframe(pd.DataFrame(o["possible_lakes"]), hide_index=True, width="stretch")
+    elif ((res.get("stages", {}).get("multidate") or {}).get("message") or "").startswith(
+            "Not requested"):
+        st.info("**Later satellite passes were not tracked for this analysis** (an optional "
+                "follow-up, so the first answer comes sooner). Tracking compares the later "
+                "Sentinel-1 passes of the same orbit track with the same before-image: is the "
+                "water going down, is new water ponding, is a lake forming behind debris (a "
+                "second flood hazard)? It adds about 4–8 minutes; everything already "
+                "downloaded for this area is reused.")
+        if st.button("Track later passes for this area", type="primary"):
+            fp_out = (res.get("stages", {}).get("flood_path") or {}).get("outputs") or {}
+            start = fp_out.get("start")
+            start_analysis(res["aoi"]["bbox"], date.fromisoformat(res["event_date"]),
+                           res.get("event_name", "custom area"), None,
+                           (start["lon"], start["lat"]) if start else None, None, True)
     else:
         missing(res, "multidate")
 

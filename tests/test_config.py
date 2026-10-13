@@ -85,3 +85,14 @@ def test_absolute_paths_are_kept():
     cfg = load_config()
     absolute = Path(REPO_ROOT.anchor) / "somewhere"
     assert cfg.resolve(absolute) == absolute
+
+
+def test_later_passes_off_by_default_on_for_the_case_study():
+    """Owner decision 2026-10-13: a new analysis answers where/what/who first; the case study
+    (weeks after the event) keeps tracking later passes."""
+    from floodmap.config import REPO_ROOT, load_config, load_event
+
+    assert load_config().multidate.enabled is False
+    event = load_event(REPO_ROOT / "configs" / "events" / "trishuli_2026.yaml")
+    assert load_config(event).multidate.enabled is True
+    assert load_config(overrides={"multidate": {"enabled": True}}).multidate.enabled is True

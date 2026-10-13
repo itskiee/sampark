@@ -108,6 +108,10 @@ class TrackPair:
         }
 
 
+# Sentinel-1A operational phase began in early October 2014 (routine data before: commissioning)
+SENTINEL1_START = date(2014, 10, 3)
+
+
 class NoPairError(RuntimeError):
     """No usable same-track pre/post pair; message is meant for the user."""
 
@@ -182,9 +186,15 @@ def rank_pairs(
     """All usable same-track pairs, best first. Raises NoPairError if there are none."""
     usable = [s for s in scenes if s.mode == "IW" and "VV" in s.polarizations]
     if not usable:
+        why = ""
+        if event_date < SENTINEL1_START:
+            why = (f" The flood date {event_date} is before Sentinel-1 began routine "
+                   f"observations ({SENTINEL1_START:%B %Y}).")
+        elif event_date >= date.today():
+            why = f" The flood date {event_date} is today or in the future: no image after it yet."
         raise NoPairError(
             "No Sentinel-1 IW scenes with VV polarisation over this area in the search window."
-        )
+            + why)
     acqs = [with_coverage(a, aoi_geom, utm_epsg) for a in merge_slices(usable, same_pass_minutes)]
     acqs = [a for a in acqs if a.coverage >= min_coverage]
 

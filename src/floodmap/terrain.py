@@ -24,7 +24,7 @@ import rasterio
 from rasterio.warp import Resampling, reproject
 
 from floodmap.aoi import AOI
-from floodmap.cdse_client import load_collection
+from floodmap.cdse_client import download, load_collection
 from floodmap.s1_pairing import to_utm
 
 log = logging.getLogger("floodmap.terrain")
@@ -60,10 +60,7 @@ def fetch_dem(conn, aoi: AOI, buffer_m: float, resolution: float, out_path: Path
                            spatial_extent={"west": w, "south": s, "east": e, "north": n})
     cube = cube.max_time().resample_spatial(resolution=resolution, projection=aoi.utm_epsg,
                                             method="bilinear")
-    part = out_path.with_name(out_path.name + ".part")
-    cube.download(str(part), format="GTiff")
-    part.replace(out_path)
-    return out_path
+    return download(cube, out_path)  # safe retries for busy server / broken connection
 
 
 def slope_and_gradients(dem: np.ndarray, res: float) -> tuple[np.ndarray, np.ndarray, np.ndarray]:

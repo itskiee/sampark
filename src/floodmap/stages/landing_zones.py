@@ -13,17 +13,32 @@ from __future__ import annotations
 import geopandas as gpd
 import numpy as np
 import rasterio
+import shapely
 from matplotlib.lines import Line2D
 from rasterio.features import rasterize
 from shapely.geometry import LineString, Point
 
 from floodmap.attribution import write_osm_license
+from floodmap.damage import subdivide
 from floodmap.landing_zones import candidates, nearest_for, suitable_mask
 from floodmap.pipeline import StageContext, register_stage
 from floodmap.results import StageResult, StageStatus
 from floodmap.stages.osm import load_layers
 
 VERIFY = "candidate only: verify trees, power lines, ground and approach on site"
+BUILDING_BATCH = 20_000  # buildings rasterised per call (memory; result is identical)
+
+
+def near_buildings_mask(geoms, buffer_m: float, shape, transform,
+                        batch: int = BUILDING_BATCH) -> np.ndarray:
+    """Pixels within `buffer_m` of any building, rasterised in batches: one call with every
+    buffered building needed > 6 GB for Kathmandu's 454,718 buildings (2026-10-14). The
+    union of the batches is exactly the same mask (test_landing_zones)."""
+    mask = np.zeros(shape, bool)
+    for i in range(0, len(geoms), batch):
+        part = shapely.buffer(geoms[i:i + batch], buffer_m, quad_segs=16)  # = GeoSeries.buffer
+        mask |= rasterize(part, out_shape=shape, transform=transform).astype(bool)
+    return mask
 
 
 @register_stage("landing_zones", requires=("cutoff", "terrain", "confidence", "osm"),
@@ -48,9 +63,9 @@ def run_landing_zones(ctx: StageContext) -> StageResult:
     slope = _read_band_by_name(terr["terrain"], "slope_deg", shape, transform, crs, False)
     dem = _read_band_by_name(terr["hydrology"], "dem_m", shape, transform, crs, False)
     buildings = load_layers(ctx.results.stages["osm"].outputs)["buildings"]
-    near_b = rasterize(list(buildings.geometry.buffer(cfg.clear_of_buildings_m)),
-                       out_shape=shape, transform=transform).astype(bool) \
-        if not buildings.empty else np.zeros(shape, bool)
+    near_b = near_buildings_mask(buildings.geometry.values, cfg.clear_of_buildings_m, shape,
+                                 transform)
+    del buildings
     res = abs(transform.a)
     ok = suitable_mask(slope, final, near_b, cfg.max_slope_deg)
     cands = candidates(ok, res, cfg.min_clear_square_m)
@@ -59,7 +74,9 @@ def run_landing_zones(ctx: StageContext) -> StageResult:
 
     flood = gpd.read_file(conf_out["files"]["polygons"])
     flood = flood.to_crs(aoi.utm_epsg) if not flood.empty else flood
-    flood_zone = flood.geometry.union_all() if not flood.empty else None
+    # small pieces that exactly tile the flood area: a walk crosses the flood iff it touches
+    # a piece (no slow merge of a huge flood into one shape; Storm Daniel test 2026-10-13)
+    flood_tree = shapely.STRtree(subdivide(flood.geometry.values)) if not flood.empty else None
     sxy = np.column_stack([targets.geometry.x, targets.geometry.y])
     # look a bit wider than needed, then prefer candidates whose walk avoids flood/debris
     picks = nearest_for(sxy, cand_xy, cfg.max_distance_m, 4 * cfg.per_settlement)
@@ -69,7 +86,8 @@ def run_landing_zones(ctx: StageContext) -> StageResult:
         for ci, dist in options:
             r, c, square = cands[ci]
             walk = LineString([(s.geometry.x, s.geometry.y), tuple(cand_xy[ci])])
-            crosses = bool(flood_zone is not None and walk.intersects(flood_zone))
+            crosses = bool(flood_tree is not None
+                           and len(flood_tree.query(walk, predicate="intersects")))
             z_lz = float(dem[r, c]) if np.isfinite(dem[r, c]) else None
             sr, sc = ~transform @ (s.geometry.x, s.geometry.y)
             sr, sc = int(sc), int(sr)

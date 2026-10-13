@@ -72,6 +72,7 @@ def road_pieces_in(lines: np.ndarray, zones: np.ndarray) -> np.ndarray:
     out = np.array([shapely.LineString()] * len(lines), dtype=object)
     if len(lines) == 0 or len(zones) == 0:
         return out
+    zones = subdivide(zones)
     li, zi = shapely.STRtree(zones).query(lines, predicate="intersects")
     order = np.argsort(li, kind="stable")
     li, zi = li[order], zi[order]
@@ -79,6 +80,43 @@ def road_pieces_in(lines: np.ndarray, zones: np.ndarray) -> np.ndarray:
     for s, e in zip(starts, np.r_[starts[1:], len(li)], strict=True):
         out[li[s]] = shapely.intersection(lines[li[s]], shapely.union_all(zones[zi[s:e]]))
     return out
+
+
+def subdivide(zones: np.ndarray, max_vertices: int = 256) -> np.ndarray:
+    """Split every polygon with more than `max_vertices` into pieces that exactly tile it
+    (halving its box again and again, like PostGIS ST_Subdivide).
+
+    Why: a road must then be overlaid with a few small pieces, not with a whole huge flood
+    polygon (Storm Daniel test 2026-10-13: 89,114 polygons, 1 million vertices, about 0.8 s
+    per road and roughly an hour for the damage stage before). The pieces cover exactly the
+    same area, so every result is unchanged (tests compare with the merged-zone method)."""
+    out: list = []
+    for z in zones:
+        _halve(z, max_vertices, out, depth=0)
+    return np.array(out, dtype=object)
+
+
+def _halve(geom, max_vertices: int, out: list, depth: int) -> None:
+    if geom.is_empty:
+        return
+    if shapely.get_num_coordinates(geom) <= max_vertices or depth >= 24:
+        out.append(geom)
+        return
+    x0, y0, x1, y1 = geom.bounds
+    if x1 - x0 >= y1 - y0:
+        xm = (x0 + x1) / 2
+        boxes = ((x0, y0, xm, y1), (xm, y0, x1, y1))
+    else:
+        ym = (y0 + y1) / 2
+        boxes = ((x0, y0, x1, ym), (x0, ym, x1, y1))
+    for b in boxes:
+        try:
+            part = shapely.clip_by_rect(geom, *b)
+            if not part.is_empty and not part.is_valid:  # rectangle clipping can be "dirty"
+                part = shapely.make_valid(part)
+        except shapely.errors.GEOSException:  # degenerate input: exact (slower) overlay
+            part = shapely.intersection(shapely.make_valid(geom), shapely.box(*b))
+        _halve(part, max_vertices, out, depth + 1)
 
 
 def affected_roads(roads: gpd.GeoDataFrame, flood: gpd.GeoDataFrame, buffer_m: float

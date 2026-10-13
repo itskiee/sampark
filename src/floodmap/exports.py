@@ -144,8 +144,8 @@ def write_package(layers: dict[str, gpd.GeoDataFrame], out_dir: Path, run_id: st
 
 def readme(results_meta: dict, layers: dict[str, gpd.GeoDataFrame]) -> list[str]:
     lines = [
-        "floodmap field package",
-        "======================",
+        "Sampark field package (floodmap)",
+        "================================",
         attribution.DISCLAIMER,
         "",
         f"Event: {results_meta.get('event_name')} | flood date {results_meta.get('event_date')}"

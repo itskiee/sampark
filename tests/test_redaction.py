@@ -97,3 +97,22 @@ def test_stage_error_with_secret_is_redacted_in_results(tmp_config, clean_regist
     text = (results.run_dir / "results.json").read_text(encoding="utf-8")
     assert FAKE_KEY not in text
     assert json.loads(text)["stages"]["s1"]["status"] == "failed"
+
+
+def test_console_shows_no_traceback_but_the_log_file_keeps_it():
+    """Users see one line + where the details are; the log file keeps the full traceback."""
+    from floodmap.logging_setup import ConsoleFormatter
+
+    console, full = io.StringIO(), io.StringIO()
+    logger = logging.getLogger("test.console.short")
+    h_console, h_file = logging.StreamHandler(console), logging.StreamHandler(full)
+    h_console.setFormatter(ConsoleFormatter("%(levelname)s %(message)s"))
+    h_file.setFormatter(RedactingFormatter("%(message)s"))
+    logger.handlers, logger.propagate = [h_file, h_console], False  # file formats first
+    try:
+        raise ValueError(f"boom {FAKE_KEY}")
+    except ValueError:
+        logger.error("Stage terrain failed [error abc12345]", exc_info=True)
+    assert "Traceback" not in console.getvalue()
+    assert "details in logs/floodmap.log" in console.getvalue()
+    assert "Traceback" in full.getvalue() and FAKE_KEY not in full.getvalue()

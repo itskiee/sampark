@@ -35,7 +35,7 @@ NAVY, RED, GREY = "#16324f", "#b2182b", "#555555"
 # (start s, end s, what to show, narration)
 SEGMENTS = [
     (0, 12, "Title card (title_card.png).",
-     "Floodmap. Give it an area and a flood date, and it tells rescue teams where the flood "
+     "Sampark. Give it an area and a flood date, and it tells rescue teams where the flood "
      "hit, what was damaged, and who is cut off, from free satellite data only."),
     (12, 30, "Dashboard: open the Trishuli case-study run; overview map.",
      "This is the August 2026 debris flood in Nepal's Bhote Koshi and Trishuli valley. The "
@@ -56,11 +56,11 @@ SEGMENTS = [
      "163 bridges are potentially affected. Who is cut off? Comparing the road network before "
      "and after finds 215 settlements likely cut off, each with the likely break and its "
      "distance, and a reminder: needs field verification."),
-    (100, 120, "Tabs 'Rescue priorities' and 'Landing zones'; then the situation report PDF "
-               "and the field-package zip in the download list.",
-     "Settlements are ranked for rescue, with helicopter landing-zone candidates nearby. The "
-     "system also writes a one-page situation report, and a field package for GPS units and "
-     "phones."),
+    (100, 120, "Tabs 'Rescue priorities' and 'Landing zones'; 'Later passes' (case study: "
+               "possible lakes forming); then the situation report PDF and the field package.",
+     "Settlements are ranked for rescue, with helicopter landing-zone candidates nearby. "
+     "Later satellite passes show whether a lake is forming behind debris. And it writes a "
+     "one-page situation report and a field package for GPS units and phones."),
     (120, 142, "Tab 'AI model': the model's water map and its held-out scores.",
      "Our AI component is our own flood segmentation model, trained from scratch on "
      "Sen1Floods11. On held-out test images it clearly beats a simple threshold rule. "
@@ -76,7 +76,7 @@ SEGMENTS = [
      "Satellites pass every few days, so this maps the damage. It cannot warn minutes before "
      "a glacier collapse."),
     (175, 180, "End card (end_card.png), hold until the end.",
-     "Floodmap is an educational prototype. Always verify on the ground."),
+     "Sampark is an educational prototype. Always verify on the ground."),
 ]
 
 
@@ -159,7 +159,8 @@ def main() -> int:
     (HERE / "captions.srt").write_text(captions(segs), encoding="utf-8")
 
     card(HERE / "title_card.png", [
-        ("floodmap", 72, NAVY, "bold"),
+        ("Sampark", 72, NAVY, "bold"),
+        ("\"connection\" in Hindi and Nepali", 22, NAVY, "normal"),
         ("Where did the flood hit?  What was damaged?  Who is cut off?", 30, NAVY, "normal"),
         ("From free satellite data: Sentinel-1, Sentinel-2, Copernicus DEM and "
          "pre-event OpenStreetMap", 22, GREY, "normal"),
@@ -170,7 +171,7 @@ def main() -> int:
         ("EDUCATIONAL PROTOTYPE — NOT AN OPERATIONAL TOOL", 26, RED, "bold"),
     ])
     card(HERE / "end_card.png", [
-        ("floodmap · github.com/itskiee/floodmap", 34, NAVY, "bold"),
+        ("Sampark · github.com/itskiee/floodmap", 34, NAVY, "bold"),
         (attribution.DISCLAIMER, 18, RED, "bold"),
         ("", 10, GREY, "normal"),
         *[(a, 17, "black", "normal") for a in attribution.DATA_ATTRIBUTIONS],

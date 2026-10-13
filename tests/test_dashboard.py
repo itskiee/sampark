@@ -66,3 +66,23 @@ def test_dashboard_renders_partial_run(isolated_outputs):
     assert at.title[0].value == "test valley"
     assert any("1.25 km²" in m.value for m in at.metric)
     assert any("Needs stage(s) ['osm']" in i.value for i in at.info)
+
+
+def test_later_passes_tab_offers_the_follow_up_when_not_requested(isolated_outputs):
+    """Later passes are off for a new analysis: the tab explains why and offers one button."""
+    from floodmap.stages.multidate import NOT_REQUESTED
+
+    run = isolated_outputs / "20261014T000000Z_test"
+    run.mkdir(parents=True)
+    results = {
+        "run_id": run.name, "event_name": "test valley", "event_date": "2026-08-26",
+        "aoi": {"bbox": [85.3, 28.1, 85.4, 28.2], "area_km2": 108.0},
+        "stages": {"multidate": {"status": "skipped", "message": NOT_REQUESTED, "outputs": {}}},
+        "attributions": [], "disclaimer": "",
+    }
+    (run / "results.json").write_text(json.dumps(results), encoding="utf-8")
+    at = _app().run()
+    assert not at.exception, at.exception
+    assert any("were not tracked" in i.value for i in at.info)
+    assert any(b.label == "Track later passes for this area" for b in at.button)
+    assert any("Sampark" in t.value for t in at.sidebar.title)

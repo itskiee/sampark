@@ -21,6 +21,11 @@ log = logging.getLogger("floodmap.net")
 
 USER_AGENT = f"floodmap/{__version__} (Multimodal AI Hackathon 2026 educational prototype)"
 _RETRY_STATUS = {429, 500, 502, 503, 504}
+# Broken / timed-out connections worth retrying; shared with cdse_client.download so that
+# only this module imports the HTTP library (data-rules scanner).
+TRANSIENT_NETWORK_ERRORS = (requests.exceptions.ConnectionError,
+                            requests.exceptions.ChunkedEncodingError,
+                            requests.exceptions.Timeout)
 
 
 class NetworkError(RuntimeError):

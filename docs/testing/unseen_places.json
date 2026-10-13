@@ -1,0 +1,1598 @@
+{
+ "places": {
+  "pokhara_control_2025": {
+   "place": "pokhara_control_2025",
+   "exit_code": 0,
+   "wall_seconds": 690.6,
+   "traceback": false,
+   "run_id": "20261013T114027Z_8ba47607",
+   "name": "No-flood control, Pokhara (Nepal), dry season",
+   "event_date": "2025-01-15",
+   "bbox": [
+    83.9,
+    28.15,
+    84.1,
+    28.3
+   ],
+   "stages": {
+    "s1": {
+     "status": "partial",
+     "seconds": 198.64,
+     "message": "19 descending + 158 ascending; primary after 2025-01-18: water-like 0.82 km\u00b2, rough/debris-like 1.15 km\u00b2 (before terrain masks)",
+     "warnings": [
+      "track 19: only 2 pre-event image(s) on this track"
+     ]
+    },
+    "terrain": {
+     "status": "ok",
+     "seconds": 75.71,
+     "message": "plausible flood zone 62.67 km\u00b2 (18% of area), permanent water 5.821 km\u00b2",
+     "warnings": []
+    },
+    "s2": {
+     "status": "ok",
+     "seconds": 59.2,
+     "message": "Sentinel-2 2025-01-14 \u2192 2025-01-19: 94% clear; new water 0.10 km\u00b2, vegetation stripped 0.08 km\u00b2",
+     "warnings": []
+    },
+    "confidence": {
+     "status": "ok",
+     "seconds": 4.05,
+     "message": "potentially affected 1.56 km\u00b2 (high 0.23, medium 0.29, low 1.04) from 3 sources",
+     "warnings": []
+    },
+    "segmentation": {
+     "status": "ok",
+     "seconds": 7.13,
+     "message": "own U-Net: new water 0.05 km\u00b2 in the plausible zone (water before 5.96, after 6.00 km\u00b2; 1.73 km\u00b2 'water' outside it, mostly radar shadow); agreement with change-detection water: IoU 0.00",
+     "warnings": []
+    },
+    "osm": {
+     "status": "ok",
+     "seconds": 59.86,
+     "message": "snapshot 2025-01-14 00:00Z: 121,279 buildings, 2,143 km of roads/paths in the area (175 bridges), 856 settlements, 366 named places, 70 hospitals",
+     "warnings": []
+    },
+    "flood_path": {
+     "status": "skipped",
+     "seconds": 0.0,
+     "message": "No upstream start point given (event file `flood_path_start`, CLI --flood-path-start LON LAT, or 'Trace a flood path' in the dashboard).",
+     "warnings": []
+    },
+    "damage": {
+     "status": "ok",
+     "seconds": 12.82,
+     "message": "1,170 of 121,279 buildings potentially affected (high 61); 15.1 km motorable road; 74 bridges; 2 health facilities",
+     "warnings": []
+    },
+    "cutoff": {
+     "status": "ok",
+     "seconds": 12.31,
+     "message": "2 of 856 settlements likely cut off by road (10 buildings; needs field verification), 68 possibly, 0 with long detours; on foot: 2 likely cut off; 2 likely lost road access to every hospital",
+     "warnings": []
+    },
+    "priority": {
+     "status": "ok",
+     "seconds": 0.4,
+     "message": "131 settlements ranked; tier 1: 2, tier 2: 0, tier 3: 77, tier 4: 52",
+     "warnings": []
+    },
+    "landing_zones": {
+     "status": "ok",
+     "seconds": 31.43,
+     "message": "candidates for 2 of 2 likely cut-off settlements (within 3 km); candidate only: verify trees, power lines, ground and approach on site",
+     "warnings": []
+    },
+    "multidate": {
+     "status": "ok",
+     "seconds": 202.23,
+     "message": "4 dates on track 19 descending (2025-01-18 \u2192 2025-02-23): water 0.05 \u2192 0.15 km\u00b2; receding 0.04, new ponding 0.14 km\u00b2; 1 possible lake(s) forming (verify)",
+     "warnings": []
+    },
+    "report": {
+     "status": "ok",
+     "seconds": 4.3,
+     "message": "one-page situation report (PDF, PNG, plain text)",
+     "warnings": []
+    },
+    "exports": {
+     "status": "ok",
+     "seconds": 9.47,
+     "message": "field package (0.8 MB): 10 layers as GeoPackage + KML, GPS waypoints, situation report",
+     "warnings": []
+    }
+   },
+   "key": {
+    "area_km2": 326.34,
+    "potentially_affected_km2": 1.559,
+    "high_confidence_km2": 0.232,
+    "buildings_high_confidence": 61,
+    "buildings_in_area": 121279,
+    "buildings_potentially_affected": 1170,
+    "settlements_assessed": 856,
+    "settlements_likely_cut_off": 2,
+    "model_new_water_km2": 0.05
+   }
+  },
+  "dubai_2024": {
+   "place": "dubai_2024",
+   "exit_code": 0,
+   "wall_seconds": 1545.9,
+   "traceback": false,
+   "run_id": "20261013T115209Z_59dfcc61",
+   "name": "Record rainfall flooding, Dubai (United Arab Emirates)",
+   "event_date": "2024-04-16",
+   "bbox": [
+    55.15,
+    25.0,
+    55.45,
+    25.25
+   ],
+   "stages": {
+    "s1": {
+     "status": "ok",
+     "seconds": 422.27,
+     "message": "130 ascending + 166 descending; primary after 2024-04-24: water-like 16.65 km\u00b2, rough/debris-like 42.38 km\u00b2 (before terrain masks)",
+     "warnings": []
+    },
+    "terrain": {
+     "status": "ok",
+     "seconds": 98.58,
+     "message": "plausible flood zone 806.2 km\u00b2 (100% of area), permanent water 137.565 km\u00b2",
+     "warnings": []
+    },
+    "s2": {
+     "status": "ok",
+     "seconds": 139.8,
+     "message": "Sentinel-2 2024-03-13 \u2192 2024-04-17: 58% clear; new water 20.92 km\u00b2, vegetation stripped 6.41 km\u00b2",
+     "warnings": []
+    },
+    "confidence": {
+     "status": "ok",
+     "seconds": 15.18,
+     "message": "potentially affected 80.97 km\u00b2 (high 28.54, medium 27.21, low 25.23) from 3 sources",
+     "warnings": []
+    },
+    "segmentation": {
+     "status": "ok",
+     "seconds": 13.94,
+     "message": "own U-Net: new water 14.90 km\u00b2 in the plausible zone (water before 132.54, after 138.22 km\u00b2; 19.35 km\u00b2 'water' outside it, mostly radar shadow); agreement with change-detection water: IoU 0.04",
+     "warnings": []
+    },
+    "osm": {
+     "status": "ok",
+     "seconds": 103.8,
+     "message": "snapshot 2024-04-15 00:00Z: 169,978 buildings, 12,823 km of roads/paths in the area (969 bridges), 1,279 settlements, 44 named places, 113 hospitals",
+     "warnings": []
+    },
+    "flood_path": {
+     "status": "skipped",
+     "seconds": 0.0,
+     "message": "No upstream start point given (event file `flood_path_start`, CLI --flood-path-start LON LAT, or 'Trace a flood path' in the dashboard).",
+     "warnings": []
+    },
+    "damage": {
+     "status": "ok",
+     "seconds": 77.24,
+     "message": "48,503 of 169,978 buildings potentially affected (high 8,089); 1555.0 km motorable road; 901 bridges; 100 health facilities",
+     "warnings": []
+    },
+    "cutoff": {
+     "status": "ok",
+     "seconds": 80.85,
+     "message": "635 of 1,279 settlements likely cut off by road (51,752 buildings; needs field verification), 449 possibly, 0 with long detours; on foot: 613 likely cut off; 635 likely lost road access to every hospital",
+     "warnings": []
+    },
+    "priority": {
+     "status": "ok",
+     "seconds": 5.14,
+     "message": "1224 settlements ranked; tier 1: 506, tier 2: 129, tier 3: 482, tier 4: 107",
+     "warnings": []
+    },
+    "landing_zones": {
+     "status": "ok",
+     "seconds": 185.91,
+     "message": "candidates for 635 of 635 likely cut-off settlements (within 3 km); candidate only: verify trees, power lines, ground and approach on site",
+     "warnings": []
+    },
+    "multidate": {
+     "status": "ok",
+     "seconds": 298.87,
+     "message": "3 dates on track 130 ascending (2024-04-24 \u2192 2024-05-18): water 5.56 \u2192 16.59 km\u00b2; receding 3.53, new ponding 14.56 km\u00b2; 38 possible lake(s) forming (verify)",
+     "warnings": []
+    },
+    "report": {
+     "status": "ok",
+     "seconds": 7.16,
+     "message": "one-page situation report (PDF, PNG, plain text)",
+     "warnings": []
+    },
+    "exports": {
+     "status": "ok",
+     "seconds": 73.17,
+     "message": "field package (29.5 MB): 10 layers as GeoPackage + KML, GPS waypoints, situation report",
+     "warnings": []
+    }
+   },
+   "key": {
+    "area_km2": 837.85,
+    "potentially_affected_km2": 80.975,
+    "high_confidence_km2": 28.537,
+    "buildings_high_confidence": 8089,
+    "buildings_in_area": 169978,
+    "buildings_potentially_affected": 48503,
+    "settlements_assessed": 1279,
+    "settlements_likely_cut_off": 635,
+    "model_new_water_km2": 14.899
+   }
+  },
+  "wayanad_2024": {
+   "place": "wayanad_2024",
+   "exit_code": 0,
+   "wall_seconds": 724.7,
+   "traceback": false,
+   "run_id": "20261013T121753Z_8ee73843",
+   "name": "Mundakkai-Chooralmala debris flow, Wayanad, Kerala (India)",
+   "event_date": "2024-07-30",
+   "bbox": [
+    76.05,
+    11.4,
+    76.25,
+    11.6
+   ],
+   "stages": {
+    "s1": {
+     "status": "ok",
+     "seconds": 162.71,
+     "message": "165 descending; primary after 2024-08-01: water-like 1.42 km\u00b2, rough/debris-like 1.96 km\u00b2 (before terrain masks)",
+     "warnings": []
+    },
+    "terrain": {
+     "status": "ok",
+     "seconds": 86.66,
+     "message": "plausible flood zone 74.57 km\u00b2 (15% of area), permanent water 1.46 km\u00b2",
+     "warnings": []
+    },
+    "s2": {
+     "status": "skipped",
+     "seconds": 79.0,
+     "message": "Sentinel-2 too cloudy: only 4% of the area is clear in both 2024-06-04 and 2024-08-13. Radar results are unaffected.",
+     "warnings": []
+    },
+    "confidence": {
+     "status": "partial",
+     "seconds": 6.07,
+     "message": "potentially affected 1.44 km\u00b2 (high 0.00, medium 0.93, low 0.51) from 1 sources",
+     "warnings": [
+      "only one source available: confidence can be at most 'medium'"
+     ]
+    },
+    "segmentation": {
+     "status": "ok",
+     "seconds": 9.48,
+     "message": "own U-Net: new water 0.34 km\u00b2 in the plausible zone (water before 2.69, after 3.05 km\u00b2; 7.21 km\u00b2 'water' outside it, mostly radar shadow); agreement with change-detection water: IoU 0.15",
+     "warnings": []
+    },
+    "osm": {
+     "status": "ok",
+     "seconds": 29.81,
+     "message": "snapshot 2024-07-29 00:00Z: 925 buildings, 1,108 km of roads/paths in the area (53 bridges), 60 settlements, 169 named places, 173 hospitals",
+     "warnings": []
+    },
+    "flood_path": {
+     "status": "skipped",
+     "seconds": 0.0,
+     "message": "No upstream start point given (event file `flood_path_start`, CLI --flood-path-start LON LAT, or 'Trace a flood path' in the dashboard).",
+     "warnings": []
+    },
+    "damage": {
+     "status": "ok",
+     "seconds": 5.54,
+     "message": "93 of 925 buildings potentially affected (high 0); 5.3 km motorable road; 16 bridges; 0 health facilities",
+     "warnings": []
+    },
+    "cutoff": {
+     "status": "ok",
+     "seconds": 9.44,
+     "message": "4 of 60 settlements likely cut off by road (116 buildings; needs field verification), 0 possibly, 13 with long detours; on foot: 4 likely cut off; 4 likely lost road access to every hospital",
+     "warnings": []
+    },
+    "priority": {
+     "status": "ok",
+     "seconds": 0.15,
+     "message": "19 settlements ranked; tier 1: 3, tier 2: 1, tier 3: 4, tier 4: 11",
+     "warnings": []
+    },
+    "landing_zones": {
+     "status": "ok",
+     "seconds": 4.14,
+     "message": "candidates for 4 of 4 likely cut-off settlements (within 3 km); candidate only: verify trees, power lines, ground and approach on site",
+     "warnings": []
+    },
+    "multidate": {
+     "status": "ok",
+     "seconds": 304.74,
+     "message": "4 dates on track 165 descending (2024-08-01 \u2192 2024-09-06): water 0.35 \u2192 0.08 km\u00b2; receding 0.31, new ponding 0.04 km\u00b2; 0 possible lake(s) forming (verify)",
+     "warnings": []
+    },
+    "report": {
+     "status": "ok",
+     "seconds": 4.06,
+     "message": "one-page situation report (PDF, PNG, plain text)",
+     "warnings": []
+    },
+    "exports": {
+     "status": "ok",
+     "seconds": 5.97,
+     "message": "field package (0.4 MB): 8 layers as GeoPackage + KML, GPS waypoints, situation report",
+     "warnings": []
+    }
+   },
+   "key": {
+    "area_km2": 482.74,
+    "potentially_affected_km2": 1.44,
+    "high_confidence_km2": 0.0,
+    "buildings_high_confidence": 0,
+    "buildings_in_area": 925,
+    "buildings_potentially_affected": 93,
+    "settlements_assessed": 60,
+    "settlements_likely_cut_off": 4,
+    "model_new_water_km2": 0.345
+   }
+  },
+  "chamoli_2021": {
+   "place": "chamoli_2021",
+   "exit_code": 0,
+   "wall_seconds": 879.3,
+   "traceback": false,
+   "run_id": "20261013T122949Z_2d6ba2d5",
+   "name": "Rishiganga-Dhauliganga rock-ice avalanche and debris flood, Chamoli, Uttarakhand (India)",
+   "event_date": "2021-02-07",
+   "bbox": [
+    79.55,
+    30.42,
+    79.8,
+    30.6
+   ],
+   "stages": {
+    "s1": {
+     "status": "ok",
+     "seconds": 316.02,
+     "message": "56 ascending + 63 descending; primary after 2021-02-10: water-like 3.76 km\u00b2, rough/debris-like 7.84 km\u00b2 (before terrain masks)",
+     "warnings": []
+    },
+    "terrain": {
+     "status": "ok",
+     "seconds": 84.79,
+     "message": "plausible flood zone 11.73 km\u00b2 (2% of area), permanent water 0.067 km\u00b2",
+     "warnings": []
+    },
+    "s2": {
+     "status": "partial",
+     "seconds": 83.27,
+     "message": "Sentinel-2 2021-01-31 \u2192 2021-02-10: 41% clear; new water 5.89 km\u00b2, vegetation stripped 2.93 km\u00b2",
+     "warnings": [
+      "only 41% of the area is cloud-free in both images"
+     ]
+    },
+    "confidence": {
+     "status": "ok",
+     "seconds": 4.77,
+     "message": "potentially affected 1.74 km\u00b2 (high 0.83, medium 0.34, low 0.57) from 3 sources",
+     "warnings": []
+    },
+    "segmentation": {
+     "status": "ok",
+     "seconds": 8.43,
+     "message": "own U-Net: new water 0.01 km\u00b2 in the plausible zone (water before 0.07, after 0.09 km\u00b2; 20.37 km\u00b2 'water' outside it, mostly radar shadow); agreement with change-detection water: IoU 0.00",
+     "warnings": []
+    },
+    "osm": {
+     "status": "partial",
+     "seconds": 23.7,
+     "message": "snapshot 2021-02-06 00:00Z: 217 buildings, 204 km of roads/paths in the area (12 bridges), 48 settlements, 153 named places, 0 hospitals",
+     "warnings": [
+      "no hospital mapped in OSM within the area + network buffer"
+     ]
+    },
+    "flood_path": {
+     "status": "skipped",
+     "seconds": 0.0,
+     "message": "No upstream start point given (event file `flood_path_start`, CLI --flood-path-start LON LAT, or 'Trace a flood path' in the dashboard).",
+     "warnings": []
+    },
+    "damage": {
+     "status": "partial",
+     "seconds": 3.32,
+     "message": "2 of 217 buildings potentially affected (high 1); 2.6 km motorable road; 11 bridges; 0 health facilities",
+     "warnings": [
+      "no hospital mapped in OSM within the area + network buffer"
+     ]
+    },
+    "cutoff": {
+     "status": "partial",
+     "seconds": 3.48,
+     "message": "1 of 48 settlements likely cut off by road (0 buildings; needs field verification), 11 possibly, 0 with long detours; on foot: 1 likely cut off; 0 likely lost road access to every hospital",
+     "warnings": [
+      "no hospital in pre-event OSM within the area + network buffer: hospital access cannot be assessed"
+     ]
+    },
+    "priority": {
+     "status": "ok",
+     "seconds": 0.17,
+     "message": "12 settlements ranked; tier 1: 0, tier 2: 1, tier 3: 0, tier 4: 11",
+     "warnings": []
+    },
+    "landing_zones": {
+     "status": "ok",
+     "seconds": 4.22,
+     "message": "candidates for 1 of 1 likely cut-off settlements (within 3 km); candidate only: verify trees, power lines, ground and approach on site",
+     "warnings": []
+    },
+    "multidate": {
+     "status": "ok",
+     "seconds": 330.28,
+     "message": "4 dates on track 56 ascending (2021-02-10 \u2192 2021-03-06): water 0.02 \u2192 0.02 km\u00b2; receding 0.02, new ponding 0.01 km\u00b2; 0 possible lake(s) forming (verify)",
+     "warnings": []
+    },
+    "report": {
+     "status": "ok",
+     "seconds": 3.71,
+     "message": "one-page situation report (PDF, PNG, plain text)",
+     "warnings": []
+    },
+    "exports": {
+     "status": "ok",
+     "seconds": 5.85,
+     "message": "field package (0.5 MB): 8 layers as GeoPackage + KML, GPS waypoints, situation report",
+     "warnings": []
+    }
+   },
+   "key": {
+    "area_km2": 478.87,
+    "potentially_affected_km2": 1.738,
+    "high_confidence_km2": 0.828,
+    "buildings_high_confidence": 1,
+    "buildings_in_area": 217,
+    "buildings_potentially_affected": 2,
+    "settlements_assessed": 48,
+    "settlements_likely_cut_off": 1,
+    "model_new_water_km2": 0.013
+   }
+  },
+  "beas_kullu_2023": {
+   "place": "beas_kullu_2023",
+   "exit_code": 0,
+   "wall_seconds": 1268.8,
+   "traceback": false,
+   "run_id": "20261013T124428Z_467e68fd",
+   "name": "Beas river flood, Kullu-Manali, Himachal Pradesh (India)",
+   "event_date": "2023-07-10",
+   "bbox": [
+    77.05,
+    31.9,
+    77.25,
+    32.28
+   ],
+   "stages": {
+    "s1": {
+     "status": "ok",
+     "seconds": 444.88,
+     "message": "136 descending + 27 ascending; primary after 2023-07-12: water-like 1.57 km\u00b2, rough/debris-like 63.07 km\u00b2 (before terrain masks)",
+     "warnings": []
+    },
+    "terrain": {
+     "status": "ok",
+     "seconds": 108.83,
+     "message": "plausible flood zone 40.81 km\u00b2 (5% of area), permanent water 0.111 km\u00b2",
+     "warnings": []
+    },
+    "s2": {
+     "status": "ok",
+     "seconds": 134.99,
+     "message": "Sentinel-2 2023-05-19 \u2192 2023-07-13: 50% clear; new water 5.81 km\u00b2, vegetation stripped 24.31 km\u00b2",
+     "warnings": []
+    },
+    "confidence": {
+     "status": "ok",
+     "seconds": 6.39,
+     "message": "potentially affected 6.08 km\u00b2 (high 2.74, medium 1.67, low 1.68) from 3 sources",
+     "warnings": []
+    },
+    "segmentation": {
+     "status": "ok",
+     "seconds": 13.03,
+     "message": "own U-Net: new water 0.08 km\u00b2 in the plausible zone (water before 0.41, after 0.27 km\u00b2; 26.27 km\u00b2 'water' outside it, mostly radar shadow); agreement with change-detection water: IoU 0.02",
+     "warnings": []
+    },
+    "osm": {
+     "status": "ok",
+     "seconds": 31.39,
+     "message": "snapshot 2023-07-09 00:00Z: 1,832 buildings, 1,435 km of roads/paths in the area (102 bridges), 442 settlements, 966 named places, 20 hospitals",
+     "warnings": []
+    },
+    "flood_path": {
+     "status": "skipped",
+     "seconds": 0.0,
+     "message": "No upstream start point given (event file `flood_path_start`, CLI --flood-path-start LON LAT, or 'Trace a flood path' in the dashboard).",
+     "warnings": []
+    },
+    "damage": {
+     "status": "ok",
+     "seconds": 5.82,
+     "message": "151 of 1,832 buildings potentially affected (high 47); 27.8 km motorable road; 72 bridges; 5 health facilities",
+     "warnings": []
+    },
+    "cutoff": {
+     "status": "ok",
+     "seconds": 7.63,
+     "message": "172 of 442 settlements likely cut off by road (655 buildings; needs field verification), 113 possibly, 3 with long detours; on foot: 59 likely cut off; 274 likely lost road access to every hospital",
+     "warnings": []
+    },
+    "priority": {
+     "status": "ok",
+     "seconds": 0.2,
+     "message": "290 settlements ranked; tier 1: 5, tier 2: 167, tier 3: 8, tier 4: 110",
+     "warnings": []
+    },
+    "landing_zones": {
+     "status": "ok",
+     "seconds": 7.53,
+     "message": "candidates for 166 of 172 likely cut-off settlements (within 3 km); candidate only: verify trees, power lines, ground and approach on site",
+     "warnings": []
+    },
+    "multidate": {
+     "status": "ok",
+     "seconds": 481.94,
+     "message": "4 dates on track 136 descending (2023-07-12 \u2192 2023-08-17): water 0.06 \u2192 0.03 km\u00b2; receding 0.04, new ponding 0.01 km\u00b2; 0 possible lake(s) forming (verify)",
+     "warnings": []
+    },
+    "report": {
+     "status": "ok",
+     "seconds": 2.67,
+     "message": "one-page situation report (PDF, PNG, plain text)",
+     "warnings": []
+    },
+    "exports": {
+     "status": "ok",
+     "seconds": 15.13,
+     "message": "field package (1.2 MB): 9 layers as GeoPackage + KML, GPS waypoints, situation report",
+     "warnings": []
+    }
+   },
+   "key": {
+    "area_km2": 795.56,
+    "potentially_affected_km2": 6.083,
+    "high_confidence_km2": 2.737,
+    "buildings_high_confidence": 47,
+    "buildings_in_area": 1832,
+    "buildings_potentially_affected": 151,
+    "settlements_assessed": 442,
+    "settlements_likely_cut_off": 172,
+    "model_new_water_km2": 0.082
+   }
+  },
+  "swat_2022": {
+   "place": "swat_2022",
+   "exit_code": 0,
+   "wall_seconds": 1194.1,
+   "traceback": false,
+   "run_id": "20261013T130535Z_08dbccbb",
+   "name": "Swat river flood, Kalam-Bahrain, Khyber Pakhtunkhwa (Pakistan)",
+   "event_date": "2022-08-26",
+   "bbox": [
+    72.45,
+    35.1,
+    72.65,
+    35.52
+   ],
+   "stages": {
+    "s1": {
+     "status": "ok",
+     "seconds": 479.36,
+     "message": "100 ascending + 107 descending; primary after 2022-08-31: water-like 6.25 km\u00b2, rough/debris-like 13.53 km\u00b2 (before terrain masks)",
+     "warnings": []
+    },
+    "terrain": {
+     "status": "ok",
+     "seconds": 83.49,
+     "message": "plausible flood zone 47.04 km\u00b2 (5% of area), permanent water 0.677 km\u00b2",
+     "warnings": []
+    },
+    "s2": {
+     "status": "partial",
+     "seconds": 166.65,
+     "message": "Sentinel-2 2022-06-29 \u2192 2022-08-28: 50% clear; new water 7.37 km\u00b2, vegetation stripped 11.57 km\u00b2",
+     "warnings": [
+      "only 50% of the area is cloud-free in both images"
+     ]
+    },
+    "confidence": {
+     "status": "ok",
+     "seconds": 3.24,
+     "message": "potentially affected 9.50 km\u00b2 (high 4.72, medium 3.16, low 1.62) from 3 sources",
+     "warnings": []
+    },
+    "segmentation": {
+     "status": "ok",
+     "seconds": 7.57,
+     "message": "own U-Net: new water 0.29 km\u00b2 in the plausible zone (water before 1.05, after 1.36 km\u00b2; 18.22 km\u00b2 'water' outside it, mostly radar shadow); agreement with change-detection water: IoU 0.02",
+     "warnings": []
+    },
+    "osm": {
+     "status": "ok",
+     "seconds": 32.56,
+     "message": "snapshot 2022-08-25 00:00Z: 4 buildings, 174 km of roads/paths in the area (17 bridges), 45 settlements, 116 named places, 1 hospitals",
+     "warnings": []
+    },
+    "flood_path": {
+     "status": "skipped",
+     "seconds": 0.0,
+     "message": "No upstream start point given (event file `flood_path_start`, CLI --flood-path-start LON LAT, or 'Trace a flood path' in the dashboard).",
+     "warnings": []
+    },
+    "damage": {
+     "status": "ok",
+     "seconds": 2.12,
+     "message": "4 of 4 buildings potentially affected (high 2); 33.4 km motorable road; 17 bridges; 0 health facilities",
+     "warnings": []
+    },
+    "cutoff": {
+     "status": "ok",
+     "seconds": 2.34,
+     "message": "10 of 45 settlements likely cut off by road (0 buildings; needs field verification), 1 possibly, 1 with long detours; on foot: 10 likely cut off; 14 likely lost road access to every hospital",
+     "warnings": []
+    },
+    "priority": {
+     "status": "ok",
+     "seconds": 0.05,
+     "message": "12 settlements ranked; tier 1: 0, tier 2: 10, tier 3: 0, tier 4: 2",
+     "warnings": []
+    },
+    "landing_zones": {
+     "status": "ok",
+     "seconds": 3.45,
+     "message": "candidates for 10 of 10 likely cut-off settlements (within 3 km); candidate only: verify trees, power lines, ground and approach on site",
+     "warnings": []
+    },
+    "multidate": {
+     "status": "ok",
+     "seconds": 397.52,
+     "message": "3 dates on track 100 ascending (2022-08-31 \u2192 2022-09-24): water 0.16 \u2192 0.09 km\u00b2; receding 0.12, new ponding 0.05 km\u00b2; 0 possible lake(s) forming (verify)",
+     "warnings": []
+    },
+    "report": {
+     "status": "ok",
+     "seconds": 2.41,
+     "message": "one-page situation report (PDF, PNG, plain text)",
+     "warnings": []
+    },
+    "exports": {
+     "status": "ok",
+     "seconds": 8.22,
+     "message": "field package (1.5 MB): 8 layers as GeoPackage + KML, GPS waypoints, situation report",
+     "warnings": []
+    }
+   },
+   "key": {
+    "area_km2": 847.54,
+    "potentially_affected_km2": 9.501,
+    "high_confidence_km2": 4.723,
+    "buildings_high_confidence": 2,
+    "buildings_in_area": 4,
+    "buildings_potentially_affected": 4,
+    "settlements_assessed": 45,
+    "settlements_likely_cut_off": 10,
+    "model_new_water_km2": 0.292
+   }
+  },
+  "ahr_2021": {
+   "place": "ahr_2021",
+   "exit_code": 0,
+   "wall_seconds": 1200.0,
+   "traceback": false,
+   "run_id": "20261013T132536Z_ae2a2e01",
+   "name": "Ahr valley flash flood (Germany)",
+   "event_date": "2021-07-14",
+   "bbox": [
+    6.85,
+    50.4,
+    7.2,
+    50.6
+   ],
+   "stages": {
+    "s1": {
+     "status": "ok",
+     "seconds": 338.55,
+     "message": "37 descending + 88 ascending; primary after 2021-07-15: water-like 0.31 km\u00b2, rough/debris-like 79.85 km\u00b2 (before terrain masks)",
+     "warnings": []
+    },
+    "terrain": {
+     "status": "ok",
+     "seconds": 75.88,
+     "message": "plausible flood zone 87.22 km\u00b2 (15% of area), permanent water 0.0 km\u00b2",
+     "warnings": []
+    },
+    "s2": {
+     "status": "ok",
+     "seconds": 103.01,
+     "message": "Sentinel-2 2021-06-13 \u2192 2021-07-18: 86% clear; new water 0.47 km\u00b2, vegetation stripped 28.85 km\u00b2",
+     "warnings": []
+    },
+    "confidence": {
+     "status": "ok",
+     "seconds": 4.67,
+     "message": "potentially affected 24.08 km\u00b2 (high 12.30, medium 9.48, low 2.30) from 3 sources",
+     "warnings": []
+    },
+    "segmentation": {
+     "status": "ok",
+     "seconds": 5.96,
+     "message": "own U-Net: new water 0.33 km\u00b2 in the plausible zone (water before 0.03, after 0.35 km\u00b2; 0.20 km\u00b2 'water' outside it, mostly radar shadow); agreement with change-detection water: IoU 0.16",
+     "warnings": []
+    },
+    "osm": {
+     "status": "ok",
+     "seconds": 194.72,
+     "message": "snapshot 2021-07-13 00:00Z: 37,326 buildings, 5,271 km of roads/paths in the area (457 bridges), 307 settlements, 578 named places, 11 hospitals",
+     "warnings": []
+    },
+    "flood_path": {
+     "status": "skipped",
+     "seconds": 0.0,
+     "message": "No upstream start point given (event file `flood_path_start`, CLI --flood-path-start LON LAT, or 'Trace a flood path' in the dashboard).",
+     "warnings": []
+    },
+    "damage": {
+     "status": "ok",
+     "seconds": 20.66,
+     "message": "8,073 of 37,326 buildings potentially affected (high 3,798); 408.0 km motorable road; 393 bridges; 11 health facilities",
+     "warnings": []
+    },
+    "cutoff": {
+     "status": "ok",
+     "seconds": 26.77,
+     "message": "65 of 307 settlements likely cut off by road (9,609 buildings; needs field verification), 24 possibly, 51 with long detours; on foot: 60 likely cut off; 65 likely lost road access to every hospital",
+     "warnings": []
+    },
+    "priority": {
+     "status": "ok",
+     "seconds": 0.66,
+     "message": "169 settlements ranked; tier 1: 57, tier 2: 8, tier 3: 61, tier 4: 43",
+     "warnings": []
+    },
+    "landing_zones": {
+     "status": "ok",
+     "seconds": 11.68,
+     "message": "candidates for 65 of 65 likely cut-off settlements (within 3 km); candidate only: verify trees, power lines, ground and approach on site",
+     "warnings": []
+    },
+    "multidate": {
+     "status": "ok",
+     "seconds": 385.28,
+     "message": "4 dates on track 37 descending (2021-07-15 \u2192 2021-08-02): water 0.28 \u2192 0.30 km\u00b2; receding 0.27, new ponding 0.29 km\u00b2; 0 possible lake(s) forming (verify)",
+     "warnings": []
+    },
+    "report": {
+     "status": "ok",
+     "seconds": 4.1,
+     "message": "one-page situation report (PDF, PNG, plain text)",
+     "warnings": []
+    },
+    "exports": {
+     "status": "ok",
+     "seconds": 15.96,
+     "message": "field package (5.1 MB): 9 layers as GeoPackage + KML, GPS waypoints, situation report",
+     "warnings": []
+    }
+   },
+   "key": {
+    "area_km2": 552.46,
+    "potentially_affected_km2": 24.077,
+    "high_confidence_km2": 12.296,
+    "buildings_high_confidence": 3798,
+    "buildings_in_area": 37326,
+    "buildings_potentially_affected": 8073,
+    "settlements_assessed": 307,
+    "settlements_likely_cut_off": 65,
+    "model_new_water_km2": 0.326
+   }
+  },
+  "slovenia_2023": {
+   "place": "slovenia_2023",
+   "exit_code": 0,
+   "wall_seconds": 2319.1,
+   "traceback": false,
+   "run_id": "20261013T134538Z_a11197e5",
+   "name": "Savinja valley floods (Slovenia)",
+   "event_date": "2023-08-04",
+   "bbox": [
+    14.8,
+    46.2,
+    15.3,
+    46.4
+   ],
+   "stages": {
+    "s1": {
+     "status": "ok",
+     "seconds": 457.95,
+     "message": "146 ascending + 22 descending; primary after 2023-08-05: water-like 1.44 km\u00b2, rough/debris-like 104.15 km\u00b2 (before terrain masks)",
+     "warnings": []
+    },
+    "terrain": {
+     "status": "ok",
+     "seconds": 100.19,
+     "message": "plausible flood zone 240.6 km\u00b2 (28% of area), permanent water 3.248 km\u00b2",
+     "warnings": []
+    },
+    "s2": {
+     "status": "skipped",
+     "seconds": 178.39,
+     "message": "Sentinel-2 too cloudy: only 0% of the area is clear in both 2023-07-09 and 2023-08-08. Radar results are unaffected.",
+     "warnings": []
+    },
+    "confidence": {
+     "status": "ok",
+     "seconds": 6.73,
+     "message": "potentially affected 63.27 km\u00b2 (high 9.53, medium 46.34, low 7.40) from 2 sources",
+     "warnings": []
+    },
+    "segmentation": {
+     "status": "ok",
+     "seconds": 10.04,
+     "message": "own U-Net: new water 0.90 km\u00b2 in the plausible zone (water before 4.25, after 5.19 km\u00b2; 0.35 km\u00b2 'water' outside it, mostly radar shadow); agreement with change-detection water: IoU 0.18",
+     "warnings": []
+    },
+    "osm": {
+     "status": "ok",
+     "seconds": 975.62,
+     "message": "snapshot 2023-08-03 00:00Z: 30,280 buildings, 4,406 km of roads/paths in the area (546 bridges), 857 settlements, 999 named places, 7 hospitals",
+     "warnings": []
+    },
+    "flood_path": {
+     "status": "skipped",
+     "seconds": 0.0,
+     "message": "No upstream start point given (event file `flood_path_start`, CLI --flood-path-start LON LAT, or 'Trace a flood path' in the dashboard).",
+     "warnings": []
+    },
+    "damage": {
+     "status": "ok",
+     "seconds": 35.63,
+     "message": "8,028 of 30,280 buildings potentially affected (high 1,255); 678.1 km motorable road; 500 bridges; 6 health facilities",
+     "warnings": []
+    },
+    "cutoff": {
+     "status": "ok",
+     "seconds": 22.03,
+     "message": "527 of 857 settlements likely cut off by road (18,445 buildings; needs field verification), 165 possibly, 79 with long detours; on foot: 442 likely cut off; 537 likely lost road access to every hospital",
+     "warnings": []
+    },
+    "priority": {
+     "status": "ok",
+     "seconds": 0.93,
+     "message": "781 settlements ranked; tier 1: 309, tier 2: 218, tier 3: 63, tier 4: 191",
+     "warnings": []
+    },
+    "landing_zones": {
+     "status": "ok",
+     "seconds": 20.92,
+     "message": "candidates for 527 of 527 likely cut-off settlements (within 3 km); candidate only: verify trees, power lines, ground and approach on site",
+     "warnings": []
+    },
+    "multidate": {
+     "status": "ok",
+     "seconds": 453.64,
+     "message": "4 dates on track 146 ascending (2023-08-05 \u2192 2023-09-10): water 0.54 \u2192 0.57 km\u00b2; receding 0.39, new ponding 0.42 km\u00b2; 0 possible lake(s) forming (verify)",
+     "warnings": []
+    },
+    "report": {
+     "status": "ok",
+     "seconds": 9.44,
+     "message": "one-page situation report (PDF, PNG, plain text)",
+     "warnings": []
+    },
+    "exports": {
+     "status": "ok",
+     "seconds": 27.2,
+     "message": "field package (9.0 MB): 9 layers as GeoPackage + KML, GPS waypoints, situation report",
+     "warnings": []
+    }
+   },
+   "key": {
+    "area_km2": 856.39,
+    "potentially_affected_km2": 63.274,
+    "high_confidence_km2": 9.531,
+    "buildings_high_confidence": 1255,
+    "buildings_in_area": 30280,
+    "buildings_potentially_affected": 8028,
+    "settlements_assessed": 857,
+    "settlements_likely_cut_off": 527,
+    "model_new_water_km2": 0.899
+   }
+  },
+  "sylhet_2022": {
+   "place": "sylhet_2022",
+   "exit_code": 0,
+   "wall_seconds": 1887.5,
+   "traceback": false,
+   "run_id": "20261013T142419Z_5856dafe",
+   "name": "Surma river floods, Sylhet (Bangladesh)",
+   "event_date": "2022-06-17",
+   "bbox": [
+    91.7,
+    24.8,
+    92.0,
+    25.05
+   ],
+   "stages": {
+    "s1": {
+     "status": "ok",
+     "seconds": 494.46,
+     "message": "77 descending + 41 ascending; primary after 2022-06-18: water-like 298.61 km\u00b2, rough/debris-like 35.89 km\u00b2 (before terrain masks)",
+     "warnings": []
+    },
+    "terrain": {
+     "status": "ok",
+     "seconds": 147.96,
+     "message": "plausible flood zone 751.03 km\u00b2 (98% of area), permanent water 261.046 km\u00b2",
+     "warnings": []
+    },
+    "s2": {
+     "status": "ok",
+     "seconds": 154.76,
+     "message": "Sentinel-2 2022-04-21 \u2192 2022-07-10: 64% clear; new water 212.74 km\u00b2, vegetation stripped 56.03 km\u00b2",
+     "warnings": []
+    },
+    "confidence": {
+     "status": "ok",
+     "seconds": 32.21,
+     "message": "potentially affected 207.86 km\u00b2 (high 170.91, medium 29.26, low 7.69) from 3 sources",
+     "warnings": []
+    },
+    "segmentation": {
+     "status": "ok",
+     "seconds": 25.57,
+     "message": "own U-Net: new water 74.27 km\u00b2 in the plausible zone (water before 346.04, after 416.67 km\u00b2; 50.97 km\u00b2 'water' outside it, mostly radar shadow); agreement with change-detection water: IoU 0.28",
+     "warnings": []
+    },
+    "osm": {
+     "status": "ok",
+     "seconds": 159.52,
+     "message": "snapshot 2022-06-16 00:00Z: 137,295 buildings, 1,861 km of roads/paths in the area (172 bridges), 1,075 settlements, 12 named places, 23 hospitals",
+     "warnings": []
+    },
+    "flood_path": {
+     "status": "skipped",
+     "seconds": 0.0,
+     "message": "No upstream start point given (event file `flood_path_start`, CLI --flood-path-start LON LAT, or 'Trace a flood path' in the dashboard).",
+     "warnings": []
+    },
+    "damage": {
+     "status": "ok",
+     "seconds": 70.87,
+     "message": "43,773 of 137,295 buildings potentially affected (high 15,399); 622.7 km motorable road; 168 bridges; 10 health facilities",
+     "warnings": []
+    },
+    "cutoff": {
+     "status": "ok",
+     "seconds": 56.47,
+     "message": "918 of 1,075 settlements likely cut off by road (95,664 buildings; needs field verification), 42 possibly, 0 with long detours; on foot: 918 likely cut off; 919 likely lost road access to every hospital",
+     "warnings": []
+    },
+    "priority": {
+     "status": "ok",
+     "seconds": 6.71,
+     "message": "1053 settlements ranked; tier 1: 756, tier 2: 162, tier 3: 116, tier 4: 19",
+     "warnings": []
+    },
+    "landing_zones": {
+     "status": "ok",
+     "seconds": 125.32,
+     "message": "candidates for 918 of 918 likely cut-off settlements (within 3 km); candidate only: verify trees, power lines, ground and approach on site",
+     "warnings": []
+    },
+    "multidate": {
+     "status": "ok",
+     "seconds": 467.48,
+     "message": "4 dates on track 77 descending (2022-06-18 \u2192 2022-07-24): water 109.35 \u2192 12.47 km\u00b2; receding 100.42, new ponding 3.46 km\u00b2; 35 possible lake(s) forming (verify)",
+     "warnings": []
+    },
+    "report": {
+     "status": "ok",
+     "seconds": 10.26,
+     "message": "one-page situation report (PDF, PNG, plain text)",
+     "warnings": []
+    },
+    "exports": {
+     "status": "ok",
+     "seconds": 111.36,
+     "message": "field package (24.0 MB): 10 layers as GeoPackage + KML, GPS waypoints, situation report",
+     "warnings": []
+    }
+   },
+   "key": {
+    "area_km2": 839.19,
+    "potentially_affected_km2": 207.862,
+    "high_confidence_km2": 170.908,
+    "buildings_high_confidence": 15399,
+    "buildings_in_area": 137295,
+    "buildings_potentially_affected": 43773,
+    "settlements_assessed": 1075,
+    "settlements_likely_cut_off": 918,
+    "model_new_water_km2": 74.274
+   }
+  },
+  "emilia_romagna_2023": {
+   "place": "emilia_romagna_2023",
+   "exit_code": 0,
+   "wall_seconds": 2724.1,
+   "traceback": false,
+   "run_id": "20261013T145551Z_f9cec807",
+   "name": "Emilia-Romagna floods, Faenza-Lugo (Italy)",
+   "event_date": "2023-05-17",
+   "bbox": [
+    11.75,
+    44.2,
+    12.1,
+    44.5
+   ],
+   "stages": {
+    "s1": {
+     "status": "ok",
+     "seconds": 759.13,
+     "message": "95 descending + 117 ascending; primary after 2023-05-22: water-like 12.99 km\u00b2, rough/debris-like 329.05 km\u00b2 (before terrain masks)",
+     "warnings": []
+    },
+    "terrain": {
+     "status": "ok",
+     "seconds": 170.22,
+     "message": "plausible flood zone 851.94 km\u00b2 (89% of area), permanent water 3.117 km\u00b2",
+     "warnings": []
+    },
+    "s2": {
+     "status": "partial",
+     "seconds": 149.82,
+     "message": "Sentinel-2 2023-04-10 \u2192 2023-05-23: 46% clear; new water 11.53 km\u00b2, vegetation stripped 15.61 km\u00b2",
+     "warnings": [
+      "only 46% of the area is cloud-free in both images"
+     ]
+    },
+    "confidence": {
+     "status": "ok",
+     "seconds": 39.57,
+     "message": "potentially affected 404.20 km\u00b2 (high 320.08, medium 75.50, low 8.62) from 3 sources",
+     "warnings": []
+    },
+    "segmentation": {
+     "status": "ok",
+     "seconds": 27.58,
+     "message": "own U-Net: new water 16.73 km\u00b2 in the plausible zone (water before 2.17, after 18.90 km\u00b2; 1.09 km\u00b2 'water' outside it, mostly radar shadow); agreement with change-detection water: IoU 0.51",
+     "warnings": []
+    },
+    "osm": {
+     "status": "ok",
+     "seconds": 246.32,
+     "message": "snapshot 2023-05-16 00:00Z: 100,971 buildings, 4,605 km of roads/paths in the area (476 bridges), 3,336 settlements, 2089 named places, 45 hospitals",
+     "warnings": []
+    },
+    "flood_path": {
+     "status": "skipped",
+     "seconds": 0.0,
+     "message": "No upstream start point given (event file `flood_path_start`, CLI --flood-path-start LON LAT, or 'Trace a flood path' in the dashboard).",
+     "warnings": []
+    },
+    "damage": {
+     "status": "ok",
+     "seconds": 306.39,
+     "message": "30,058 of 100,971 buildings potentially affected (high 17,230); 1486.4 km motorable road; 460 bridges; 4 health facilities",
+     "warnings": []
+    },
+    "cutoff": {
+     "status": "ok",
+     "seconds": 245.48,
+     "message": "2914 of 3,336 settlements likely cut off by road (49,097 buildings; needs field verification), 145 possibly, 100 with long detours; on foot: 2903 likely cut off; 2925 likely lost road access to every hospital",
+     "warnings": []
+    },
+    "priority": {
+     "status": "ok",
+     "seconds": 4.45,
+     "message": "3226 settlements ranked; tier 1: 2295, tier 2: 619, tier 3: 115, tier 4: 197",
+     "warnings": []
+    },
+    "landing_zones": {
+     "status": "ok",
+     "seconds": 286.84,
+     "message": "candidates for 2914 of 2914 likely cut-off settlements (within 3 km); candidate only: verify trees, power lines, ground and approach on site",
+     "warnings": []
+    },
+    "multidate": {
+     "status": "ok",
+     "seconds": 377.8,
+     "message": "3 dates on track 95 descending (2023-05-22 \u2192 2023-06-15): water 12.24 \u2192 2.04 km\u00b2; receding 11.40, new ponding 1.20 km\u00b2; 6 possible lake(s) forming (verify)",
+     "warnings": []
+    },
+    "report": {
+     "status": "ok",
+     "seconds": 7.79,
+     "message": "one-page situation report (PDF, PNG, plain text)",
+     "warnings": []
+    },
+    "exports": {
+     "status": "ok",
+     "seconds": 74.24,
+     "message": "field package (34.0 MB): 10 layers as GeoPackage + KML, GPS waypoints, situation report",
+     "warnings": []
+    }
+   },
+   "key": {
+    "area_km2": 930.28,
+    "potentially_affected_km2": 404.2,
+    "high_confidence_km2": 320.083,
+    "buildings_high_confidence": 17230,
+    "buildings_in_area": 100971,
+    "buildings_potentially_affected": 30058,
+    "settlements_assessed": 3336,
+    "settlements_likely_cut_off": 2914,
+    "model_new_water_km2": 16.734
+   }
+  },
+  "thessaly_2023": {
+   "place": "thessaly_2023",
+   "exit_code": 0,
+   "wall_seconds": 3743.9,
+   "traceback": false,
+   "run_id": "20261013T185258Z_1a42f1e0",
+   "name": "Storm Daniel floods, Karditsa-Palamas, Thessaly (Greece)",
+   "event_date": "2023-09-06",
+   "bbox": [
+    21.85,
+    39.3,
+    22.25,
+    39.6
+   ],
+   "stages": {
+    "s1": {
+     "status": "ok",
+     "seconds": 28.08,
+     "message": "102 ascending + 7 descending; primary after 2023-09-07: water-like 370.62 km\u00b2, rough/debris-like 305.36 km\u00b2 (before terrain masks)",
+     "warnings": []
+    },
+    "terrain": {
+     "status": "ok",
+     "seconds": 17.58,
+     "message": "plausible flood zone 983.17 km\u00b2 (87% of area), permanent water 0.093 km\u00b2",
+     "warnings": []
+    },
+    "s2": {
+     "status": "ok",
+     "seconds": 7.71,
+     "message": "Sentinel-2 2023-07-22 \u2192 2023-09-10: 99% clear; new water 277.41 km\u00b2, vegetation stripped 164.06 km\u00b2",
+     "warnings": []
+    },
+    "confidence": {
+     "status": "ok",
+     "seconds": 24.2,
+     "message": "potentially affected 754.71 km\u00b2 (high 660.43, medium 90.94, low 3.34) from 3 sources",
+     "warnings": []
+    },
+    "segmentation": {
+     "status": "ok",
+     "seconds": 18.01,
+     "message": "own U-Net: new water 384.93 km\u00b2 in the plausible zone (water before 10.12, after 391.79 km\u00b2; 28.38 km\u00b2 'water' outside it, mostly radar shadow); agreement with change-detection water: IoU 0.75",
+     "warnings": []
+    },
+    "osm": {
+     "status": "ok",
+     "seconds": 10.6,
+     "message": "snapshot 2023-09-05 00:00Z: 7,138 buildings, 7,001 km of roads/paths in the area (342 bridges), 180 settlements, 215 named places, 6 hospitals",
+     "warnings": []
+    },
+    "flood_path": {
+     "status": "skipped",
+     "seconds": 0.0,
+     "message": "No upstream start point given (event file `flood_path_start`, CLI --flood-path-start LON LAT, or 'Trace a flood path' in the dashboard).",
+     "warnings": []
+    },
+    "damage": {
+     "status": "ok",
+     "seconds": 337.62,
+     "message": "4,004 of 7,138 buildings potentially affected (high 2,501); 5139.0 km motorable road; 346 bridges; 2 health facilities",
+     "warnings": []
+    },
+    "cutoff": {
+     "status": "ok",
+     "seconds": 113.68,
+     "message": "171 of 180 settlements likely cut off by road (1,490 buildings; needs field verification), 3 possibly, 2 with long detours; on foot: 171 likely cut off; 174 likely lost road access to every hospital",
+     "warnings": []
+    },
+    "priority": {
+     "status": "ok",
+     "seconds": 0.44,
+     "message": "177 settlements ranked; tier 1: 124, tier 2: 47, tier 3: 4, tier 4: 2",
+     "warnings": []
+    },
+    "landing_zones": {
+     "status": "ok",
+     "seconds": 19.54,
+     "message": "candidates for 171 of 171 likely cut-off settlements (within 3 km); candidate only: verify trees, power lines, ground and approach on site",
+     "warnings": []
+    },
+    "multidate": {
+     "status": "ok",
+     "seconds": 3086.37,
+     "message": "4 dates on track 102 ascending (2023-09-07 \u2192 2023-10-13): water 344.50 \u2192 5.03 km\u00b2; receding 340.55, new ponding 0.99 km\u00b2; 6 possible lake(s) forming (verify)",
+     "warnings": []
+    },
+    "report": {
+     "status": "ok",
+     "seconds": 5.73,
+     "message": "one-page situation report (PDF, PNG, plain text)",
+     "warnings": []
+    },
+    "exports": {
+     "status": "ok",
+     "seconds": 68.83,
+     "message": "field package (34.2 MB): 10 layers as GeoPackage + KML, GPS waypoints, situation report",
+     "warnings": []
+    }
+   },
+   "key": {
+    "area_km2": 1146.77,
+    "potentially_affected_km2": 754.707,
+    "high_confidence_km2": 660.43,
+    "buildings_high_confidence": 2501,
+    "buildings_in_area": 7138,
+    "buildings_potentially_affected": 4004,
+    "settlements_assessed": 180,
+    "settlements_likely_cut_off": 171,
+    "model_new_water_km2": 384.928
+   },
+   "note": "re-run 2026-10-14 after the huge-flood speed fixes (first attempt stopped after 2 h in the cut-off stage); downloads mostly from the cache; 51 of the 62 minutes were later passes, slowed by dropped connections that the new retry logic recovered."
+  },
+  "rio_grande_do_sul_2024": {
+   "place": "rio_grande_do_sul_2024",
+   "exit_code": 0,
+   "wall_seconds": 373.2,
+   "traceback": false,
+   "run_id": "20261013T174340Z_6ee314c7",
+   "name": "Guaiba and Jacui floods, Porto Alegre-Eldorado do Sul (Brazil)",
+   "event_date": "2024-05-04",
+   "bbox": [
+    -51.45,
+    -30.15,
+    -51.1,
+    -29.85
+   ],
+   "stages": {
+    "s1": {
+     "status": "failed",
+     "seconds": 1.82,
+     "message": "No orbit track has both a pre-event image (within 36 days before) and a post-event image (within 24 days after) covering at least 50% of the area. Tracks with usable coverage: [(24, 'descending'), (163, 'ascending')].",
+     "warnings": []
+    },
+    "terrain": {
+     "status": "skipped",
+     "seconds": 0.0,
+     "message": "Needs stage(s) ['s1'], not available.",
+     "warnings": []
+    },
+    "s2": {
+     "status": "ok",
+     "seconds": 187.17,
+     "message": "Sentinel-2 2024-03-14 \u2192 2024-05-06: 100% clear; new water 372.49 km\u00b2, vegetation stripped 40.34 km\u00b2",
+     "warnings": []
+    },
+    "confidence": {
+     "status": "skipped",
+     "seconds": 0.0,
+     "message": "Needs stage(s) ['s1', 'terrain'], not available.",
+     "warnings": []
+    },
+    "segmentation": {
+     "status": "skipped",
+     "seconds": 0.0,
+     "message": "Needs stage(s) ['s1'], not available.",
+     "warnings": []
+    },
+    "osm": {
+     "status": "ok",
+     "seconds": 145.01,
+     "message": "snapshot 2024-05-03 00:00Z: 422,682 buildings, 7,357 km of roads/paths in the area (597 bridges), 541 settlements, 31 named places, 78 hospitals",
+     "warnings": []
+    },
+    "flood_path": {
+     "status": "skipped",
+     "seconds": 0.0,
+     "message": "Needs stage(s) ['terrain'], not available.",
+     "warnings": []
+    },
+    "damage": {
+     "status": "skipped",
+     "seconds": 0.0,
+     "message": "Needs stage(s) ['confidence', 'terrain'], not available.",
+     "warnings": []
+    },
+    "cutoff": {
+     "status": "skipped",
+     "seconds": 0.0,
+     "message": "Needs stage(s) ['confidence', 'terrain'], not available.",
+     "warnings": []
+    },
+    "priority": {
+     "status": "skipped",
+     "seconds": 0.0,
+     "message": "Needs stage(s) ['cutoff', 'damage'], not available.",
+     "warnings": []
+    },
+    "landing_zones": {
+     "status": "skipped",
+     "seconds": 0.0,
+     "message": "Needs stage(s) ['cutoff', 'terrain', 'confidence'], not available.",
+     "warnings": []
+    },
+    "multidate": {
+     "status": "skipped",
+     "seconds": 0.0,
+     "message": "Needs stage(s) ['s1', 'terrain'], not available.",
+     "warnings": []
+    },
+    "report": {
+     "status": "ok",
+     "seconds": 4.27,
+     "message": "one-page situation report (PDF, PNG, plain text)",
+     "warnings": []
+    },
+    "exports": {
+     "status": "skipped",
+     "seconds": 0.0,
+     "message": "Nothing to export yet (no map layers were produced).",
+     "warnings": []
+    }
+   },
+   "key": {
+    "area_km2": 1123.05,
+    "potentially_affected_km2": null,
+    "high_confidence_km2": null,
+    "buildings_high_confidence": null,
+    "buildings_in_area": null,
+    "buildings_potentially_affected": null,
+    "settlements_assessed": null,
+    "settlements_likely_cut_off": null,
+    "model_new_water_km2": null
+   },
+   "note": "no Sentinel-1 image exists over this area between February and the flood (only one Sentinel-1 satellite in 2024): the system reports this instead of inventing a map."
+  },
+  "kathmandu_2024": {
+   "place": "kathmandu_2024",
+   "exit_code": 0,
+   "wall_seconds": 732.8,
+   "traceback": false,
+   "run_id": "20261013T202628Z_8d2331bc",
+   "name": "Kathmandu valley and Roshi Khola floods (Nepal)",
+   "event_date": "2024-09-28",
+   "bbox": [
+    85.25,
+    27.5,
+    85.6,
+    27.75
+   ],
+   "stages": {
+    "s1": {
+     "status": "ok",
+     "seconds": 12.04,
+     "message": "19 descending + 85 ascending; primary after 2024-10-02: water-like 0.23 km\u00b2, rough/debris-like 23.92 km\u00b2 (before terrain masks)",
+     "warnings": []
+    },
+    "terrain": {
+     "status": "ok",
+     "seconds": 7.86,
+     "message": "plausible flood zone 216.8 km\u00b2 (22% of area), permanent water 0.042 km\u00b2",
+     "warnings": []
+    },
+    "s2": {
+     "status": "ok",
+     "seconds": 4.13,
+     "message": "Sentinel-2 2024-09-23 \u2192 2024-10-01: 57% clear; new water 2.44 km\u00b2, vegetation stripped 15.28 km\u00b2",
+     "warnings": []
+    },
+    "confidence": {
+     "status": "ok",
+     "seconds": 4.69,
+     "message": "potentially affected 19.97 km\u00b2 (high 8.73, medium 6.03, low 5.21) from 3 sources",
+     "warnings": []
+    },
+    "segmentation": {
+     "status": "ok",
+     "seconds": 9.02,
+     "message": "own U-Net: new water 0.20 km\u00b2 in the plausible zone (water before 0.13, after 0.30 km\u00b2; 0.46 km\u00b2 'water' outside it, mostly radar shadow); agreement with change-detection water: IoU 0.06",
+     "warnings": []
+    },
+    "osm": {
+     "status": "ok",
+     "seconds": 28.36,
+     "message": "snapshot 2024-09-27 00:00Z: 454,718 buildings, 7,863 km of roads/paths in the area (651 bridges), 2,805 settlements, 465 named places, 311 hospitals",
+     "warnings": []
+    },
+    "flood_path": {
+     "status": "skipped",
+     "seconds": 0.0,
+     "message": "No upstream start point given (event file `flood_path_start`, CLI --flood-path-start LON LAT, or 'Trace a flood path' in the dashboard).",
+     "warnings": []
+    },
+    "damage": {
+     "status": "ok",
+     "seconds": 22.52,
+     "message": "20,011 of 454,718 buildings potentially affected (high 3,119); 275.5 km motorable road; 534 bridges; 52 health facilities",
+     "warnings": []
+    },
+    "cutoff": {
+     "status": "ok",
+     "seconds": 21.15,
+     "message": "348 of 2,805 settlements likely cut off by road (21,624 buildings; needs field verification), 215 possibly, 242 with long detours; on foot: 233 likely cut off; 348 likely lost road access to every hospital",
+     "warnings": []
+    },
+    "priority": {
+     "status": "ok",
+     "seconds": 0.95,
+     "message": "1024 settlements ranked; tier 1: 103, tier 2: 245, tier 3: 314, tier 4: 362",
+     "warnings": []
+    },
+    "landing_zones": {
+     "status": "ok",
+     "seconds": 37.49,
+     "message": "candidates for 318 of 348 likely cut-off settlements (within 3 km); candidate only: verify trees, power lines, ground and approach on site",
+     "warnings": []
+    },
+    "multidate": {
+     "status": "ok",
+     "seconds": 559.32,
+     "message": "4 dates on track 19 descending (2024-10-02 \u2192 2024-11-07): water 0.05 \u2192 0.12 km\u00b2; receding 0.04, new ponding 0.11 km\u00b2; 0 possible lake(s) forming (verify)",
+     "warnings": []
+    },
+    "report": {
+     "status": "ok",
+     "seconds": 2.16,
+     "message": "one-page situation report (PDF, PNG, plain text)",
+     "warnings": []
+    },
+    "exports": {
+     "status": "ok",
+     "seconds": 19.86,
+     "message": "field package (7.7 MB): 9 layers as GeoPackage + KML, GPS waypoints, situation report",
+     "warnings": []
+    }
+   },
+   "key": {
+    "area_km2": 957.02,
+    "potentially_affected_km2": 19.968,
+    "high_confidence_km2": 8.73,
+    "buildings_high_confidence": 3119,
+    "buildings_in_area": 454718,
+    "buildings_potentially_affected": 20011,
+    "settlements_assessed": 2805,
+    "settlements_likely_cut_off": 348,
+    "model_new_water_km2": 0.199
+   },
+   "note": "re-run 2026-10-14 after the retry fix (first attempt: terrain download broke on a dropped connection) and the landing-zone memory fix (second attempt: > 6 GB, stopped); downloads mostly from the cache."
+  }
+ },
+ "invalid": {
+  "future date": {
+   "case": "future date",
+   "args": "--bbox 85.30 27.70 85.40 27.80 --date 2026-12-01",
+   "exit_code": 0,
+   "wall_seconds": 16.8,
+   "traceback": false,
+   "answer": "run completed; s1 failed: No Sentinel-1 IW scenes with VV polarisation over this area in the search window. The flood date 2026-12-01 is today or in the future: no image after it yet.",
+   "stage_statuses": {
+    "s1": "failed",
+    "terrain": "skipped",
+    "s2": "skipped",
+    "confidence": "skipped",
+    "segmentation": "skipped",
+    "osm": "ok",
+    "flood_path": "skipped",
+    "damage": "skipped",
+    "cutoff": "skipped",
+    "priority": "skipped",
+    "landing_zones": "skipped",
+    "multidate": "skipped",
+    "report": "ok",
+    "exports": "skipped"
+   }
+  },
+  "date before Sentinel-1": {
+   "case": "date before Sentinel-1",
+   "args": "--bbox 85.30 27.70 85.40 27.80 --date 2012-06-01",
+   "exit_code": 0,
+   "wall_seconds": 12.3,
+   "traceback": false,
+   "answer": "run completed; s1 failed: No Sentinel-1 IW scenes with VV polarisation over this area in the search window. The flood date 2012-06-01 is before Sentinel-1 began routine observations (October 2014).",
+   "stage_statuses": {
+    "s1": "failed",
+    "terrain": "skipped",
+    "s2": "skipped",
+    "confidence": "skipped",
+    "segmentation": "skipped",
+    "osm": "ok",
+    "flood_path": "skipped",
+    "damage": "skipped",
+    "cutoff": "skipped",
+    "priority": "skipped",
+    "landing_zones": "skipped",
+    "multidate": "skipped",
+    "report": "ok",
+    "exports": "skipped"
+   }
+  },
+  "open sea": {
+   "case": "open sea",
+   "args": "--bbox 89.50 20.00 89.70 20.20 --date 2024-06-01",
+   "exit_code": 0,
+   "wall_seconds": 27.2,
+   "traceback": false,
+   "answer": "run completed; terrain failed: No Copernicus DEM elevation data for this area (open sea, or outside the DEM coverage): terrain masks, the confidence map and everything that depends on them cannot be computed.",
+   "stage_statuses": {
+    "s1": "partial",
+    "terrain": "failed",
+    "s2": "skipped",
+    "confidence": "skipped",
+    "segmentation": "partial",
+    "osm": "partial",
+    "flood_path": "skipped",
+    "damage": "skipped",
+    "cutoff": "skipped",
+    "priority": "skipped",
+    "landing_zones": "skipped",
+    "multidate": "skipped",
+    "report": "ok",
+    "exports": "skipped"
+   }
+  },
+  "tiny area": {
+   "case": "tiny area",
+   "args": "--bbox 85.300 27.700 85.301 27.701 --date 2024-09-28",
+   "exit_code": 2,
+   "wall_seconds": 2.4,
+   "traceback": false,
+   "answer": "error: AOI is 0.01 km\u00b2, smaller than the 0.5 km\u00b2 minimum.",
+   "stage_statuses": {}
+  },
+  "huge area": {
+   "case": "huge area",
+   "args": "--bbox 80 25 84 29 --date 2024-09-28",
+   "exit_code": 2,
+   "wall_seconds": 2.2,
+   "traceback": false,
+   "answer": "error: AOI is 175,957 km\u00b2, larger than the 2,500 km\u00b2 limit. Please choose a smaller area (e.g. one valley reach).",
+   "stage_statuses": {}
+  },
+  "inverted box": {
+   "case": "inverted box",
+   "args": "--bbox 85.40 27.80 85.30 27.70 --date 2024-09-28",
+   "exit_code": 2,
+   "wall_seconds": 2.2,
+   "traceback": false,
+   "answer": "error: bbox order must be [min_lon, min_lat, max_lon, max_lat] with min < max (boxes crossing the antimeridian are not supported)",
+   "stage_statuses": {}
+  },
+  "bad date text": {
+   "case": "bad date text",
+   "args": "--bbox 85.30 27.70 85.40 27.80 --date 2024-13-40",
+   "exit_code": 2,
+   "wall_seconds": 0.1,
+   "traceback": false,
+   "answer": "floodmap run: error: argument --date: date must be YYYY-MM-DD, got '2024-13-40'",
+   "stage_statuses": {}
+  },
+  "missing date": {
+   "case": "missing date",
+   "args": "--bbox 85.30 27.70 85.40 27.80",
+   "exit_code": 2,
+   "wall_seconds": 2.2,
+   "traceback": false,
+   "answer": "error: --date is required with --bbox",
+   "stage_statuses": {}
+  }
+ }
+}

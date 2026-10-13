@@ -59,3 +59,56 @@ def connect():
 def load_collection(conn, collection_id: str, **kwargs):
     """Allowlisted wrapper around openEO `load_collection`."""
     return conn.load_collection(check_openeo_collection(collection_id), **kwargs)
+
+
+# Transient problems worth waiting for: CDSE busy (429) or briefly failing (5xx), and broken
+# or timed-out connections (seen 2026-10-13: "Connection broken: IncompleteRead" in the
+# middle of a Copernicus DEM download, which failed the whole terrain stage).
+BUSY_STATUS = {429}
+SERVER_STATUS = {500, 502, 503, 504}
+BUSY_RETRIES, NETWORK_RETRIES = 6, 3
+
+
+def _transient(exc: Exception) -> str | None:
+    status = getattr(exc, "http_status_code", None)
+    if status in BUSY_STATUS:
+        return "busy"
+    if status in SERVER_STATUS:
+        return "network"
+    from floodmap.net import TRANSIENT_NETWORK_ERRORS
+
+    if isinstance(exc, TRANSIENT_NETWORK_ERRORS):
+        return "network"
+    return None
+
+
+def download(cube, out_path, sleep=None):
+    """Synchronous openEO download with safe retries for transient problems only.
+
+    The file is written under a temporary name and renamed only when complete, so an
+    interrupted download never looks like a finished one. Anything else (bad request, no
+    data, login problem) is raised at once with its own message."""
+    import time
+    from pathlib import Path
+
+    sleep = sleep or time.sleep
+    out_path = Path(out_path)
+    part = out_path.with_name(out_path.name + ".part")
+    tries = {"busy": 0, "network": 0}
+    while True:
+        try:
+            cube.download(str(part), format="GTiff")
+            part.replace(out_path)
+            return out_path
+        except Exception as exc:
+            part.unlink(missing_ok=True)
+            kind = _transient(exc)
+            limit = BUSY_RETRIES if kind == "busy" else NETWORK_RETRIES
+            if kind is None or tries[kind] >= limit:
+                raise
+            tries[kind] += 1
+            wait = (10 if kind == "busy" else 15) * tries[kind]
+            log.warning("CDSE %s (%s); retry %d of %d in %ss", "busy" if kind == "busy"
+                        else "connection/server problem", type(exc).__name__, tries[kind],
+                        limit, wait)
+            sleep(wait)

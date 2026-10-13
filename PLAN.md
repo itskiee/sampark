@@ -116,7 +116,7 @@ Owner decision 2026-10-13 after re-reading both PDFs ("AI COMPONENT — choose o
 - [x] small U-Net trained from scratch on CPU (482,593 parameters, 20 m, 30 epochs, 40.8 min), ONNX 1.9 MB
 - [x] evaluation: test IoU 0.649 (threshold rule 0.445); unseen Bolivia event IoU 0.648 (rule 0.581); model card
 - [x] improvement attempts (rule: validation +0.005): bigger model 0.6285, weight averaging 0.6247, + brightness
-      augmentation 0.6242 vs current 0.6293 → current kept; Bolivia varies 0.536–0.648 between trainings (experiments.json)
+      augmentation 0.6242, ensemble 0.6281 vs current 0.6293 → current kept; Bolivia varies 0.536–0.648 between trainings (experiments.json)
 - [x] pipeline stage `segmentation`: water before/after → new water in plausible zone; agreement with change detection;
       not counted as an independent confidence source (same image); doctor checks the model file
 - [x] Himalayan unseen scenes: poor transfer (radar shadow taken as water, narrow corridor missed), no false
@@ -158,20 +158,30 @@ Rules checked before building (compliance.md §11): allowed inputs only, no new 
 Owner decisions 2026-10-13: report laid out by the owner in Word/Google Docs from our draft;
 video with the owner's voice AND captions; test on more than 10 unseen places; every
 deliverable checked.
-- [ ] README: what it does, run from scratch, **any area + date** (live judging), dashboard, sit-rep, run times,
-      limits, troubleshooting, how to read results, results summary, AI model + reproduction, rules, attributions
-- [ ] report draft (`report/`): full text, every number generated from results.json / metrics.json / model card,
-      figures as PNG; HTML that opens in Word; ≤ 6 pages incl. references (owner lays out, checks page count)
-- [ ] video: timed script (narration) + captions file (.srt) + title/end cards from `floodmap.attribution`;
-      maps/screens only, no victim images; owner records
-- [ ] unseen-place campaign: ≥ 12 places never used before (mountain + lowland + edge cases), full pipeline,
-      per-stage status and time, maps checked by eye; plus invalid inputs (future date, sea, tiny/huge area,
-      pre-Sentinel date); fix anything that fails, document everything
+- [x] README: what it does, run from scratch, **any area + date** (live judging), dashboard, sit-rep, run times,
+      limits, how to read results, results summary, AI model + reproduction, rules, attributions
+- [x] report draft (`report/build_report.py` → HTML for Word): every number generated; ≤ 6 pages (owner lays out)
+- [x] video kit (`report/video/`): timed script, captions (.srt), title/end cards; owner records
+- [x] Devpost text field by field (`docs/devpost.md`) + 3:2 thumbnail and gallery (`report/devpost/`)
+- [x] unseen-place campaign: 13 places + 8 invalid inputs (`docs/testing/unseen_places.md`); findings and fixes in
+      `docs/explainers/M9_testing_and_submission.md`:
+      huge-flood speed (subdivided flood polygons, prepared queries; identical results, tests),
+      download retries for transient problems (tests), console without tracebacks (test),
+      clear "no DEM data" message; documented: no S1 pair (Porto Alegre), false-alarm floor (Pokhara),
+      deserts/flat cities (Dubai), sparse pre-event OSM (Swat, Chamoli)
+- [x] later passes optional (owner decision): checkbox + "Track later passes" button + `--later-passes`;
+      case study keeps them on (event file); dashboard uses each event's own settings
+- [x] `doctor` checks Copernicus processing (tiny DEM request); leftover LLM settings removed
+- [x] re-runs with the fixes: Thessaly, Kathmandu (+ landing-zone memory fix), invalid inputs (clear messages,
+      no tracebacks); Trishuli re-run number by number: all identical
 - [ ] final checks: fresh clone → hashed install → tests → pre-commit (gitleaks whole history) → doctor → live run;
-      CI green (browser); attributions + prototype label on every output; no local paths/secrets;
-      remove leftover LLM-key settings in code (config.Settings, cli doctor text, data_rules comment,
-      redaction tests keep a generic fake secret); dashboard lists configs/events/unseen/ too
+      CI green; attributions + prototype label on every output; no local paths/secrets
 - [ ] deliverables matrix (compliance.md §9) all ✅; Devpost text drafted; owner makes repo public + submits
+- [x] display name **Sampark** (सम्पर्क, "connection"; owner decision 2026-10-13): README, report, video, Devpost,
+      dashboard, field package (code stays `floodmap`)
+- [ ] low-key AI attribution (owner decision 2026-10-13, run only on the owner's word, before going public):
+      backup → drop co-author trailers from history → untrack CLAUDE.md/.claude/ → update refs to 048c725 →
+      checks → force-push while private; one honest "Acknowledgements" line in the README
 
 ## Approved proposals (from planning)
 P1 numbers-by-construction copilot · P2 template sit-rep with LLM narrative + fallback ·

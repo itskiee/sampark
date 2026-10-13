@@ -1,4 +1,8 @@
-# floodmap — Mapping flood damage from space
+# Sampark — who is cut off after a flood, mapped from space
+
+**Sampark** (सम्पर्क) means *connection* in Hindi and Nepali; Nepali news calls villages cut off
+after floods and landslides *सम्पर्कविहीन*, "without connection". The code package and commands
+are named `floodmap`.
 
 > **Educational prototype** built for the Multimodal AI Hackathon 2026 (Track B). Not an
 > operational tool. All results are estimates from satellite data and pre-event
@@ -98,8 +102,9 @@ python -m venv .venv
 .venv/Scripts/python -m floodmap doctor
 ```
 It checks Python, packages, the configuration, disk space, the Copernicus login and
-catalogue, the ohsome API with a small pre-event OpenStreetMap download, and the
-segmentation model file. Run it before every demo.
+catalogue, **a tiny Copernicus processing request** (proves that login, credits and the
+processing service work), the ohsome API with a small pre-event OpenStreetMap download, and
+the segmentation model file. Run it before every demo.
 
 ### 4. Run the case study
 ```bash
@@ -138,6 +143,11 @@ Example (Melamchi flood, Nepal, 2021):
 Options:
 - `--flood-path-start LON LAT`: trace the flood path from an upstream point (bonus) and list
   the settlements along it. Any point near the river works; it snaps to the channel.
+- `--later-passes`: also track the later satellite passes of the same track (is the water
+  going down, is new water ponding, is a lake forming behind debris?). Optional follow-up,
+  off by default because it adds about 4–8 minutes and right after a flood those passes
+  usually do not exist yet. The case study switches it on in its event file; in the
+  dashboard it is a checkbox, and a finished run offers "Track later passes for this area".
 - `--stages s1,terrain,…`: run only some stages (the ones they need are added).
 - Or write an event file like [configs/events/trishuli_2026.yaml](configs/events/trishuli_2026.yaml)
   and use `--event FILE`. The same is possible in the dashboard (**New analysis**).
@@ -148,10 +158,11 @@ Options:
   first radar image *after* the date and up to three *before* it on the same orbit track,
   and needs pre-event OpenStreetMap from ohsome (snapshot: the day before the event, or the
   latest ohsome data if older).
-- A new area of a few hundred km² takes about 8–13 minutes on a laptop (downloads from
-  Copernicus Data Space are most of it); a repeated run is served from the cache in
-  seconds to a few minutes. Later-pass tracking adds one download per later pass (up to
-  three) the first time.
+- Measured on 13 unseen places (with later passes on): 11–45 minutes per new area of
+  330–960 km², most of it waiting for Copernicus Data Space; mountain valleys took 12–21
+  minutes, large lowland floods the longest. Later passes account for 3.5–8 minutes of that
+  (now optional). A repeated run is served from the cache in seconds to a few minutes.
+  Details: [docs/testing/unseen_places.md](docs/testing/unseen_places.md).
 - When something is missing (no radar pass yet, cloudy optical image, no OSM roads), that
   stage reports *skipped* with the reason and the rest of the analysis still runs. A stage
   never crashes the whole run.
@@ -219,7 +230,7 @@ reason and never stops the run; all tunable values live in
 | `cutoff` | road graph before vs after, reachability to the nearest town, hospital or road leaving the area; first break on the old route; the plain-language sentence |
 | `priority` | rescue priority tiers and reasons |
 | `landing_zones` | flat, dry, open ground near likely cut-off settlements |
-| `multidate` | later passes of the same track, same thresholds: receding water, new ponding, possible lakes |
+| `multidate` | optional (`--later-passes`): later passes of the same track, same thresholds: receding water, new ponding, possible lakes |
 | `report`, `exports` | one-page situation report; field package |
 
 Design notes per milestone (what, why, what if removed, alternatives):
@@ -247,8 +258,8 @@ data, and show how well it works on Himalayan scenes it has never seen."*
   0.99 where it does flag water. So the change detection stays the primary map and the
   model is a documented second opinion.
 - **Improvement attempts did not beat it** (chosen by validation only, decided in advance): a
-  4× larger model (validation 0.6285 vs 0.6293), weight averaging (0.6247) and brightness
-  augmentation (0.6242). The unseen-event score varies between trainings (0.536–0.648), so a
+  4× larger model (validation 0.6285 vs 0.6293), weight averaging (0.6247), brightness
+  augmentation (0.6242) and an ensemble of three models (0.6281). The unseen-event score varies between trainings (0.536–0.648), so a
   fair summary is "about 0.54–0.65 against 0.58 for the threshold rule". The limit is the
   training data, not the model: [models/segmentation/experiments.json](models/segmentation/experiments.json).
 - Model card with all metrics: [models/segmentation/model_card.json](models/segmentation/model_card.json);
@@ -321,6 +332,11 @@ The full discussion is in the report; the most important points:
 - **Our model** was trained on lowland floods and transfers poorly to Himalayan gorges.
 - **Seasonal effects:** monsoon-wet fields, snow and vegetation change can look like water
   or debris to radar.
+- **Needs a Sentinel-1 before/after pair on the same orbit track.** Where none exists, the
+  system says so and does not map the flood; mapping from Sentinel-2 alone is not
+  implemented (future work). Example: over Porto Alegre (Brazil) in 2024, when only one
+  Sentinel-1 satellite was flying, there is no radar image at all between February and the
+  flood; the first one is from 8 May 2024 ([docs/testing/unseen_places.md](docs/testing/unseen_places.md)).
 - **Built for river-valley floods.** In deserts, dry sand is as dark as water to radar (it can
   be labelled "permanent water"), and rain changes sand and city surfaces everywhere; in
   flat, dense cities scattered detections then cut many roads, so cut-off counts there are

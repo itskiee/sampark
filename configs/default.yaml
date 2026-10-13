@@ -229,6 +229,11 @@ landing_zones:
   per_settlement: 2
 
 multidate:
+  # Optional follow-up (owner decision 2026-10-13): off for a new analysis, so the first answer
+  # (where, what, who) comes 3.5-8 minutes sooner; switched on in the dashboard ("Track later
+  # satellite passes"), with --later-passes, or per event file (the case study keeps it on).
+  # Right after a flood the later passes usually do not exist yet anyway.
+  enabled: false
   # Later Sentinel-1 passes of the same track are tracked up to this many days after the event
   # (12-day repeat: about three passes; more if Sentinel-1C/1D add 6-day revisits).
   max_days_after_event: 40

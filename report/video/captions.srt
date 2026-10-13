@@ -1,12 +1,12 @@
 1
-00:00:00,000 --> 00:00:05,950
-Floodmap. Give it an area and a flood
-date, and it tells rescue teams where the
+00:00:00,000 --> 00:00:06,370
+Sampark. Give it an area and a flood date,
+and it tells rescue teams where the flood
 
 2
-00:00:06,000 --> 00:00:11,950
-flood hit, what was damaged, and who is
-cut off, from free satellite data only.
+00:00:06,420 --> 00:00:11,950
+hit, what was damaged, and who is cut off,
+from free satellite data only.
 
 3
 00:00:12,000 --> 00:00:17,687
@@ -82,18 +82,19 @@ and its distance, and a reminder: needs
 field verification.
 
 18
-00:01:40,000 --> 00:01:49,163
+00:01:40,000 --> 00:01:46,870
 Settlements are ranked for rescue, with
 helicopter landing-zone candidates nearby.
 
 19
-00:01:49,213 --> 00:01:57,590
-The system also writes a one-page
-situation report, and a field package for
+00:01:46,920 --> 00:01:53,958
+Later satellite passes show whether a lake
+is forming behind debris. And it writes a
 
 20
-00:01:57,640 --> 00:01:59,950
-GPS units and phones.
+00:01:54,008 --> 00:01:59,950
+one-page situation report and a field
+package for GPS units and phones.
 
 21
 00:02:00,000 --> 00:02:06,117
@@ -115,24 +116,24 @@ and we show that honestly: it is a second
 opinion, not the main map.
 
 25
-00:02:22,000 --> 00:02:27,444
+00:02:22,000 --> 00:02:27,461
 We checked our results against the
 official Copernicus EMS maps, which were
 
 26
-00:02:27,494 --> 00:02:33,304
+00:02:27,511 --> 00:02:33,340
 never an input. Where we flag damage, EMS
 agrees, with ninety-one to one hundred
 
 27
-00:02:33,354 --> 00:02:39,163
+00:02:33,390 --> 00:02:39,218
 percent precision. In the narrow gorge we
 find only about a third of the area, a
 
 28
-00:02:39,213 --> 00:02:44,950
+00:02:39,268 --> 00:02:44,950
 limitation we document. We also ran the
-system on [N] places it had never seen.
+system on 13 places it had never seen.
 
 29
 00:02:45,000 --> 00:02:52,474
@@ -145,5 +146,5 @@ before a glacier collapse.
 
 31
 00:02:55,000 --> 00:02:59,950
-Floodmap is an educational prototype.
+Sampark is an educational prototype.
 Always verify on the ground.

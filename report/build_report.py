@@ -131,8 +131,15 @@ def main() -> int:
     # ---- unseen places ----
     if unseen and unseen.get("places"):
         places = [p for p in unseen["places"].values() if "stages" in p]
-        failed = sum(1 for p in places for s in p["stages"].values()
-                     if s["status"] == "failed")
+        failed = [(p["name"], name, s["message"]) for p in places
+                  for name, s in p["stages"].items() if s["status"] == "failed"]
+        failed_text = "none" if not failed else "; ".join(
+            f"{html.escape(nm.split(',')[0])}: {stg} ({html.escape(msg.split('.')[0])})"
+            for nm, stg, msg in failed)
+
+        def d(v, fmt="{:,}"):  # missing values in this table are shown as a dash
+            return "–" if v is None else fmt.format(v)
+
         rows = []
         for p in places:
             k = p["key"]
@@ -142,9 +149,9 @@ def main() -> int:
                 f"<tr><td>{html.escape(p['name'])}</td><td>{p['event_date']}</td>"
                 f"<td>{p['wall_seconds'] / 60:.0f}</td>"
                 f"<td>{'/'.join(str(counts[s]) for s in counts)}</td>"
-                f"<td>{n(k['potentially_affected_km2'], '{:.1f}')}</td>"
-                f"<td>{n(k['settlements_likely_cut_off'])} / "
-                f"{n(k['settlements_assessed'])}</td></tr>")
+                f"<td>{d(k['potentially_affected_km2'], '{:.1f}')}</td>"
+                f"<td>{d(k['settlements_likely_cut_off'])} / "
+                f"{d(k['settlements_assessed'])}</td></tr>")
         invalid = list((unseen.get("invalid") or {}).values())
         tb = sum(1 for i in invalid if i["traceback"])
         tb_text = ("produced no Python traceback; each got a plain-language answer." if tb == 0
@@ -152,7 +159,7 @@ def main() -> int:
         unseen_html = (
             f"<p>The full system ran on <b>{len(places)} places it had never seen</b> "
             f"(Himalaya, Europe, South America, a desert city, no-flood control), exactly as a "
-            f"judge would run it. Stages failed: <b>{failed}</b>. {len(invalid)} invalid inputs "
+            f"judge would run it. Stages that failed: {failed_text}. {len(invalid)} invalid inputs "
             f"(future date, open sea, tiny/huge/inverted area, pre-Sentinel date, bad text) "
             f"{tb_text}</p>"
             "<table><tr><th>Place</th><th>Date</th><th>Minutes</th>"
@@ -189,7 +196,7 @@ def main() -> int:
     ]
 
     body = f"""
-<h1>floodmap: flood damage and cut-off settlements from free satellite data</h1>
+<h1>Sampark: who is cut off after a flood, mapped from free satellite data</h1>
 <p class="sub">Multimodal AI Hackathon 2026 · Track B "Mapping flood damage from space" ·
 Nandika Agarwal · github.com/itskiee/floodmap<br>
 <b>{html.escape(attribution.DISCLAIMER)}</b></p>
@@ -197,7 +204,8 @@ Nandika Agarwal · github.com/itskiee/floodmap<br>
 <h2>1. Problem and users</h2>
 <p>After a Himalayan debris flood, district emergency centres, army and police helicopter
 teams and relief organisations need three answers fast, often before anyone can reach the
-valley: <b>where did the flood hit, what was damaged, and who is cut off?</b> floodmap takes
+valley: <b>where did the flood hit, what was damaged, and who is cut off?</b> Sampark
+(सम्पर्क, Hindi and Nepali for "connection"; code package <code>floodmap</code>) takes
 <b>any area and flood date</b> and answers them from free data only: Sentinel-1 radar,
 Sentinel-2 optical images when the sky is clear, the Copernicus DEM and OpenStreetMap (OSM) as
 it was before the event. Results are worded as estimates for prioritising field checks
@@ -354,6 +362,10 @@ or debris; later-date debris areas drift upwards with the season.</li>
 <li><b>False alarms:</b> ploughed fields, harvests, shoreline and construction changes also
 change radar backscatter; a no-flood control still shows scattered, mostly low-confidence
 detections (Section 8).</li>
+<li><b>Needs a same-track Sentinel-1 before/after pair:</b> where none exists, the system
+says so and does not map the flood (Porto Alegre 2024: no radar image at all between February
+and the flood, when only one Sentinel-1 satellite was flying). Mapping from Sentinel-2 alone is
+future work.</li>
 <li><b>Built for river-valley floods:</b> in deserts dry sand is as dark as water to radar and
 rain changes sand and city surfaces everywhere; in flat, dense cities scattered detections cut
 many roads, so cut-off counts there are not reliable (Dubai test, Section 8).</li>
@@ -377,7 +389,7 @@ table { border-collapse: collapse; font-size: 9pt; margin: 4pt 0; }
 td, th { border: 1px solid #999; padding: 2pt 5pt; } th { background: #e8eef4; }
 .refs { font-size: 8.5pt; }
 </style>"""
-    page = (f'<!DOCTYPE html><html><head><meta charset="utf-8"><title>floodmap report draft'
+    page = (f'<!DOCTYPE html><html><head><meta charset="utf-8"><title>Sampark report draft'
             f"</title>{style}</head><body>{body}</body></html>")
     target = OUT / "floodmap_report_draft.html"
     target.write_text(page + "\n", encoding="utf-8")

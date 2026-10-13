@@ -48,6 +48,9 @@ def _build_parser() -> argparse.ArgumentParser:
     run.add_argument("--flood-path-start", type=float, nargs=2, metavar=("LON", "LAT"),
                      help="upstream point for the flood-path bonus")
     run.add_argument("--config", type=Path, action="append", default=[], help="extra config YAML")
+    run.add_argument("--later-passes", action="store_true",
+                     help="also track later satellite passes (receding water, possible lakes "
+                          "forming; adds about 4-8 minutes)")
 
     sub.add_parser("login", help="log in to Copernicus Data Space (once; token in your profile)")
 
@@ -115,7 +118,8 @@ def _cmd_run(args: argparse.Namespace) -> int:
             focus, start = None, None
         if args.flood_path_start:
             start = tuple(args.flood_path_start)
-        config = load_config(event, tuple(args.config))
+        config = load_config(event, tuple(args.config),
+                             {"multidate": {"enabled": True}} if args.later_passes else None)
         stages = [s.strip() for s in args.stages.split(",")] if args.stages else None
         results = run_pipeline(aoi_spec, event_date, config, stages=stages, event_name=name,
                                focus_bbox=focus, flood_path_start=start)
@@ -205,10 +209,32 @@ def _cmd_doctor(args: argparse.Namespace) -> int:
         from floodmap.cdse_client import CDSEError, connect
 
         try:
-            connect()
+            conn = connect()
             check("cdse login", "OK", "logged in (token stored in your user profile)")
         except CDSEError as exc:
+            conn = None
             check("cdse login", "FAIL", str(exc))
+
+        if conn is not None:  # processing itself (credits, server), not only the login
+            import tempfile
+            import time
+
+            from floodmap.cdse_client import load_collection
+            from floodmap.logging_setup import redact
+
+            try:
+                t0 = time.time()
+                cube = load_collection(conn, "COPERNICUS_30", spatial_extent={
+                    "west": 85.300, "south": 28.150, "east": 85.304, "north": 28.154})
+                with tempfile.TemporaryDirectory() as tmp:
+                    cube.max_time().download(str(Path(tmp) / "dem_probe.tif"), format="GTiff")
+                check("cdse processing", "OK", f"a tiny Copernicus DEM request was processed "
+                                               f"in {time.time() - t0:.0f} s")
+            except Exception as exc:
+                check("cdse processing", "FAIL",
+                      f"{redact(str(exc))[:160]} (check your openEO credit balance: "
+                      "Billing page of the openEO algorithm plaza, or the Copernicus Data "
+                      "Space status)")
 
         from floodmap.data_rules import ohsome_snapshot
         from floodmap.ohsome_client import latest_data_timestamp

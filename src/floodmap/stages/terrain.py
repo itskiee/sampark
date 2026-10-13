@@ -53,7 +53,16 @@ def run_terrain(ctx: StageContext) -> StageResult:
     if not ctx.cache.is_complete(folder):
         folder.mkdir(parents=True, exist_ok=True)
         ctx.progress("terrain", "downloading Copernicus DEM GLO-30 from CDSE")
-        fetch_dem(connect(), aoi, cfg.buffer_m, cfg.dem_resolution_m, dem_path)
+        try:
+            fetch_dem(connect(), aoi, cfg.buffer_m, cfg.dem_resolution_m, dem_path)
+        except Exception as exc:
+            if "NoDataAvailable" not in str(exc):
+                raise
+            # the Copernicus DEM covers land only (seen on the open-sea test, 2026-10-14)
+            return StageResult("terrain", StageStatus.FAILED,
+                               "No Copernicus DEM elevation data for this area (open sea, or "
+                               "outside the DEM coverage): terrain masks, the confidence map "
+                               "and everything that depends on them cannot be computed.")
         ctx.cache.mark_complete(folder, key)
     hydro_path = folder / f"hydrology_stream{cfg.stream_area_km2:g}km2.tif"
     with rasterio.open(dem_path) as src:

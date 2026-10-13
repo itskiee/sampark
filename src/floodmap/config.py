@@ -177,6 +177,7 @@ class LandingZonesConfig(_Strict):
 
 
 class MultidateConfig(_Strict):
+    enabled: bool
     max_days_after_event: int = Field(gt=0, le=120)
     max_dates: int = Field(ge=1, le=10)
     lake_min_area_m2: float = Field(gt=0)

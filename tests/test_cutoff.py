@@ -99,3 +99,45 @@ def test_no_access_and_snapping():
     assert classify(np.inf, np.inf, np.inf, 1.5, 2000) == "no access before the event"
     g = build_graph(ROADS, INSIDE)
     assert snap(g, gpd.GeoSeries([Point(20_000, 20_000)]), 500)[0] == -1
+
+
+def test_edge_confidence_matches_reference():
+    """The fast query (segments in the tree, flood polygons as prepared queries) must give
+    exactly the old result (polygons in the tree, segments as queries). Found 2026-10-13:
+    the old order took > 40 min on the huge Storm Daniel flood polygon."""
+    import shapely
+
+    from floodmap.cutoff import CONF_RANK, edge_confidence
+
+    rng = np.random.default_rng(7)
+    starts = rng.uniform(0, 20_000, (400, 2))
+    roads = gpd.GeoDataFrame(
+        {"highway": ["primary"] * 400, "is_bridge": [False] * 400, "name": ["r"] * 400},
+        geometry=[LineString([tuple(a), tuple(a + rng.uniform(-3000, 3000, 2))])
+                  for a in starts], crs=EPSG)
+    g = build_graph(roads, INSIDE, densify_m=50)
+    # one big, jagged polygon (many vertices) plus small patches at every confidence level
+    angles = np.linspace(0, 2 * np.pi, 4000, endpoint=False)
+    radius = 6000 + 1500 * np.sin(angles * 37) + rng.uniform(0, 300, angles.size)
+    big = shapely.Polygon(np.column_stack([10_000 + radius * np.cos(angles),
+                                           10_000 + radius * np.sin(angles)]))
+    small = [box(x, y, x + 200, y + 200) for x, y in rng.uniform(0, 20_000, (60, 2))]
+    flood = gpd.GeoDataFrame(
+        {"confidence": ["medium"] + list(rng.choice(["low", "medium", "high"], 60))},
+        geometry=[big] + small, crs=EPSG)
+
+    new = edge_confidence(g, flood, 10, {})
+
+    old = np.zeros(len(g.u), dtype=np.int8)  # reference: the previous implementation
+    real = np.flatnonzero(g.way >= 0)
+    segments = g.segments()
+    levels = flood["confidence"].map(CONF_RANK).fillna(0).astype(int)
+    for level in (1, 2, 3):
+        polys = flood[levels == level]
+        tree = shapely.STRtree(polys.geometry.buffer(10).values)
+        seg_idx, _ = tree.query(segments, predicate="intersects")
+        hit = real[np.unique(seg_idx)]
+        old[hit] = np.maximum(old[hit], level)
+
+    assert (new > 0).sum() > 100  # the test really exercises hits
+    assert np.array_equal(new, old)

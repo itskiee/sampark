@@ -61,6 +61,18 @@ class RedactingFormatter(logging.Formatter):
         return redact(super().format(record))
 
 
+class ConsoleFormatter(RedactingFormatter):
+    """One short line per message: tracebacks go only to the log file (a user or judge sees
+    "Stage terrain failed [error 725b12d4] (details in logs/floodmap.log)", never a Python
+    traceback; seen on the open-sea test 2026-10-14)."""
+
+    def format(self, record: logging.LogRecord) -> str:
+        short = logging.makeLogRecord(record.__dict__)
+        short.exc_info, short.exc_text, short.stack_info = None, None, None
+        text = super().format(short)
+        return text + "  (details in logs/floodmap.log)" if record.exc_info else text
+
+
 _CONFIGURED = False
 
 
@@ -80,7 +92,7 @@ def setup_logging(log_dir: Path | None = None, level: str = "INFO") -> logging.L
 
     console = logging.StreamHandler(sys.stderr)
     console.setLevel(level.upper())
-    console.setFormatter(RedactingFormatter("%(levelname)s %(message)s"))
+    console.setFormatter(ConsoleFormatter("%(levelname)s %(message)s"))
     logger.addHandler(console)
 
     if log_dir is not None:

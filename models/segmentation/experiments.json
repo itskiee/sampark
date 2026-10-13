@@ -17,7 +17,7 @@
    "valid_iou": 0.6293,
    "test_iou": 0.649,
    "bolivia_iou": 0.6477,
-   "summary": "Improvement attempts, decided in advance by validation IoU only (adopt if at least 0.005 better; test and Bolivia never used to choose): 4x larger (base 32, 50 epochs): validation 0.6285, Bolivia 0.536; weight averaging (EMA 0.995 with warm-up): validation 0.6247, Bolivia 0.585; weight averaging + brightness augmentation (+-1.5 dB): validation 0.6242, Bolivia 0.590. None beat the current model (validation 0.6293), so it was kept. Across the four variants the unseen-event (Bolivia, 15 chips) IoU ranges 0.536-0.648: that estimate varies a lot between trainings, so our 0.648 is likely at the favourable end. The limit is the training data, not the model size or training procedure."
+   "summary": "Improvement attempts, decided in advance by validation IoU only (adopt if at least 0.005 better; test and Bolivia never used to choose): 4x larger (base 32, 50 epochs): validation 0.6285, Bolivia 0.536; weight averaging (EMA 0.995 with warm-up): validation 0.6247, Bolivia 0.585; weight averaging + brightness augmentation (+-1.5 dB): validation 0.6242, Bolivia 0.590.; an ensemble averaging three of them (no training): validation 0.6281, Bolivia 0.607. None beat the current model (validation 0.6293), so it was kept. Across the four variants the unseen-event (Bolivia, 15 chips) IoU ranges 0.536-0.648: that estimate varies a lot between trainings, so our 0.648 is likely at the favourable end. The limit is the training data, not the model size or training procedure."
   },
   {
    "key": "base32_e50",
@@ -73,6 +73,17 @@
    "test_iou": 0.6538,
    "bolivia_iou": 0.5897,
    "summary": ""
+  },
+  {
+   "key": "ensemble_3",
+   "label": "ensemble: average of current, V1 and V2 (no training)",
+   "architecture": "3 x U-Net base 16",
+   "training": null,
+   "valid_iou": 0.6281,
+   "test_iou": 0.6538,
+   "bolivia_iou": 0.6069,
+   "summary": "",
+   "how": "scripts/eval_ensemble.py, onnxruntime, same chips"
   }
  ]
 }
