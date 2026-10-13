@@ -85,6 +85,11 @@ python -m venv .venv
 # .venv/bin/python -m pip install --require-hashes -r requirements.txt     # Linux / macOS
 .venv/Scripts/python -m pip install --no-deps -e .
 ```
+**Windows:** clone into a short folder (for example `C:\sampark`). Some packages contain
+very long file paths, and pip fails beyond Windows' 260-character limit unless
+[long paths are enabled](https://pip.pypa.io/warnings/enable-long-paths) (seen in our
+fresh-clone test).
+
 `--require-hashes` makes pip check every package against the SHA-256 in
 `requirements.txt`; installation stops if anything does not match. On Linux/macOS use
 `.venv/bin/python` wherever this README says `.venv/Scripts/python`.
