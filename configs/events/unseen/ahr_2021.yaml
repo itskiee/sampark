@@ -1,0 +1,13 @@
+# Unseen-place test (M9): never used before in this project; robustness + plausibility only.
+# Why chosen: European mountain-valley flash flood with many bridges lost.
+# The box is approximate, drawn from general geography (towns and rivers), NOT from any
+# published flood or damage map.
+
+name: "Ahr valley flash flood (Germany)"
+event_date: 2021-07-14
+
+aoi:
+  # [min_lon, min_lat, max_lon, max_lat] in WGS84 degrees
+  bbox: [6.85, 50.4, 7.2, 50.6]
+
+config_overrides: {}

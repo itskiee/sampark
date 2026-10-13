@@ -166,7 +166,8 @@ def test_full_pipeline_offline(tmp_path, offline_world):
     start = (85.35, 28.215)
     results = run_pipeline(AOI_BBOX, EVENT, config, event_name="synthetic valley",
                            stages=["s1", "s2", "terrain", "confidence", "osm", "flood_path",
-                                   "damage", "cutoff", "priority"],
+                                   "damage", "cutoff", "priority", "landing_zones", "report",
+                                   "exports"],
                            focus_bbox=(85.33, 28.14, 85.37, 28.20), flood_path_start=start)
     st = results.stages
     assert st["s1"].status == StageStatus.OK, st["s1"].message
@@ -215,7 +216,19 @@ def test_full_pipeline_offline(tmp_path, offline_world):
     assert top["name"] == "Floorvillage" and top["tier"] == 1 and top["rank"] == 1
     assert "on the traced flood corridor" in top["reasons"]
     along = st["flood_path"].outputs["settlements_along_path"]
-    assert [s["name"] for s in along] == ["Floorvillage"]  # slope village is 2 km away
+    assert [s["name"] for s in along] == ["Floorvillage"]
+
+    # M8 extras: landing zones, sit-rep and field package run on the same synthetic world
+    assert st["landing_zones"].usable, st["landing_zones"].message
+    assert st["landing_zones"].outputs["likely_cut_off_settlements"] == 1
+    assert st["report"].status == StageStatus.OK
+    assert st["exports"].status == StageStatus.OK, st["exports"].message
+    import zipfile
+
+    with zipfile.ZipFile(st["exports"].outputs["files"]["zip"]) as zf:
+        names = set(zf.namelist())
+    assert {"README.txt", "LICENSE_OSM_DATA.txt", "layers.gpkg", "sitrep.pdf"} <= names
+    assert "kml/settlements_cutoff.kml" in names  # slope village is 2 km away
     assert abs(along[0]["height_above_river_m"]) < 20
 
     data = json.loads((results.run_dir / "results.json").read_text(encoding="utf-8"))
@@ -252,3 +265,24 @@ def test_area_without_osm_data_gives_clear_messages(tmp_path, offline_world, mon
     assert st["damage"].usable, st["damage"].message
     assert st["damage"].outputs["buildings"]["potentially_affected"] == 0
     assert st["flood_path"].outputs["settlements_along_path"] == []
+
+
+@pytest.mark.skipif(not __import__("floodmap.segmentation", fromlist=["available"]).available(),
+                    reason="segmentation model not trained")
+def test_own_segmentation_model_in_pipeline(tmp_path, offline_world):
+    """Our U-Net runs inside the pipeline on the synthetic valley and finds the new water."""
+    config = load_config(overrides={
+        "cache": {"dir": str(tmp_path / "cache")},
+        "output": {"dir": str(tmp_path / "outputs")},
+        "logging": {"dir": str(tmp_path / "logs")},
+        "s1": {"resolution_m": RES, "min_mapping_unit_m2": RES**2},
+        "terrain": {"dem_resolution_m": RES, "buffer_m": 2000, "stream_area_km2": 1.0},
+    })
+    results = run_pipeline(AOI_BBOX, EVENT, config, event_name="synthetic valley",
+                           stages=["segmentation"])
+    seg = results.stages["segmentation"]
+    assert seg.status == StageStatus.OK, (seg.message, seg.warnings)
+    assert seg.outputs["new_water_km2"] > 0.3  # the flooded valley floor (~0.5 km² inside)
+    assert seg.outputs["agreement_with_change_detection_water"]["iou"] > 0.5
+    data = json.loads((results.run_dir / "results.json").read_text(encoding="utf-8"))
+    assert "Bonafilia" in data["training_data_citations"][0]

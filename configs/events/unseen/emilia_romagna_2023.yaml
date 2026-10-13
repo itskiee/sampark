@@ -1,0 +1,13 @@
+# Unseen-place test (M9): never used before in this project; robustness + plausibility only.
+# Why chosen: lowland river flooding of towns and farmland.
+# The box is approximate, drawn from general geography (towns and rivers), NOT from any
+# published flood or damage map.
+
+name: "Emilia-Romagna floods, Faenza-Lugo (Italy)"
+event_date: 2023-05-17
+
+aoi:
+  # [min_lon, min_lat, max_lon, max_lat] in WGS84 degrees
+  bbox: [11.75, 44.2, 12.1, 44.5]
+
+config_overrides: {}

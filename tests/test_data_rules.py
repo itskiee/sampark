@@ -204,3 +204,27 @@ def test_sensitive_paths_are_git_ignored(path):
 @pytest.mark.parametrize("path", [".env.example", "src/floodmap/aoi.py", "configs/default.yaml"])
 def test_project_files_are_not_git_ignored(path):
     assert not _ignored(path), f"{path} should be tracked but is git-ignored"
+
+
+@pytest.mark.parametrize("name", [
+    "v1.1/data/flood_events/HandLabeled/S1Hand/Ghana_103272_S1Hand.tif",
+    "v1.1/data/flood_events/HandLabeled/LabelHand/Ghana_103272_LabelHand.tif",
+    "v1.1/splits/flood_handlabeled/flood_test_data.csv",
+])
+def test_allowed_training_objects(name):
+    from floodmap.data_rules import check_training_object
+
+    assert check_training_object(name) == name
+
+
+@pytest.mark.parametrize("name", [
+    "v1.1/data/flood_events/HandLabeled/JRCWaterHand/Ghana_103272_JRCWaterHand.tif",  # JRC
+    "v1.1/data/flood_events/HandLabeled/S2Hand/Ghana_103272_S2Hand.tif",  # not approved
+    "v1.1/data/flood_events/WeaklyLabeled/S1Weak/x.tif",
+    "../v1.1/data/flood_events/HandLabeled/S1Hand/x.tif",
+])
+def test_refused_training_objects(name):
+    from floodmap.data_rules import DataRuleViolation, check_training_object
+
+    with pytest.raises(DataRuleViolation):
+        check_training_object(name)

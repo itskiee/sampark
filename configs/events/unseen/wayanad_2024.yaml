@@ -1,0 +1,13 @@
+# Unseen-place test (M9): never used before in this project; robustness + plausibility only.
+# Why chosen: monsoon landslide debris flow in forested hills.
+# The box is approximate, drawn from general geography (towns and rivers), NOT from any
+# published flood or damage map.
+
+name: "Mundakkai-Chooralmala debris flow, Wayanad, Kerala (India)"
+event_date: 2024-07-30
+
+aoi:
+  # [min_lon, min_lat, max_lon, max_lat] in WGS84 degrees
+  bbox: [76.05, 11.4, 76.25, 11.6]
+
+config_overrides: {}

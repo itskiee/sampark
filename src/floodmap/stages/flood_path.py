@@ -29,7 +29,8 @@ def run_flood_path(ctx: StageContext) -> StageResult:
     if ctx.flood_path_start is None:
         return StageResult("flood_path", StageStatus.SKIPPED,
                            "No upstream start point given (event file `flood_path_start`, "
-                           "CLI --flood-path-start LON LAT, or a click in the dashboard).")
+                           "CLI --flood-path-start LON LAT, or 'Trace a flood path' in the "
+                           "dashboard).")
     cfg, aoi = ctx.config.flood_path, ctx.aoi
     terr = ctx.results.stages["terrain"].outputs
     with rasterio.open(terr["files"]["hydrology"]) as src:

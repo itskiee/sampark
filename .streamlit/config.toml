@@ -1,0 +1,21 @@
+# Streamlit settings for the floodmap dashboard (checked by tests/test_dashboard.py).
+
+[browser]
+# Owner rule: no data leaves the machine. Streamlit would otherwise send usage statistics.
+gatherUsageStats = false
+
+[server]
+# Only this computer can open the dashboard (not other machines on the network).
+address = "localhost"
+# Do not re-run the app when files change (stable during a live demo).
+fileWatcherType = "none"
+runOnSave = false
+
+[client]
+# Never show tracebacks or file paths in the browser; details go to the redacted log only.
+showErrorDetails = "none"
+toolbarMode = "minimal"
+
+[theme]
+base = "light"
+primaryColor = "#16324f"

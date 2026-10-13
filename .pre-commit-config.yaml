@@ -13,6 +13,9 @@ repos:
       - id: detect-private-key
       - id: check-added-large-files   # stops accidental commits of rasters / data dumps
         args: ["--maxkb=1024"]
+        # The ONE intentional exception: our trained segmentation model (1.9 MB ONNX, M5),
+        # which must ship so the pipeline runs without retraining. Exact path only.
+        exclude: ^models/segmentation/s1_water_unet\.onnx$
       - id: check-merge-conflict
       - id: check-yaml
       - id: check-toml

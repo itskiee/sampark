@@ -12,7 +12,7 @@ def test_config_show_prints_valid_json(capsys):
     assert cli.main(["config-show", "--event", TRISHULI]) == 0
     data = json.loads(capsys.readouterr().out)
     assert data["event"]["event_date"] == "2026-08-26"
-    assert "LLM_API_KEY" in data["settings"]
+    assert data["settings"]["secrets needed"].startswith("none")
 
 
 def test_run_with_inverted_bbox_returns_input_error(capsys):
@@ -35,7 +35,7 @@ def test_doctor_offline_runs_and_hides_secrets(monkeypatch, capsys):
     code = cli.main(["doctor", "--offline"])
     out = capsys.readouterr().out
     assert "sk-test-FAKE-doctor-key" not in out
-    assert "set (hidden)" in out
+    assert "secrets needed" in out
     assert code in (0, 1)
 
 

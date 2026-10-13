@@ -40,7 +40,8 @@ FORBIDDEN_SUBSTRINGS: tuple[str, ...] = (
     # current OSM sources
     "overpass",
     # surface water / hydrography products
-    "jrc/gsw", "globalsurfacewater", "merit/", "merit_hydro", "hydrosheds", "global_hand",
+    "jrc/gsw", "globalsurfacewater", "jrcwater",
+    "merit/", "merit_hydro", "hydrosheds", "global_hand",
     # other elevation models (only Copernicus DEM is allowed)
     "srtmgl1", "nasadem", "cgiar/srtm", "alos/aw3d", "gmted",
     # land cover
@@ -71,6 +72,7 @@ REVIEWED_URL_HOSTS = frozenset(
         "stac.dataspace.copernicus.eu",  # Copernicus Data Space scene catalogue
         "openeo.dataspace.copernicus.eu",  # Copernicus Data Space processing (openEO)
         "dataspace.copernicus.eu",  # account registration link in messages
+        "storage.googleapis.com",  # Sen1Floods11 training chips (official bucket), script only
     }
 )
 

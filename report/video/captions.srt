@@ -1,0 +1,149 @@
+1
+00:00:00,000 --> 00:00:05,950
+Floodmap. Give it an area and a flood
+date, and it tells rescue teams where the
+
+2
+00:00:06,000 --> 00:00:11,950
+flood hit, what was damaged, and who is
+cut off, from free satellite data only.
+
+3
+00:00:12,000 --> 00:00:17,687
+This is the August 2026 debris flood in
+Nepal's Bhote Koshi and Trishuli valley.
+
+4
+00:00:17,737 --> 00:00:23,209
+The system uses only what the brief
+allows: Sentinel-1 radar, Sentinel-2 when
+
+5
+00:00:23,259 --> 00:00:29,233
+the sky is clear, the Copernicus elevation
+model, and OpenStreetMap as it was before
+
+6
+00:00:29,283 --> 00:00:29,950
+the flood.
+
+7
+00:00:30,000 --> 00:00:38,427
+Judges can choose any area and date. Here
+I start a new analysis. Every step reports
+
+8
+00:00:38,477 --> 00:00:46,500
+its status, and if something is missing,
+say clouds over the optical image, that
+
+9
+00:00:46,550 --> 00:00:51,950
+step is skipped with a reason and the rest
+still runs.
+
+10
+00:00:52,000 --> 00:00:59,427
+Where did the flood hit? Radar images
+before and after are compared only on the
+
+11
+00:00:59,477 --> 00:01:07,094
+same orbit track. Terrain masks remove
+slopes where water cannot stand, and every
+
+12
+00:01:07,144 --> 00:01:14,098
+area gets a confidence level. Here, 15.6
+square kilometres are potentially
+
+13
+00:01:14,148 --> 00:01:14,950
+affected.
+
+14
+00:01:15,000 --> 00:01:21,917
+What was damaged? Over three thousand pre-
+event buildings, 80 kilometres of road and
+
+15
+00:01:21,967 --> 00:01:28,475
+163 bridges are potentially affected. Who
+is cut off? Comparing the road network
+
+16
+00:01:28,525 --> 00:01:35,114
+before and after finds 215 settlements
+likely cut off, each with the likely break
+
+17
+00:01:35,164 --> 00:01:39,950
+and its distance, and a reminder: needs
+field verification.
+
+18
+00:01:40,000 --> 00:01:49,163
+Settlements are ranked for rescue, with
+helicopter landing-zone candidates nearby.
+
+19
+00:01:49,213 --> 00:01:57,590
+The system also writes a one-page
+situation report, and a field package for
+
+20
+00:01:57,640 --> 00:01:59,950
+GPS units and phones.
+
+21
+00:02:00,000 --> 00:02:06,117
+Our AI component is our own flood
+segmentation model, trained from scratch
+
+22
+00:02:06,167 --> 00:02:12,950
+on Sen1Floods11. On held-out test images
+it clearly beats a simple threshold rule.
+
+23
+00:02:13,000 --> 00:02:19,783
+In Himalayan gorges it transfers poorly,
+and we show that honestly: it is a second
+
+24
+00:02:19,833 --> 00:02:21,950
+opinion, not the main map.
+
+25
+00:02:22,000 --> 00:02:27,444
+We checked our results against the
+official Copernicus EMS maps, which were
+
+26
+00:02:27,494 --> 00:02:33,304
+never an input. Where we flag damage, EMS
+agrees, with ninety-one to one hundred
+
+27
+00:02:33,354 --> 00:02:39,163
+percent precision. In the narrow gorge we
+find only about a third of the area, a
+
+28
+00:02:39,213 --> 00:02:44,950
+limitation we document. We also ran the
+system on [N] places it had never seen.
+
+29
+00:02:45,000 --> 00:02:52,474
+Satellites pass every few days, so this
+maps the damage. It cannot warn minutes
+
+30
+00:02:52,524 --> 00:02:54,950
+before a glacier collapse.
+
+31
+00:02:55,000 --> 00:02:59,950
+Floodmap is an educational prototype.
+Always verify on the ground.

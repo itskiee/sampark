@@ -7,8 +7,8 @@ Robustness design:
 - Each stage runs inside its own try/except. A failure becomes a FAILED StageResult with a
   short message and an error id; the full traceback goes to the (redacted) log file only.
 - A stage whose required inputs are missing is SKIPPED with the reason, not crashed.
-- results.json is always written, even if stages fail, so the dashboard/copilot can show
-  whatever was produced.
+- results.json is always written, even if stages fail, so the dashboard and the situation
+  report can show whatever was produced.
 """
 
 from __future__ import annotations
@@ -37,17 +37,16 @@ STAGE_ORDER: tuple[tuple[str, str], ...] = (
     ("terrain", "M2"),  # Copernicus DEM: slope, HAND, layover/shadow masks
     ("s2", "M2"),  # Sentinel-2 optical change when cloud-free
     ("confidence", "M2"),  # agreement of S1 / S2 / model
+    ("segmentation", "M5"),  # our own U-Net water model (declared AI component)
     ("osm", "M3"),  # pre-event OSM via ohsome (before flood_path: settlements along it)
     ("flood_path", "M2"),  # bonus: downstream flow path from DEM (+ settlements from OSM)
     ("damage", "M3"),  # affected buildings / roads / bridges
     ("cutoff", "M4"),  # reachability to town / hospital, before vs after
     ("priority", "M4"),  # rescue priority ranking
-    ("copilot", "M5"),  # grounded EN/NE answers
-    ("report", "M5"),  # one-page situation report
-    ("landing_zones", "M8"),
-    ("multidate", "M8"),
-    ("segmentation", "M8"),
-    ("exports", "M8"),  # GeoJSON / KML
+    ("landing_zones", "M8"),  # helicopter landing-zone candidates near cut-off settlements
+    ("multidate", "M8"),  # later passes: receding water, new ponding, possible lakes forming
+    ("report", "M6"),  # one-page situation report (after every analysis stage)
+    ("exports", "M8"),  # field package: GeoPackage, KML, GPX, sit-rep
 )
 STAGE_NAMES = tuple(name for name, _ in STAGE_ORDER)
 _MILESTONE = dict(STAGE_ORDER)

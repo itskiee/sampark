@@ -1,0 +1,417 @@
+{
+  "name": "floodmap S1 water U-Net",
+  "created_utc": "2026-10-13T06:47:07+00:00",
+  "task": "per-pixel water probability from one Sentinel-1 image (VV, VH in dB)",
+  "architecture": "U-Net, 3 levels, base 16 channels, 482,593 parameters",
+  "trained_from": "scratch (no pretrained weights)",
+  "training_data": "Sen1Floods11 hand-labelled S1 chips, official train split (252); model selected on the valid split (89)",
+  "citation": "Bonafilia, D., Tellman, B., Anderson, T., Issenberg, E. (2020). Sen1Floods11: a georeferenced dataset to train and test deep learning flood algorithms for Sentinel-1. CVPR Workshops 2020.",
+  "licence_note": "trained on Sen1Floods11: non-commercial educational use",
+  "input": {
+    "bands": [
+      "VV dB",
+      "VH dB"
+    ],
+    "scaling": "clip((dB - -30.0) / 30.0, 0, 1)",
+    "resolution_m": 20.0,
+    "nodata": 0
+  },
+  "threshold": 0.5,
+  "training": {
+    "epochs": 30,
+    "batch": 8,
+    "lr": 0.002,
+    "seed": 2026,
+    "device": "CPU",
+    "minutes": 40.8
+  },
+  "evaluation": {
+    "valid": {
+      "model": {
+        "iou": 0.6293,
+        "precision": 0.7526,
+        "recall": 0.7933,
+        "f1": 0.7724,
+        "valid_pixels": 5091538,
+        "water_pixels": 582280
+      },
+      "baseline_vv_le_-15dB": {
+        "iou": 0.447,
+        "precision": 0.6554,
+        "recall": 0.5843,
+        "f1": 0.6178,
+        "valid_pixels": 5091538,
+        "water_pixels": 582280
+      }
+    },
+    "test": {
+      "model": {
+        "iou": 0.649,
+        "precision": 0.7603,
+        "recall": 0.816,
+        "f1": 0.7872,
+        "valid_pixels": 5145344,
+        "water_pixels": 666816
+      },
+      "baseline_vv_le_-15dB": {
+        "iou": 0.4452,
+        "precision": 0.6732,
+        "recall": 0.5679,
+        "f1": 0.6161,
+        "valid_pixels": 5145344,
+        "water_pixels": 666816
+      }
+    },
+    "bolivia": {
+      "model": {
+        "iou": 0.6477,
+        "precision": 0.7855,
+        "recall": 0.7869,
+        "f1": 0.7862,
+        "valid_pixels": 724567,
+        "water_pixels": 118156
+      },
+      "baseline_vv_le_-15dB": {
+        "iou": 0.5812,
+        "precision": 0.8726,
+        "recall": 0.6351,
+        "f1": 0.7351,
+        "valid_pixels": 724567,
+        "water_pixels": 118156
+      }
+    }
+  },
+  "unseen_event_note": "Bolivia is an entire flood event excluded from training. No Nepal/Himalayan chips exist in Sen1Floods11.",
+  "history": [
+    {
+      "epoch": 1,
+      "loss": 1.3924,
+      "iou": 0.0058,
+      "precision": 0.7242,
+      "recall": 0.0058,
+      "f1": 0.0115,
+      "valid_pixels": 5091538,
+      "water_pixels": 582280,
+      "seconds": 89.3
+    },
+    {
+      "epoch": 2,
+      "loss": 1.2445,
+      "iou": 0.5957,
+      "precision": 0.7558,
+      "recall": 0.7376,
+      "f1": 0.7466,
+      "valid_pixels": 5091538,
+      "water_pixels": 582280,
+      "seconds": 82.3
+    },
+    {
+      "epoch": 3,
+      "loss": 1.182,
+      "iou": 0.5513,
+      "precision": 0.6106,
+      "recall": 0.8502,
+      "f1": 0.7108,
+      "valid_pixels": 5091538,
+      "water_pixels": 582280,
+      "seconds": 79.9
+    },
+    {
+      "epoch": 4,
+      "loss": 1.1212,
+      "iou": 0.5746,
+      "precision": 0.6843,
+      "recall": 0.7819,
+      "f1": 0.7299,
+      "valid_pixels": 5091538,
+      "water_pixels": 582280,
+      "seconds": 79.2
+    },
+    {
+      "epoch": 5,
+      "loss": 1.0329,
+      "iou": 0.5861,
+      "precision": 0.727,
+      "recall": 0.7514,
+      "f1": 0.739,
+      "valid_pixels": 5091538,
+      "water_pixels": 582280,
+      "seconds": 80.9
+    },
+    {
+      "epoch": 6,
+      "loss": 0.9722,
+      "iou": 0.6053,
+      "precision": 0.7624,
+      "recall": 0.746,
+      "f1": 0.7541,
+      "valid_pixels": 5091538,
+      "water_pixels": 582280,
+      "seconds": 79.2
+    },
+    {
+      "epoch": 7,
+      "loss": 0.8795,
+      "iou": 0.3257,
+      "precision": 0.3308,
+      "recall": 0.9542,
+      "f1": 0.4913,
+      "valid_pixels": 5091538,
+      "water_pixels": 582280,
+      "seconds": 78.6
+    },
+    {
+      "epoch": 8,
+      "loss": 0.7806,
+      "iou": 0.5987,
+      "precision": 0.7583,
+      "recall": 0.7399,
+      "f1": 0.749,
+      "valid_pixels": 5091538,
+      "water_pixels": 582280,
+      "seconds": 81.4
+    },
+    {
+      "epoch": 9,
+      "loss": 0.7821,
+      "iou": 0.3896,
+      "precision": 0.4048,
+      "recall": 0.9117,
+      "f1": 0.5607,
+      "valid_pixels": 5091538,
+      "water_pixels": 582280,
+      "seconds": 78.8
+    },
+    {
+      "epoch": 10,
+      "loss": 0.7028,
+      "iou": 0.5999,
+      "precision": 0.8183,
+      "recall": 0.6921,
+      "f1": 0.7499,
+      "valid_pixels": 5091538,
+      "water_pixels": 582280,
+      "seconds": 78.8
+    },
+    {
+      "epoch": 11,
+      "loss": 0.6884,
+      "iou": 0.5813,
+      "precision": 0.8624,
+      "recall": 0.6407,
+      "f1": 0.7352,
+      "valid_pixels": 5091538,
+      "water_pixels": 582280,
+      "seconds": 78.5
+    },
+    {
+      "epoch": 12,
+      "loss": 0.6343,
+      "iou": 0.5696,
+      "precision": 0.6362,
+      "recall": 0.8448,
+      "f1": 0.7258,
+      "valid_pixels": 5091538,
+      "water_pixels": 582280,
+      "seconds": 79.3
+    },
+    {
+      "epoch": 13,
+      "loss": 0.6583,
+      "iou": 0.4086,
+      "precision": 0.4261,
+      "recall": 0.9084,
+      "f1": 0.5801,
+      "valid_pixels": 5091538,
+      "water_pixels": 582280,
+      "seconds": 83.1
+    },
+    {
+      "epoch": 14,
+      "loss": 0.6353,
+      "iou": 0.5229,
+      "precision": 0.5532,
+      "recall": 0.9053,
+      "f1": 0.6867,
+      "valid_pixels": 5091538,
+      "water_pixels": 582280,
+      "seconds": 78.3
+    },
+    {
+      "epoch": 15,
+      "loss": 0.6199,
+      "iou": 0.5126,
+      "precision": 0.9185,
+      "recall": 0.5371,
+      "f1": 0.6778,
+      "valid_pixels": 5091538,
+      "water_pixels": 582280,
+      "seconds": 79.3
+    },
+    {
+      "epoch": 16,
+      "loss": 0.725,
+      "iou": 0.5523,
+      "precision": 0.8609,
+      "recall": 0.6064,
+      "f1": 0.7116,
+      "valid_pixels": 5091538,
+      "water_pixels": 582280,
+      "seconds": 79.9
+    },
+    {
+      "epoch": 17,
+      "loss": 0.6675,
+      "iou": 0.5654,
+      "precision": 0.7749,
+      "recall": 0.6765,
+      "f1": 0.7224,
+      "valid_pixels": 5091538,
+      "water_pixels": 582280,
+      "seconds": 81.9
+    },
+    {
+      "epoch": 18,
+      "loss": 0.6388,
+      "iou": 0.6049,
+      "precision": 0.7386,
+      "recall": 0.7697,
+      "f1": 0.7538,
+      "valid_pixels": 5091538,
+      "water_pixels": 582280,
+      "seconds": 85.2
+    },
+    {
+      "epoch": 19,
+      "loss": 0.7208,
+      "iou": 0.5749,
+      "precision": 0.6973,
+      "recall": 0.766,
+      "f1": 0.73,
+      "valid_pixels": 5091538,
+      "water_pixels": 582280,
+      "seconds": 90.1
+    },
+    {
+      "epoch": 20,
+      "loss": 0.6682,
+      "iou": 0.5897,
+      "precision": 0.787,
+      "recall": 0.7016,
+      "f1": 0.7419,
+      "valid_pixels": 5091538,
+      "water_pixels": 582280,
+      "seconds": 80.2
+    },
+    {
+      "epoch": 21,
+      "loss": 0.6797,
+      "iou": 0.59,
+      "precision": 0.7461,
+      "recall": 0.7382,
+      "f1": 0.7421,
+      "valid_pixels": 5091538,
+      "water_pixels": 582280,
+      "seconds": 79.9
+    },
+    {
+      "epoch": 22,
+      "loss": 0.6161,
+      "iou": 0.6054,
+      "precision": 0.7012,
+      "recall": 0.816,
+      "f1": 0.7543,
+      "valid_pixels": 5091538,
+      "water_pixels": 582280,
+      "seconds": 78.7
+    },
+    {
+      "epoch": 23,
+      "loss": 0.6392,
+      "iou": 0.6082,
+      "precision": 0.8107,
+      "recall": 0.7089,
+      "f1": 0.7564,
+      "valid_pixels": 5091538,
+      "water_pixels": 582280,
+      "seconds": 82.0
+    },
+    {
+      "epoch": 24,
+      "loss": 0.5786,
+      "iou": 0.6132,
+      "precision": 0.8357,
+      "recall": 0.6973,
+      "f1": 0.7603,
+      "valid_pixels": 5091538,
+      "water_pixels": 582280,
+      "seconds": 79.6
+    },
+    {
+      "epoch": 25,
+      "loss": 0.5861,
+      "iou": 0.6293,
+      "precision": 0.7526,
+      "recall": 0.7933,
+      "f1": 0.7724,
+      "valid_pixels": 5091538,
+      "water_pixels": 582280,
+      "seconds": 79.5
+    },
+    {
+      "epoch": 26,
+      "loss": 0.5813,
+      "iou": 0.6248,
+      "precision": 0.7553,
+      "recall": 0.7834,
+      "f1": 0.7691,
+      "valid_pixels": 5091538,
+      "water_pixels": 582280,
+      "seconds": 79.7
+    },
+    {
+      "epoch": 27,
+      "loss": 0.5743,
+      "iou": 0.6206,
+      "precision": 0.7748,
+      "recall": 0.7571,
+      "f1": 0.7658,
+      "valid_pixels": 5091538,
+      "water_pixels": 582280,
+      "seconds": 80.5
+    },
+    {
+      "epoch": 28,
+      "loss": 0.6095,
+      "iou": 0.6244,
+      "precision": 0.7831,
+      "recall": 0.7549,
+      "f1": 0.7687,
+      "valid_pixels": 5091538,
+      "water_pixels": 582280,
+      "seconds": 79.5
+    },
+    {
+      "epoch": 29,
+      "loss": 0.6085,
+      "iou": 0.6261,
+      "precision": 0.7771,
+      "recall": 0.7631,
+      "f1": 0.77,
+      "valid_pixels": 5091538,
+      "water_pixels": 582280,
+      "seconds": 80.5
+    },
+    {
+      "epoch": 30,
+      "loss": 0.5893,
+      "iou": 0.6223,
+      "precision": 0.8133,
+      "recall": 0.7259,
+      "f1": 0.7671,
+      "valid_pixels": 5091538,
+      "water_pixels": 582280,
+      "seconds": 79.8
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+# Unseen-place test (M9): never used before in this project; robustness + plausibility only.
+# Why chosen: dense city plus hill rivers: large OSM building count (scale test).
+# The box is approximate, drawn from general geography (towns and rivers), NOT from any
+# published flood or damage map.
+
+name: "Kathmandu valley and Roshi Khola floods (Nepal)"
+event_date: 2024-09-28
+
+aoi:
+  # [min_lon, min_lat, max_lon, max_lat] in WGS84 degrees
+  bbox: [85.25, 27.5, 85.6, 27.75]
+
+config_overrides: {}

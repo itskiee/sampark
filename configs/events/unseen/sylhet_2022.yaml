@@ -1,0 +1,13 @@
+# Unseen-place test (M9): never used before in this project; robustness + plausibility only.
+# Why chosen: monsoon lowland flood, cloudy optical images.
+# The box is approximate, drawn from general geography (towns and rivers), NOT from any
+# published flood or damage map.
+
+name: "Surma river floods, Sylhet (Bangladesh)"
+event_date: 2022-06-17
+
+aoi:
+  # [min_lon, min_lat, max_lon, max_lat] in WGS84 degrees
+  bbox: [91.7, 24.8, 92.0, 25.05]
+
+config_overrides: {}

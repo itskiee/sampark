@@ -1,0 +1,13 @@
+# Unseen-place test (M9): never used before in this project; robustness + plausibility only.
+# Why chosen: Himalayan glacier-collapse debris flood in winter (snow cover: radar edge case).
+# The box is approximate, drawn from general geography (towns and rivers), NOT from any
+# published flood or damage map.
+
+name: "Rishiganga-Dhauliganga rock-ice avalanche and debris flood, Chamoli, Uttarakhand (India)"
+event_date: 2021-02-07
+
+aoi:
+  # [min_lon, min_lat, max_lon, max_lat] in WGS84 degrees
+  bbox: [79.55, 30.42, 79.8, 30.6]
+
+config_overrides: {}

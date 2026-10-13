@@ -1,0 +1,13 @@
+# Unseen-place test (M9): never used before in this project; robustness + plausibility only.
+# Why chosen: Alpine valley floods.
+# The box is approximate, drawn from general geography (towns and rivers), NOT from any
+# published flood or damage map.
+
+name: "Savinja valley floods (Slovenia)"
+event_date: 2023-08-04
+
+aoi:
+  # [min_lon, min_lat, max_lon, max_lat] in WGS84 degrees
+  bbox: [14.8, 46.2, 15.3, 46.4]
+
+config_overrides: {}

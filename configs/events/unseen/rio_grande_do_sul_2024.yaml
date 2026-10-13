@@ -1,0 +1,13 @@
+# Unseen-place test (M9): never used before in this project; robustness + plausibility only.
+# Why chosen: southern hemisphere, western longitudes, city flood.
+# The box is approximate, drawn from general geography (towns and rivers), NOT from any
+# published flood or damage map.
+
+name: "Guaiba and Jacui floods, Porto Alegre-Eldorado do Sul (Brazil)"
+event_date: 2024-05-04
+
+aoi:
+  # [min_lon, min_lat, max_lon, max_lat] in WGS84 degrees
+  bbox: [-51.45, -30.15, -51.1, -29.85]
+
+config_overrides: {}

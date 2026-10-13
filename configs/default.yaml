@@ -215,6 +215,34 @@ cutoff:
   detour_min_extra_km: 2.0
   max_listed: 25
 
+landing_zones:
+  # Helicopter landing-zone CANDIDATES (M8 extra). Conservative "near-level ground" limit on
+  # the 30 m Copernicus DEM; steeper spots are excluded. Real suitability is checked on site.
+  max_slope_deg: 6
+  # A clear square of at least this side must fit (room for rotor clearance and touchdown).
+  min_clear_square_m: 60
+  # Keep this far from mapped (pre-event OSM) buildings.
+  clear_of_buildings_m: 30
+  # Only candidates a person can reach on foot from the settlement (straight-line distance).
+  max_distance_m: 3000
+  # Options listed per settlement (walks that avoid detected flood/debris come first).
+  per_settlement: 2
+
+multidate:
+  # Later Sentinel-1 passes of the same track are tracked up to this many days after the event
+  # (12-day repeat: about three passes; more if Sentinel-1C/1D add 6-day revisits).
+  max_days_after_event: 40
+  # At most this many later passes (each is one download from Copernicus Data Space).
+  max_dates: 3
+  # A water body on the last date is flagged as a POSSIBLE lake forming when it is at least
+  # this large and at least `lake_growth_factor` times its area on the first date.
+  lake_min_area_m2: 20000
+  lake_growth_factor: 1.5
+  # ...and it must be seen on at least this many later dates: water that appears on one image
+  # only is usually wet snow or noise (both look dark like water to radar). With fewer later
+  # passes available, all of them are required.
+  lake_min_later_dates: 2
+
 network:
   # Per-request timeout for catalogue / ohsome HTTP calls. ohsome's own server timeout is
   # 600 s; we stop earlier so a stuck request cannot freeze a live demo.
