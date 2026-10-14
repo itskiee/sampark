@@ -1,4 +1,4 @@
-"""Multi-date tracking (M8 extra from the owner's list): what happens after the first image.
+"""Multi-date tracking (M8 extra from the author's list): what happens after the first image.
 
 Later Sentinel-1 passes on the SAME orbit track are compared with the SAME pre-event
 composite and classified with the SAME frozen thresholds as the first post-event image.

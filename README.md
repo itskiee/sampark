@@ -35,7 +35,7 @@ for the public input data.
 ## Contents
 1. [Results at a glance](#results-at-a-glance)
 2. [Run it from scratch](#run-it-from-scratch)
-3. [Analyse any area and date](#analyse-any-area-and-date) (what judges will do)
+3. [Analyse any area and date](#analyse-any-area-and-date)
 4. [How to read the results](#how-to-read-the-results)
 5. [How it works](#how-it-works)
 6. [The AI component: our own segmentation model](#the-ai-component-our-own-segmentation-model)

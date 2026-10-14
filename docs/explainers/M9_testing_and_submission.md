@@ -1,6 +1,6 @@
 # M9 explainer: unseen-place testing, fixes, and the submission package
 
-M9 turns the working system into the submission. The owner asked for "more than 10 unseen
+M9 turns the working system into the submission. The author asked for "more than 10 unseen
 places" before submitting, every deliverable met, and nothing done in a hurry. This file
 explains what was tested, what broke, how it was fixed, and why.
 
@@ -33,7 +33,7 @@ explains what was tested, what broke, how it was fixed, and why.
 | **Dates outside Sentinel-1** gave a generic "no scenes" message. | invalid inputs | **Fixed:** "… is before Sentinel-1 began routine observations (October 2014)" / "… is today or in the future". |
 | **A Python traceback on the console** when a stage failed. | Open sea | **Fixed.** The console shows one line with an error number and "details in logs/floodmap.log"; the log file keeps the full traceback. Tested. |
 | **Technical message over open sea** ("NoDataAvailable … load_stac"). The Copernicus DEM covers land only. | Open sea | **Fixed.** "No Copernicus DEM elevation data for this area (open sea, or outside the DEM coverage)…". |
-| **No Sentinel-1 pair at all.** Over Porto Alegre there is no radar image between February and the flood (2024, one satellite flying). | Porto Alegre 2024 | **Documented, no code change (owner decision).** The system says so clearly. Mapping from Sentinel-2 alone is future work. |
+| **No Sentinel-1 pair at all.** Over Porto Alegre there is no radar image between February and the flood (2024, one satellite flying). | Porto Alegre 2024 | **Documented, no code change (design decision).** The system says so clearly. Mapping from Sentinel-2 alone is future work. |
 | **A false-alarm floor without a flood:** scattered field and shoreline changes, mostly low confidence. | Pokhara control | **Documented, not tuned.** Changing thresholds after the EMSR927 check would break the frozen-method promise. It is why every result carries a confidence level and "needs field verification". |
 | **Deserts and flat cities:** dry sand is as dark as water to radar (labelled "permanent water"); rain changes sand and city surfaces everywhere; in dense flat cities scattered detections cut many roads. | Dubai 2024 | **Documented** as a limitation: the method is built for river-valley floods. |
 | **Sparse pre-event OSM:** only 4 buildings mapped in the Swat valley before the 2022 flood; 217 around Chamoli in 2021. | Swat, Chamoli | **Documented** (OSM completeness limitation, as for Derna in M7). |
@@ -45,7 +45,7 @@ offered option, later passes, the model's new water, the flood path): **all iden
 Thessaly after the fixes: damage 5.6 min (was 60 min) with the same numbers (4,004 of 7,138
 buildings, 5,139.0 km of road); cut-off 1.9 min (did not finish in 40 min before).
 
-## 3. Owner decisions taken in M9
+## 3. Design decisions taken in M9
 - **Later satellite passes are optional for a new analysis** (`multidate.enabled: false`).
   - Why: they cost 3.5–8 min per run (30–40 % of a live run), answer a follow-up question
     (is the water going down, is a lake forming?), and usually do not exist yet right after a
@@ -70,7 +70,7 @@ buildings, 5,139.0 km of road); cut-off 1.9 min (did not finish in 40 min before
 - **Dashboard:** uses each event's own settings; lists the unseen-place events.
 - **Deliverables:** README for judges, report draft builder (`report/build_report.py`, every
   number generated), video kit (`report/video/`: script, captions, title and end cards),
-  Devpost text and images (`docs/devpost.md`, `report/devpost/`).
+  Devpost images (`report/devpost/`).
 
 ## 5. If a judge asks
 - *"Did you test it anywhere else?"* Thirteen unseen places on four continents plus invalid

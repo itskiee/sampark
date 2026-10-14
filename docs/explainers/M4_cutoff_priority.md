@@ -90,7 +90,7 @@ A and D stay connected, and the break on B's old route is found at the bridge, 9
   - connected;
   - no access before the event (no mapped road within 500 m: trail-only village or OSM
     gap).
-- **Sentences in the brief's form, never claiming certainty** (owner review 2026-10-12),
+- **Sentences in the brief's form, never claiming certainty** (author review 2026-10-12),
   for example:
   - *"near Bidur: likely cut off by road from Trishuli Hospital; road likely impassable at
     Pasang Lhamu Highway, 2.9 km away (flood/debris detected, high confidence). Still
@@ -200,7 +200,7 @@ specks inflates it 4.4×. In the no-flood control those specks are exactly what 
 - **No-flood control:** 0 cut off; all 18 "possibly" come from low-confidence specks.
 - **Sikkim:** few OSM buildings (869), so few settlements.
 
-## 8. Owner's questions (review 2026-10-12): answers for Q&A
+## 8. Author's questions (review 2026-10-12): answers for Q&A
 
 ### Q1. Why 75 m between houses, and not 150 m or another distance?
 - **What the number does:** two houses closer than this belong to the same settlement. It

@@ -118,7 +118,7 @@ def classify(
         vh_ok = valid & np.isfinite(lr_vh)
         # VH (cross-polarised) reacts strongly to volume scattering: vegetation, debris piles,
         # rough banks. In the M1 ablation it traced the flooded channel far more continuously
-        # than VV, so a strong VH drop also counts as a decrease (owner decision P16).
+        # than VV, so a strong VH drop also counts as a decrease (design decision P16).
         decrease |= vh_ok & (lr_vh <= dec_t)
         increase |= vh_ok & (lr_vh >= inc_t)
         increase &= ~decrease  # conflicting signals: the drop wins (conservative for water)

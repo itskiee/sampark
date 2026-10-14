@@ -143,7 +143,7 @@ Syabrubesi reach, same pattern: 1.35 / 2.23 / 1.55 / 1.37 dB std and 1.43 / 5.34
   decreases (Melamchi 0.93 → 2.29 %). It is a trade-off, not a free fix; terrain masks (M2)
   address the slope false positives more directly.
 
-## 7c. Proposals arising from M1 (need owner approval)
+## 7c. Proposals arising from M1 (need author approval)
 - **P16 — use VH for decreases too.** In the ablation, VH traced the flooded river channel
   far more continuously than VV. Proposed rule: strong decrease if LR_VV ≤ −3 dB **or**
   LR_VH ≤ −3 dB (water still requires dark VV).
@@ -167,7 +167,7 @@ Syabrubesi reach, same pattern: 1.35 / 2.23 / 1.55 / 1.37 dB std and 1.43 / 5.34
   Sentinel-1D, VV+VH, 20 m, EPSG:32645.
 - Areas inside the 1,791.7 km² AOI: water-like 0.823 km², strong decrease 11.182 km²,
   strong increase 20.012 km² (Sentinel-1 only, unmasked).
-- GO/NO-GO (owner: **GO**): continuous change along the lower Trishuli channel over
+- GO/NO-GO (author: **GO**): continuous change along the lower Trishuli channel over
   ~20 km; a chain of debris-type increases along the valley floor near Syabrubesi
   (weaker, narrow steep valley). Figures: `outputs/<run>/s1/zoom_*.png`, `s1_focus.png`.
 - Timings: first run 238 s (per-image fallback), cached re-run 15 s; one-request

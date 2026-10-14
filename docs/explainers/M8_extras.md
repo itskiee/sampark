@@ -1,6 +1,6 @@
-# M8 explainer: extras from the owner's original list
+# M8 explainer: extras from the author's original list
 
-The owner asked for extras that make the system more useful to the people who use it, built
+The author asked for extras that make the system more useful to the people who use it, built
 only after the core requirements were complete and checked (M1–M7). Already built earlier:
 - flood-path bonus (M2/M3);
 - rescue priority (M4);

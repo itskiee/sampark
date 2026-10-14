@@ -53,7 +53,7 @@ cover this (`tests/test_ohsome_client.py`).
 
 **Alternatives considered:**
 - **ohsome v2:** new host plus API key. Not used, because it steps away from the URL the
-  brief names (owner decision: no risk).
+  brief names (design decision: no risk).
 - **Overpass / osmnx downloads:** forbidden, because they return *current* OSM, which
   contains post-event edits.
 - **Geofabrik history files:** not named in the brief, and too large.
@@ -69,11 +69,11 @@ cover this (`tests/test_ohsome_client.py`).
 | Places | `place = city, town, village, hamlet, isolated_dwelling` | area + 10 km |
 | Health facilities | `amenity = hospital/clinic/doctors`, `healthcare = …` | area + 10 km |
 
-- **Only what the brief names** (owner rule 2026-10-12: nothing against or beyond the
+- **Only what the brief names** (project rule 2026-10-12: nothing against or beyond the
   authorities' rules): the brief's OSM row lists buildings, roads and bridges, and its task
   text needs settlements, the nearest town and hospitals. Nothing else is downloaded.
   Places and hospitals: the data rule allows "OpenStreetMap as it was before the event"
-  without restricting features, and the task cannot be done without them. Owner decision
+  without restricting features, and the task cannot be done without them. Design decision
   2026-10-12: keep them; Discord question 9 asks for written confirmation.
 - **Licence:** every OSM-derived output folder gets `LICENSE_OSM_DATA.txt` (ODbL), and
   results.json carries `data_licenses`, because the brief says published modified OSM data
@@ -236,7 +236,7 @@ field next to it.
   printing "→" crashed the run summary *after* the pipeline had finished. The CLI now
   always writes UTF-8 and replaces unprintable characters. Regression test added.
 
-## 9. Proposals for the owner (need approval)
+## 9. Proposals for the author (need approval)
 - **P18: settlements from building clusters.**
   - *Problem:* 62 % of Trishuli buildings, and all affected Sikkim buildings, are more
     than 1 km from a named place.

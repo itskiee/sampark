@@ -1,5 +1,5 @@
 """Build the report draft (deliverable: "Report (max. 6 pages), including the limitations
-section") as an HTML file that opens in Word / Google Docs, where the owner lays it out.
+section") as an HTML file that opens in Word / Google Docs, where the author lays it out.
 
 Every number in the text is READ from files, never typed:
   - the case-study run's results.json            (outputs/<run>/results.json)
@@ -159,7 +159,7 @@ def main() -> int:
         unseen_html = (
             f"<p>The full system ran on <b>{len(places)} places it had never seen</b> "
             f"(Himalaya, Europe, South America, a desert city, no-flood control), exactly as a "
-            f"judge would run it. Stages that failed: {failed_text}. {len(invalid)} invalid inputs "
+            f"user would run it. Stages that failed: {failed_text}. {len(invalid)} invalid inputs "
             f"(future date, open sea, tiny/huge/inverted area, pre-Sentinel date, bad text) "
             f"{tb_text}</p>"
             "<table><tr><th>Place</th><th>Date</th><th>Minutes</th>"
@@ -219,7 +219,7 @@ masks, Sentinel-2, a confidence map, our own segmentation model, pre-event OSM, 
 bonus, damage overlay, cut-off analysis, rescue priority, helicopter landing-zone candidates,
 later satellite passes, the one-page situation report and an offline field package (GeoPackage,
 KML, GPS waypoints). Each stage returns ok / partial / skipped / failed with a reason and never
-stops the run, because judges test live on areas they choose. All tunable values sit in one
+stops the run, because users can choose any area and date. All tunable values sit in one
 commented configuration file; nothing is specific to Trishuli. Everything runs on the user's
 laptop: there is no external AI service and only requests for the public input data leave the
 machine. The data rules are enforced in code: allowlists of collections and web hosts at

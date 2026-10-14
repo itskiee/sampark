@@ -7,7 +7,7 @@ date the judges choose."*
 
 ---
 
-## 1. Rules for using the reference maps (owner check 2026-10-13, `docs/compliance.md` §11)
+## 1. Rules for using the reference maps (author check 2026-10-13, `docs/compliance.md` §11)
 - **Checking only:** EMSR927 "may only be used to check your results". The packages live in
   `validation/data/` (git-ignored); the scripts live only in `validation/`.
 - **Pipeline code cannot read them:** pipeline code (`src/`, `app/`, `scripts/`) is blocked

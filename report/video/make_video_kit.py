@@ -7,9 +7,9 @@ Writes into report/video/:
   title_card.png    1920x1080 opening card
   end_card.png      1920x1080 closing card with every required attribution + disclaimer
 
-Rules (brief + owner): maps and screens only, NO images of victims; "educational prototype"
+Rules (brief + author): maps and screens only, NO images of victims; "educational prototype"
 on screen; all attributions on the end card; numbers only as they appear in the case-study
-run and validation results (checked by the owner while recording).
+run and validation results (checked by the author while recording).
 
 Usage: .venv/Scripts/python -I report/video/make_video_kit.py [--unseen N]
 """

@@ -1,7 +1,7 @@
 # Streamlit settings for the floodmap dashboard (checked by tests/test_dashboard.py).
 
 [browser]
-# Owner rule: no data leaves the machine. Streamlit would otherwise send usage statistics.
+# Project rule: no data leaves the machine. Streamlit would otherwise send usage statistics.
 gatherUsageStats = false
 
 [server]

@@ -1,4 +1,4 @@
-"""Field exports (M8 extra from the owner's list): one zip a field team can use offline.
+"""Field exports (M8 extra from the author's list): one zip a field team can use offline.
 
 Contents: layers.gpkg (every layer, for GIS desks), kml/*.kml (Google Earth / phone apps),
 waypoints.gpx (handheld GPS: priority settlements, landing-zone candidates, key breaks),

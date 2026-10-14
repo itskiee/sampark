@@ -1,6 +1,6 @@
-"""Unpack the EMSR927 packages the owner downloaded (checking only, never a pipeline input).
+"""Unpack the EMSR927 packages the author downloaded (checking only, never a pipeline input).
 
-Input:  validation/data/EMSR927/*.zip (+ EMSR927-aois.geojson), downloaded by the owner from
+Input:  validation/data/EMSR927/*.zip (+ EMSR927-aois.geojson), downloaded by the author from
         https://mapping.emergency.copernicus.eu/activations/EMSR927/
 Output: validation/data/EMSR927/extracted/<package>/... (git-ignored)
 

@@ -33,7 +33,7 @@ what, why, what if removed, and what could replace it.
   10. **Footer:** the required attributions, verbatim from `floodmap.attribution`, the
       prototype disclaimer, and the Sen1Floods11 citation when the model ran.
 - **Why a template, no language model:**
-  - The owner decided on no external AI.
+  - The author decided on no external AI.
   - It also guarantees *every number comes from results.json*: the report receives exactly
     the dictionary written to results.json and nothing else.
   - A stage that did not run appears as "not available (<reason>)", never as an invented
@@ -60,11 +60,11 @@ what, why, what if removed, and what could replace it.
     priorities* (CSV download), *Flood path (bonus)*, *AI model*, *Data & limitations*;
   - GeoJSON downloads (OSM-derived files carry the ODbL licence);
   - the required attributions as the footer of every page.
-- **Why Streamlit (owner approved 2026-10-13):** pure Python, runs locally, and calls the
+- **Why Streamlit (author approved 2026-10-13):** pure Python, runs locally, and calls the
   same `run_pipeline` as the CLI and the tests. The dashboard never computes its own
   numbers.
 - **Security and privacy** (`.streamlit/config.toml`, enforced by `tests/test_dashboard.py`):
-  - `gatherUsageStats = false`: Streamlit would otherwise send usage statistics. Owner
+  - `gatherUsageStats = false`: Streamlit would otherwise send usage statistics. Author
     rule: nothing leaves the machine.
   - `address = "localhost"`: other computers on the network cannot open it.
   - `showErrorDetails = "none"`: no tracebacks or file paths in the browser; details go to

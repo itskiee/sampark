@@ -1,6 +1,6 @@
 """Helicopter landing-zone CANDIDATES near settlements that are likely cut off by road.
 
-Extra from the owner's original list (M8). Inputs are only allowed data: Copernicus DEM
+Extra from the author's original list (M8). Inputs are only allowed data: Copernicus DEM
 slope, our own flood/debris map, pre-event OSM buildings. No OSM helipad tags are used.
 A candidate is a spot where a clear square of `min_clear_square_m` fits on near-level
 ground, outside detected flood/debris and water, away from mapped buildings. Trees, power

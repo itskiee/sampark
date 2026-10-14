@@ -122,5 +122,5 @@ area plus a 10 km margin (so rivers entering the area have some upstream catchme
   and Sentinel-2).
 - **P17 (scene-shift correction) re-assessed:** the Melamchi monsoon brightening that
   motivated it is now removed by the terrain masks (21.3 → 3.6 km², and the remaining
-  detections sit on the river). P17 adds complexity for little gain → **dropped (owner
+  detections sit on the river). P17 adds complexity for little gain → **dropped (author
   decision 2026-10-11)**.

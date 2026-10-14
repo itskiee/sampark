@@ -5,7 +5,7 @@ Numbers marked *(measured)* come from the training run and the pipeline runs (se
 
 ---
 
-## 1. Why this AI component (owner decision 2026-10-13)
+## 1. Why this AI component (design decision 2026-10-13)
 - **What the brief allows:** both PDFs say: *"AI COMPONENT — Choose one of the following"*
   (25 % of judging). The two options are:
   1. *Flood segmentation model:* "Train a model to detect water or debris in satellite
@@ -15,7 +15,7 @@ Numbers marked *(measured)* come from the training run and the pipeline runs (se
 - **Why option 1:**
   - **No external AI service and no data leaving the machine.** Option 2 would need an
     outside language-model API, or someone else's downloaded model.
-  - It is **our own model**, trained from scratch, which the owner can explain end to end.
+  - It is **our own model**, trained from scratch, which the author can explain end to end.
   - It runs offline in the live demo, so no internet, API key or quota can fail.
 - **The one-page sit-rep stays** (brief "OUTPUT"). It becomes a code-filled template with
   no language model (M6).
@@ -69,7 +69,7 @@ Numbers marked *(measured)* come from the training run and the pipeline runs (se
 - **Export:** saved as ONNX (`models/segmentation/s1_water_unet.onnx`, a few MB). The
   pipeline runs it with **onnxruntime**: no PyTorch needed for judges, CI or the demo.
   PyTorch is only in the `train` extra (`requirements-train.txt`).
-- **Timing** *(measured)*: 109 s per epoch on the owner's laptop.
+- **Timing** *(measured)*: 109 s per epoch on the author's laptop.
 
 ## 4. Use in the pipeline (`stages/segmentation.py`)
 - **Steps:**
@@ -126,7 +126,7 @@ Each cell is IoU / precision / recall / F1.
 - On a **flood event it never saw** (Bolivia) it keeps its accuracy (IoU 0.648 vs 0.649 on
   the test chips). The threshold rule reaches 0.581 there.
 
-**Can the existing model be improved? (owner request "improve the existing model"; measured
+**Can the existing model be improved? (author request "improve the existing model"; measured
 2026-10-13; record: `models/segmentation/experiments.json`)**
 - The training IoU (0.583) is below validation (0.629), which looked like slight underfitting.
   Three improvements were tried with the same data, splits, seed and script.

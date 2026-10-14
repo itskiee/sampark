@@ -16,7 +16,7 @@ Credit: "European Union, Copernicus Emergency Management Service data".
 ## How the comparison is reproduced (M7)
 1. Download the EMSR927 packages from
    https://mapping.emergency.copernicus.eu/activations/EMSR927/ into
-   `validation/data/EMSR927/` (the owner did this on 2026-10-13; checksums of the exact files
+   `validation/data/EMSR927/` (the author did this on 2026-10-13; checksums of the exact files
    used: `EMSR927_SHA256SUMS.txt`).
 2. `python -I validation/extract_emsr927.py`: unpacks data files only (unsafe paths refused,
    nothing executed; the OSM change file `.osc` is skipped and never read).

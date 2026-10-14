@@ -137,7 +137,7 @@ if mode == "New analysis":
         flood_start = (lon, lat)
     else:
         flood_start = None
-    # optional follow-up (owner decision 2026-10-13): off for a new area, on in event files
+    # optional follow-up (design decision 2026-10-13): off for a new area, on in event files
     # that ask for it (the case study); each event's own settings are used
     track_later = st.sidebar.checkbox(
         "Track later satellite passes: is the water going down, is a lake forming? "

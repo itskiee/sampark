@@ -9,7 +9,7 @@ and how. Every control listed here is implemented and, where possible, tested.
 | Asset | Risk | Controls |
 |---|---|---|
 | Copernicus Data Space login | Account misuse, credit theft | Interactive login (`floodmap login`); the openEO client keeps the refresh token in the user profile, never in the repo. The pipeline only reuses it non-interactively and never prints it. |
-| Your data | Leaving the machine | No external AI or language-model service is used (owner decision 2026-10-13). Our own model runs locally with onnxruntime; the only outbound connections are the allowlisted data sources (Copernicus Data Space, ohsome). |
+| Your data | Leaving the machine | No external AI or language-model service is used (design decision 2026-10-13). Our own model runs locally with onnxruntime; the only outbound connections are the allowlisted data sources (Copernicus Data Space, ohsome). |
 | Personal information | Exposure in a public repo | Commits use a GitHub *noreply* email; `results.json` stores only relative paths (tested). |
 | Integrity of results | Disqualifying data use, stale results | Data-rule allowlist enforced at runtime (`data_rules.py`) and statically (`tests/test_data_rules.py`); cache keys include config + code version; half-written cache entries are never reused. |
 | Third-party material | Redistribution | Organizer PDFs and raw validation data are git-ignored. |
@@ -40,7 +40,7 @@ and how. Every control listed here is implemented and, where possible, tested.
   `COPERNICUS_30`). Imports of other data platforms fail the data-rules test.
 
 **Untrusted input is treated as data**
-- Judge-provided areas (bbox / GeoJSON) are validated, size-capped and never used as
+- User-provided areas (bbox / GeoJSON) are validated, size-capped and never used as
   file paths (`aoi.py`).
 - YAML is read with `yaml.safe_load` only.
 - OpenStreetMap tag values (user-generated) are sanitised (control and bidirectional

@@ -174,7 +174,7 @@ Breaking the data rules = disqualification, so they're enforced three ways:
   openEO. This told us *before* writing M1 which tracks have both pre- and post-event images.
 
 ## 11. Rework (2026-10-11): why Copernicus Data Space only, no Earth Engine
-- **Decision (owner):** follow the brief literally. Its dataset table names
+- **Decision (author):** follow the brief literally. Its dataset table names
   dataspace.copernicus.eu as the source of Sentinel-1/2, and the brief requires running
   "end-to-end from raw satellite data". Earth Engine is not mentioned in the brief, and its
   Sentinel-1 copies are terrain-corrected with SRTM, a DEM that is not an allowed input.
@@ -200,7 +200,7 @@ Breaking the data rules = disqualification, so they're enforced three ways:
 - `pytest -m network`: 1 passed. The live CDSE catalogue has a track with pre+post scenes.
 - `ruff check .`: clean. `pre-commit run --all-files`: all hooks passed (gitleaks: no leaks).
 - `pip-audit`: no known vulnerabilities (runtime + dev). `earthengine-api` is uninstalled.
-- `floodmap doctor`: all OK except "cdse login" (owner has not logged in yet); CDSE
+- `floodmap doctor`: all OK except "cdse login" (author has not logged in yet); CDSE
   catalogue reachable (8 Sentinel-1 scenes over Syabrubesi in the last 30 days); ohsome:
   data until 2026-07-27 09:00Z → Trishuli snapshot 2026-07-27.
 - `check_cdse.py` (Trishuli, 15 Jul – 1 Oct 2026): 19 Sentinel-1D IW VV+VH scenes on 3

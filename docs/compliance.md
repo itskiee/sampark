@@ -20,7 +20,7 @@ progress / planned milestone · ⬜ not started.
 |---|---|---|
 | Chosen: "Flood segmentation model. Train a model to detect water or debris in satellite images using the listed training data" | our own U-Net trained from scratch on Sen1Floods11 (listed training data), runs locally (M5) | ✅ |
 | "…and show how well it works on Himalayan scenes it has never seen" | no Himalayan chips in training; measured on Trishuli, Melamchi, Sikkim (agreement, shadow confusion) + held-out Bolivia event; quantitative comparison with EMSR927 (M7: U-Net IoU ~0 in the gorge, 0.26 at Phosretar, precision 0.99) | ✅ |
-| (not chosen) Situation-report copilot | not built: owner decision 2026-10-13, no external AI | n/a |
+| (not chosen) Situation-report copilot | not built: design decision 2026-10-13, no external AI | n/a |
 
 ## 3. Bonus
 
@@ -39,7 +39,7 @@ progress / planned milestone · ⬜ not started.
 
 | PDF text | How we meet it | Status |
 |---|---|---|
-| "Explain what your system cannot do. For example, Sentinel satellites revisit an area only every few days, so they cannot warn of a sudden glacier collapse minutes ahead" | limitations sections in every explainer (M1–M5); report limitations section incl. the revisit example (`report/build_report.py`); sit-rep and README limitations | ✅ explainers, sit-rep, README · 🔶 report layout by owner |
+| "Explain what your system cannot do. For example, Sentinel satellites revisit an area only every few days, so they cannot warn of a sudden glacier collapse minutes ahead" | limitations sections in every explainer (M1–M5); report limitations section incl. the revisit example (`report/build_report.py`); sit-rep and README limitations | ✅ explainers, sit-rep, README · 🔶 report layout by author |
 
 ## 6. Technical considerations
 
@@ -54,7 +54,7 @@ progress / planned milestone · ⬜ not started.
 
 | Dataset row | How we meet it | Status |
 |---|---|---|
-| Sentinel-1/2, dataspace.copernicus.eu, "Before/after images", free registration | only via Copernicus Data Space (STAC catalogue + openEO); owner registered | ✅ |
+| Sentinel-1/2, dataspace.copernicus.eu, "Before/after images", free registration | only via Copernicus Data Space (STAC catalogue + openEO); author registered | ✅ |
 | OpenStreetMap via ohsome API `https://api.ohsome.org/v1`, "Buildings, roads, bridges", "snapshot date before 26 Aug 2026 (currently the latest available is 27 July 2026)" | exactly that URL; Trishuli snapshot 27 Jul 2026 09:00Z; also places/hospitals because the task needs settlements, towns, hospitals | ✅ |
 | "A modified version of the OSM data itself, if published, must stay under ODbL" | `LICENSE_OSM_DATA.txt` (ODbL) beside every OSM-derived output; `data_licenses` in results.json; README/LICENSE state ODbL | ✅ |
 | Kuro Siwo (recommended): training data, cite Bountos et al., 2024 | **not used** (too large for the time/hardware), so not cited as used | ✅ (n/a) |
@@ -69,17 +69,17 @@ progress / planned milestone · ⬜ not started.
 | "Produced using Copernicus WorldDEM-30 © DLR e.V. 2010–2014 and © Airbus Defence and Space GmbH 2014–2018 provided under COPERNICUS by the European Union and ESA; all rights reserved." | same places (one source: `floodmap.attribution`, never retyped) | ✅ |
 | "© OpenStreetMap contributors." | same places | ✅ |
 | "Plus a citation of any training dataset used." | Sen1Floods11 citation wherever the model appears (model card, PNGs, sit-rep, README, report references, video end card) | ✅ |
-| Responsibility: "do not use images of victims in demos or reports" | maps only, no photos anywhere; video script and recording checklist say so | ✅ (owner keeps it so while recording) |
+| Responsibility: "do not use images of victims in demos or reports" | maps only, no photos anywhere; video script and recording checklist say so | ✅ (author keeps it so while recording) |
 | Responsibility: "Systems built here are educational prototypes, not operational tools" | `attribution.DISCLAIMER` on every PNG, results.json, README, dashboard, sit-rep, field package, report, video title + end cards | ✅ |
-| Wording that never claims certainty | "potentially affected", "likely cut off … needs field verification", "(likely …)" class names (owner review 2026-10-12) | ✅ |
+| Wording that never claims certainty | "potentially affected", "likely cut off … needs field verification", "(likely …)" class names (author review 2026-10-12) | ✅ |
 
 ## 9. Submission checklist
 
 | PDF item | Plan | Status |
 |---|---|---|
-| "GitHub repository with a README explaining how to run the system" | repo `itskiee/floodmap` (private until submission); README run-from-scratch guide, any area + date, how to read results | ✅ README · 🔶 owner makes repo public |
-| "Report (max. 6 pages), including the limitations section" | ≤ 6 pages **including references** (conservative); draft `report/floodmap_report_draft.html`, every number generated | 🔶 owner lays out in Word, checks page count, exports PDF |
-| "3-minute demo video" | `report/video/`: timed script, captions (.srt), title + end cards with all attributions; no victim images | 🔶 owner records voice + screen |
+| "GitHub repository with a README explaining how to run the system" | repo `itskiee/floodmap` (private until submission); README run-from-scratch guide, any area + date, how to read results | ✅ README · 🔶 author makes repo public |
+| "Report (max. 6 pages), including the limitations section" | ≤ 6 pages **including references** (conservative); draft `report/floodmap_report_draft.html`, every number generated | 🔶 author lays out in Word, checks page count, exports PDF |
+| "3-minute demo video" | `report/video/`: timed script, captions (.srt), title + end cards with all attributions; no victim images | 🔶 author records voice + screen |
 | "Required data attributions and training-dataset citations" | see section 8 | ✅ |
 | "Case-study results compared with the EMSR927 reference maps" | `validation/results.md` (+ metrics.json, maps): extent per confidence, buildings, roads, key breaks, our model, reasons for misses | ✅ |
 
@@ -101,7 +101,7 @@ progress / planned milestone · ⬜ not started.
 
 | Item | Rule from the PDFs | Safeguard |
 |---|---|---|
-| EMSR927 packages (downloaded by the owner) | "may only be used to check your results"; "compare your results with the official … maps (EMSR927)" | stored only in `validation/data/` (git-ignored); unpacked by `validation/extract_emsr927.py` (data file types only, unsafe paths refused, nothing executed); pipeline code can never read them (data-rules scanner) |
+| EMSR927 packages (downloaded by the author) | "may only be used to check your results"; "compare your results with the official … maps (EMSR927)" | stored only in `validation/data/` (git-ignored); unpacked by `validation/extract_emsr927.py` (data file types only, unsafe paths refused, nothing executed); pipeline code can never read them (data-rules scanner) |
 | Method frozen before checking | (not tuning against reference maps keeps them "checking only") | `configs/default.yaml` unchanged since commit 281fd85 (its ID changed from 048c725 when commit messages were edited on 2026-10-14; files and dates unchanged), SHA-256 prefix `f6062fb0f6df0693`; thresholds, masks, event area and flood-path start are never changed because of EMSR927 <br>Verified afterwards with `git diff 281fd85 -- configs/default.yaml`: 33 lines added (new sections `landing_zones`, `multidate` for M8, and the M9 on/off switch `multidate.enabled`), 0 changed or removed; no flood, damage or cut-off value changed |
 | AI model selection | listed training data only | the larger candidate started before the download and is chosen on Sen1Floods11's validation split only |
 | EMSR927 `osmdiff` (.osc) file | "OpenStreetMap edits made after the event" not allowed as inputs | not extracted, never read |
@@ -110,4 +110,4 @@ progress / planned milestone · ⬜ not started.
 | Landing-zone candidates (M8) | allowed inputs only | Copernicus DEM, our flood map, pre-event OSM buildings/roads; no OSM helipad tags; labelled "candidate, verify on the ground" |
 | Field exports (M8) | ODbL for published OSM-derived data | our results only; ODbL notice included |
 | Multi-date tracking (M8) | Sentinel-1/2 from dataspace.copernicus.eu; same orbit track | later same-track Sentinel-1 passes (and clear Sentinel-2) from Copernicus Data Space |
-| Any new data source, web host or service | — | none planned; would need the owner's approval first |
+| Any new data source, web host or service | — | none planned; would need the author's approval first |

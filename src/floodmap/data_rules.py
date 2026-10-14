@@ -43,7 +43,7 @@ OHSOME_API_URL = "https://api.ohsome.org/v1"
 
 # Hosts our own HTTP client (floodmap/net.py) may call. The openEO client library talks to
 # CDSE_OPENEO_URL and the CDSE login service itself; we only ever hand it CDSE_OPENEO_URL.
-# No other host: no external AI / language-model service is used (owner decision 2026-10-13).
+# No other host: no external AI / language-model service is used (design decision 2026-10-13).
 ALLOWED_HTTP_HOSTS: frozenset[str] = frozenset({"api.ohsome.org", "stac.dataspace.copernicus.eu"})
 
 # --- Training data (listed in the brief: Kuro Siwo, Sen1Floods11) -----------------------

@@ -299,7 +299,7 @@ def load_config(
 class Settings(BaseModel):
     """Values from the environment / .env.
 
-    floodmap currently needs NO secret: no external AI service is used (owner decision
+    floodmap currently needs NO secret: no external AI service is used (design decision
     2026-10-13) and the Copernicus Data Space login token lives in the user profile. The
     class stays so that any future secret goes through SecretStr + log redaction."""
 

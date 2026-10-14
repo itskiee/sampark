@@ -40,7 +40,7 @@ dev = [
     "uv>=0.4",
 ]
 
-# Only for training the segmentation model on the owner's laptop (CPU). Not needed to run
+# Only for training the segmentation model on the author's laptop (CPU). Not needed to run
 # the pipeline, the dashboard or CI: the trained model ships as a small ONNX file.
 train = [
     "torch>=2.4",
