@@ -53,12 +53,3 @@ htmlcov/
 Thumbs.db
 # segmentation model candidates (only the adopted model is committed)
 models/segmentation/candidates/
-
-# Local AI-assistant working notes (kept on the maintainer's machine only)
-CLAUDE.md
-.claude/
-# Local working files (build log and submission notes; kept on the author's machine)
-PLAN.md
-docs/devpost.md
-report/video/video_script.md
-outputs_archive/
