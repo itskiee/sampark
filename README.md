@@ -7,6 +7,8 @@ after floods and landslides *सम्पर्कविहीन*, "without con
 > operational tool. All results are estimates from satellite data and pre-event
 > OpenStreetMap and must be verified on the ground before any decision is made.
 
+📄 **[Report (PDF, 6 pages)](report/Sampark_report.pdf)** · 🗺️ [Comparison with Copernicus EMS](validation/results.md) · 🧪 [Tests on 13 unseen places](docs/testing/unseen_places.md)
+
 Give it **an area and a flood date**. From free satellite data it answers, for district
 emergency centres, helicopter crews and relief teams:
 
