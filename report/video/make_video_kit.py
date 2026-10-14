@@ -34,60 +34,58 @@ NAVY, RED, GREY = "#16324f", "#b2182b", "#555555"
 
 # (start s, end s, what to show, narration)
 SEGMENTS = [
-    (0, 10, "Title card (title_card.png).",
-     "Sampark. Give it an area and a flood date, and it tells rescue teams where the flood hit, "
-     "what was damaged and who is cut off."),
-    (10, 24, "Dashboard, Trishuli case study open: the title, the yellow prototype notice and the "
-             "four numbers at the top.",
-     "Here is the August 2026 debris flood in Nepal's Trishuli valley. It uses only free data "
-     "the brief allows: Sentinel-1 radar, Sentinel-2 when clear, the Copernicus elevation model "
-     "and OpenStreetMap from before the flood."),
-    (24, 42, "Sidebar: New analysis, pick an area (e.g. unseen/wayanad_2024), leave 'Track later "
-             "satellite passes' unticked, click Run analysis; show the live progress until it "
-             "finishes (speed up, caption 'sped up').",
-     "It works for any area and date. I start a new analysis. Each step shows its status, and "
-     "if data is missing, like clouds over Sentinel-2, that step says why and the rest still "
-     "runs."),
-    (42, 60, "Back to the Trishuli run. Tab 'Where did the flood hit?': the flood map, then the "
-             "confidence table below it.",
-     "Where did the flood hit? Radar images before and after are compared only on the same "
-     "orbit track. Terrain masks remove steep slopes and radar shadow, and every area gets a "
-     "confidence level. Here: 15.6 square kilometres."),
-    (60, 74, "Section 'What was damaged?': the damage map, the most affected settlements, "
-             "the bridges.",
-     "What was damaged? Buildings, roads and bridges mapped before the flood are overlaid: 3,332 "
+    (0, 12, "Title card (title_card.png).",
+     "Hello everyone! I'm Nandika Agarwal from team Sampark, and this is our project for the "
+     "Multimodal AI Hackathon 2026, Track B: mapping flood damage from space."),
+    (12, 26, "Dashboard with the Trishuli case study open (title and the four numbers).",
+     "Sampark means connection in Hindi and Nepali. After a flood, rescue teams need three "
+     "answers fast: where did the flood hit, what was damaged, and who is cut off? Sampark "
+     "answers all three."),
+    (26, 40, "Same screen: move the mouse over the yellow prototype notice and the numbers.",
+     "Here is the August 2026 debris flood in Nepal's Trishuli valley. We use only free data the "
+     "brief allows: Sentinel-1 radar, Sentinel-2, the Copernicus elevation model, and "
+     "OpenStreetMap from before the flood."),
+    (40, 54, "Sidebar: New analysis, area unseen/wayanad_2024, 'Track later satellite passes' "
+             "unticked, Run analysis; progress until it finishes (speed up, label 'sped up').",
+     "You can choose any area and date. Each step shows its status, and if something is "
+     "missing, like clouds over Sentinel-2, it says why and carries on."),
+    (54, 68, "Back to the Trishuli run. Section 'Where did the flood hit?': the map, then the "
+             "confidence table.",
+     "Where did the flood hit? We compare radar images before and after on the same orbit track, "
+     "remove steep slopes and radar shadow, and give every area a confidence level: 15.6 square "
+     "kilometres here."),
+    (68, 80, "Section 'What was damaged?': the damage map, the settlements and bridges tables.",
+     "What was damaged? Overlaying buildings, roads and bridges mapped before the flood: 3,332 "
      "buildings, 80 kilometres of road and 163 bridges potentially affected."),
-    (74, 94, "Section 'Who is cut off?': the map, then the table; point at one 'Situation' "
+    (80, 98, "Section 'Who is cut off?': the map, then the table; point at one 'Situation' "
              "sentence.",
-     "Who is cut off? Comparing the road network before and after finds 215 settlements likely "
-     "cut off from the nearest town or hospital. Each gets a sentence naming the likely break "
-     "and its distance, and a reminder: needs field verification."),
-    (94, 106, "Section 'Rescue priorities' (the ranked table with reasons), then section "
-              "'Landing zones' (the map with green candidates).",
-     "Settlements are ranked for rescue, with the reasons, and nearby flat, dry ground is "
-     "suggested as helicopter landing candidates."),
-    (106, 116, "Section 'Later passes': the table, the three change numbers, the possible lakes.",
+     "And the key question: who is cut off? Comparing the road network before and after, 215 "
+     "settlements are likely cut off from the nearest town or hospital. Each one gets a plain "
+     "sentence naming the likely break and its distance, and always: needs field verification."),
+    (98, 108, "Section 'Rescue priorities' (table), then section 'Landing zones' (map).",
+     "Settlements are ranked for rescue, with reasons, and flat, dry ground nearby is suggested "
+     "for helicopters."),
+    (108, 117, "Section 'Later passes': the table, the three change numbers, the possible lakes.",
      "Later satellite passes show the water receding, and flag possible lakes forming behind "
      "debris."),
-    (116, 128, "Section 'Flood path (bonus)': the traced path map and the settlements along it.",
-     "And the bonus: from any upstream point, it traces the flood path down the valley on the "
-     "elevation model and lists the settlements along it."),
-    (128, 138, "Section 'Situation report': the one-page report; click 'Download PDF'.",
-     "It writes a one-page situation report, and a field package for GPS units and phones that "
-     "works offline."),
-    (138, 155, "Section 'AI model': the model's water map and the score table.",
-     "Our AI component is our own flood model, trained from scratch on Sen1Floods11 and run "
-     "locally. It clearly beats a simple threshold rule on held-out images. In Himalayan gorges "
-     "it transfers poorly, and we say so."),
-    (155, 170, "The Bidur comparison map (validation/results/EMSR927_AOI03_GRA_PRODUCT_v1.png), "
+    (117, 127, "Section 'Flood path (bonus)': the traced path map and the settlements list.",
+     "Our bonus: from any upstream point, Sampark traces the flood path down the valley and "
+     "lists the settlements in its way."),
+    (127, 135, "Section 'Situation report': the one-page report; click 'Download PDF'.",
+     "Everything goes into a one-page situation report and an offline field package for GPS "
+     "units and phones."),
+    (135, 151, "Section 'AI model': the model's water map and the score table.",
+     "Our AI component is our own flood model, trained from scratch on Sen1Floods11 and running "
+     "locally. It clearly beats a simple threshold rule, and in steep Himalayan gorges it "
+     "struggles, which we report honestly."),
+    (151, 165, "The Bidur comparison map (validation/results/EMSR927_AOI03_GRA_PRODUCT_v1.png), "
                "then the table in docs/testing/unseen_places.md.",
-     "We checked against the official Copernicus EMS maps, used only for checking: where we "
-     "flag damage, precision is 91 to 100 percent. And we tested it on {unseen} places it had "
-     "never seen."),
-    (170, 177, "Section 'Data & limitations'.",
-     "Satellites pass every few days, so it maps damage. It cannot warn minutes ahead."),
-    (177, 180, "End card (end_card.png).",
-     "Educational prototype: always verify on the ground."),
+     "We checked against the official Copernicus EMS maps: where we flag damage, precision is 91 "
+     "to 100 percent. And we tested {unseen} places Sampark had never seen, on four continents."),
+    (165, 173, "Section 'Data & limitations'.",
+     "Satellites pass every few days, so Sampark maps damage. It cannot warn minutes ahead."),
+    (173, 180, "End card (end_card.png).",
+     "Sampark is an educational prototype: always verify on the ground. Thank you!"),
 ]
 
 
