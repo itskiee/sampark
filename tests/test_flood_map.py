@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import numpy as np
 
-from floodmap.flood_map import (
+from sampark.flood_map import (
     CONF_HIGH,
     CONF_LOW,
     CONF_MEDIUM,
@@ -12,7 +12,7 @@ from floodmap.flood_map import (
     area_table,
     combine,
 )
-from floodmap.thresholds import DECREASE, INCREASE, NO_CHANGE, NODATA, WATER
+from sampark.thresholds import DECREASE, INCREASE, NO_CHANGE, NODATA, WATER
 
 SHAPE = (40, 40)
 

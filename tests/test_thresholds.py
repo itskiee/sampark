@@ -3,7 +3,7 @@ from __future__ import annotations
 import numpy as np
 import pytest
 
-from floodmap.thresholds import (
+from sampark.thresholds import (
     DECREASE,
     INCREASE,
     NO_CHANGE,

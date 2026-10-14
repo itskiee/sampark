@@ -7,7 +7,7 @@ shrinks / trims until it fits; this test feeds it far more text than any real ru
 
 from __future__ import annotations
 
-from floodmap import sitrep
+from sampark import sitrep
 
 LONG = ("near Somewhere Very Long Name (1,341 buildings): likely cut off by road (likely "
         "impassable at Some Highway With A Long Name, 2.87 km away, high confidence); likely "

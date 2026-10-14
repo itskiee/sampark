@@ -5,11 +5,11 @@ from datetime import date
 
 import pytest
 
-from floodmap import attribution
-from floodmap.aoi import AOIError
-from floodmap.config import REPO_ROOT
-from floodmap.pipeline import STAGE_NAMES, register_stage, run_pipeline
-from floodmap.results import StageResult, StageStatus
+from sampark import attribution
+from sampark.aoi import AOIError
+from sampark.config import REPO_ROOT
+from sampark.pipeline import STAGE_NAMES, register_stage, run_pipeline
+from sampark.results import StageResult, StageStatus
 
 FOCUS = [85.28, 28.10, 85.42, 28.30]
 DAY = date(2026, 8, 26)

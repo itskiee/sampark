@@ -1,6 +1,6 @@
 # Security
 
-floodmap is an educational prototype, but it is built with the controls we would expect
+sampark is an educational prototype, but it is built with the controls we would expect
 from a system used by a public authority. This file explains what we protect, from what,
 and how. Every control listed here is implemented and, where possible, tested.
 
@@ -8,7 +8,7 @@ and how. Every control listed here is implemented and, where possible, tested.
 
 | Asset | Risk | Controls |
 |---|---|---|
-| Copernicus Data Space login | Account misuse, credit theft | Interactive login (`floodmap login`); the openEO client keeps the refresh token in the user profile, never in the repo. The pipeline only reuses it non-interactively and never prints it. |
+| Copernicus Data Space login | Account misuse, credit theft | Interactive login (`sampark login`); the openEO client keeps the refresh token in the user profile, never in the repo. The pipeline only reuses it non-interactively and never prints it. |
 | Your data | Leaving the machine | No external AI or language-model service is used (design decision 2026-10-13). Our own model runs locally with onnxruntime; the only outbound connections are the allowlisted data sources (Copernicus Data Space, ohsome). |
 | Personal information | Exposure in a public repo | Commits use a GitHub *noreply* email; `results.json` stores only relative paths (tested). |
 | Integrity of results | Disqualifying data use, stale results | Data-rule allowlist enforced at runtime (`data_rules.py`) and statically (`tests/test_data_rules.py`); cache keys include config + code version; half-written cache entries are never reused. |
@@ -28,11 +28,11 @@ and how. Every control listed here is implemented and, where possible, tested.
 - All log output, including tracebacks, passes through a redacting formatter (registered
   secret values + credential-shaped patterns). Tested in `tests/test_redaction.py`.
 - The UI/CLI shows short error messages with an error id; full tracebacks go only to the
-  local, git-ignored `logs/floodmap.log`.
+  local, git-ignored `logs/sampark.log`.
 - `doctor` and `config-show` report only whether a secret is *set*.
 
 **Network access is restricted**
-- All our HTTP requests go through `floodmap/net.py`, which accepts only HTTPS to
+- All our HTTP requests go through `sampark/net.py`, which accepts only HTTPS to
   allowlisted hosts (ohsome, CDSE catalogue), always uses timeouts and bounded retries. A
   test fails if any other pipeline module imports an HTTP library.
 - The openEO client is only given the CDSE endpoint constant; data collections are opened

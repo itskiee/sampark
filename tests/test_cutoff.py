@@ -7,7 +7,7 @@ import geopandas as gpd
 import numpy as np
 from shapely.geometry import LineString, Point, box
 
-from floodmap.cutoff import (
+from sampark.cutoff import (
     broken_edges,
     build_graph,
     classify,
@@ -107,7 +107,7 @@ def test_edge_confidence_matches_reference():
     the old order took > 40 min on the huge Storm Daniel flood polygon."""
     import shapely
 
-    from floodmap.cutoff import CONF_RANK, edge_confidence
+    from sampark.cutoff import CONF_RANK, edge_confidence
 
     rng = np.random.default_rng(7)
     starts = rng.uniform(0, 20_000, (400, 2))

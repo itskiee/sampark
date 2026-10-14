@@ -7,10 +7,10 @@ import json
 import logging
 from datetime import date
 
-from floodmap import cli
-from floodmap.config import load_settings
-from floodmap.logging_setup import REDACTED, RedactingFormatter, redact, register_secret
-from floodmap.pipeline import register_stage, run_pipeline
+from sampark import cli
+from sampark.config import load_settings
+from sampark.logging_setup import REDACTED, RedactingFormatter, redact, register_secret
+from sampark.pipeline import register_stage, run_pipeline
 
 FAKE_KEY = "sk-test-THIS-IS-A-FAKE-KEY-0123456789"
 
@@ -71,7 +71,7 @@ def test_ordinary_text_is_untouched():
 
 
 def test_settings_never_expose_environment_secrets(monkeypatch):
-    """floodmap needs no secret; a key lying around in the environment is never shown."""
+    """sampark needs no secret; a key lying around in the environment is never shown."""
     monkeypatch.setenv("LLM_API_KEY", FAKE_KEY)
     settings = load_settings()
     assert FAKE_KEY not in repr(settings)
@@ -101,7 +101,7 @@ def test_stage_error_with_secret_is_redacted_in_results(tmp_config, clean_regist
 
 def test_console_shows_no_traceback_but_the_log_file_keeps_it():
     """Users see one line + where the details are; the log file keeps the full traceback."""
-    from floodmap.logging_setup import ConsoleFormatter
+    from sampark.logging_setup import ConsoleFormatter
 
     console, full = io.StringIO(), io.StringIO()
     logger = logging.getLogger("test.console.short")
@@ -114,5 +114,5 @@ def test_console_shows_no_traceback_but_the_log_file_keeps_it():
     except ValueError:
         logger.error("Stage terrain failed [error abc12345]", exc_info=True)
     assert "Traceback" not in console.getvalue()
-    assert "details in logs/floodmap.log" in console.getvalue()
+    assert "details in logs/sampark.log" in console.getvalue()
     assert "Traceback" in full.getvalue() and FAKE_KEY not in full.getvalue()

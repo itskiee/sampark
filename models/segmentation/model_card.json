@@ -1,5 +1,5 @@
 {
-  "name": "floodmap S1 water U-Net",
+  "name": "sampark S1 water U-Net",
   "created_utc": "2026-10-13T06:47:07+00:00",
   "task": "per-pixel water probability from one Sentinel-1 image (VV, VH in dB)",
   "architecture": "U-Net, 3 levels, base 16 channels, 482,593 parameters",

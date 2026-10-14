@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import numpy as np
 
-from floodmap.landing_zones import candidates, nearest_for, suitable_mask
+from sampark.landing_zones import candidates, nearest_for, suitable_mask
 
 RES = 20.0
 
@@ -56,7 +56,7 @@ def test_building_mask_in_batches_equals_one_call():
     from rasterio.features import rasterize
     from rasterio.transform import from_origin
 
-    from floodmap.stages.landing_zones import near_buildings_mask
+    from sampark.stages.landing_zones import near_buildings_mask
 
     rng = np.random.default_rng(5)
     geoms = np.array([shapely.box(x, y, x + 15, y + 12) for x, y in rng.uniform(0, 4000, (500, 2))]

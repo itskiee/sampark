@@ -53,7 +53,7 @@ def thumbnail(run: Path, dst: Path) -> None:
 
     from matplotlib.patches import Rectangle
 
-    from floodmap import attribution
+    from sampark import attribution
 
     res = json.loads((run / "results.json").read_text(encoding="utf-8"))
     cut = res["stages"]["cutoff"]["outputs"]["by_network"]["motorable"]

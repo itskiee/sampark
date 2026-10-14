@@ -7,7 +7,7 @@ import tomllib
 
 import pytest
 
-from floodmap.config import REPO_ROOT, load_config
+from sampark.config import REPO_ROOT, load_config
 
 APP = str(REPO_ROOT / "app" / "streamlit_app.py")
 
@@ -24,7 +24,7 @@ def isolated_outputs(tmp_path, monkeypatch):
     cfg = load_config(overrides={"output": {"dir": str(tmp_path / "outputs")},
                                  "cache": {"dir": str(tmp_path / "cache")},
                                  "logging": {"dir": str(tmp_path / "logs")}})
-    monkeypatch.setattr("floodmap.config.load_config", lambda *a, **k: cfg)
+    monkeypatch.setattr("sampark.config.load_config", lambda *a, **k: cfg)
     return tmp_path / "outputs"
 
 
@@ -72,7 +72,7 @@ def test_dashboard_renders_partial_run(isolated_outputs):
 
 def test_later_passes_tab_offers_the_follow_up_when_not_requested(isolated_outputs):
     """Later passes are off for a new analysis: the tab explains why and offers one button."""
-    from floodmap.stages.multidate import NOT_REQUESTED
+    from sampark.stages.multidate import NOT_REQUESTED
 
     run = isolated_outputs / "20261014T000000Z_test"
     run.mkdir(parents=True)

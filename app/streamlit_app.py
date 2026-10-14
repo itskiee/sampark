@@ -1,10 +1,10 @@
-"""floodmap dashboard (brief "OUTPUT: a map dashboard, plus a one-page situation report").
+"""sampark dashboard (brief "OUTPUT: a map dashboard, plus a one-page situation report").
 
 Runs locally only (see .streamlit/config.toml: localhost, no usage statistics, no error
 details in the browser). Every number shown is read from a run's results.json; every map is
 our own (Copernicus DEM hillshade + Sentinel layers), no external map tiles.
 
-Start:  python -m floodmap dashboard     (or: python -m streamlit run app/streamlit_app.py)
+Start:  python -m sampark dashboard     (or: python -m streamlit run app/streamlit_app.py)
 """
 
 from __future__ import annotations
@@ -16,8 +16,8 @@ from pathlib import Path
 import pandas as pd
 import streamlit as st
 
-from floodmap import attribution
-from floodmap.config import REPO_ROOT, load_config, load_event
+from sampark import attribution
+from sampark.config import REPO_ROOT, load_config, load_event
 
 st.set_page_config(page_title="Sampark — educational prototype", layout="wide")
 
@@ -85,9 +85,9 @@ LAT_LON = [("lat", "Latitude"), ("lon", "Longitude")]
 def start_analysis(aoi, event_date, name, focus, flood_start, event, later_passes: bool) -> None:
     """Run the pipeline with live progress, then show the new run (one code path for the
     sidebar and for 'Track later passes for this area')."""
-    from floodmap.aoi import AOIError
-    from floodmap.config import ConfigError
-    from floodmap.pipeline import run_pipeline
+    from sampark.aoi import AOIError
+    from sampark.config import ConfigError
+    from sampark.pipeline import run_pipeline
 
     with st.status("Running the analysis (radar, terrain, OSM, damage, cut-off)…",
                    expanded=True) as status:
@@ -120,7 +120,7 @@ def footer(res: dict | None) -> None:
 # --- sidebar: new analysis or previous run --------------------------------------------------
 st.sidebar.title("Sampark")
 st.sidebar.caption("Who is cut off after a flood, mapped from space (\"sampark\" means "
-                   "connection in Hindi and Nepali; code package: floodmap). Educational "
+                   "connection in Hindi and Nepali). Educational "
                    "prototype — not an operational tool.")
 if st.session_state.pop("show_runs", False):  # after a finished analysis (set before drawing)
     st.session_state["mode"] = "Open a previous run"
@@ -167,7 +167,7 @@ if mode == "New analysis":
 
 runs = list_runs()
 if not runs:
-    st.title("floodmap")
+    st.title("sampark")
     st.info("No analysis yet. Choose 'New analysis' in the sidebar.")
     footer(None)
     st.stop()
@@ -222,7 +222,7 @@ if section == SECTIONS[0]:
     rep = stage(res, "report")
     files = rep["outputs"]["files"] if rep else {}
     if not files and st.button("Generate the situation report"):
-        from floodmap.sitrep import build
+        from sampark.sitrep import build
 
         built = build(res, run, run / "report")
         files = {k: str(v.relative_to(run)) for k, v in built.items()}
@@ -422,7 +422,7 @@ if section == SECTIONS[9]:
                      "osm": "OpenStreetMap before the event"}[name]
             st.write(f"**{label}** ({s['status']}): {s.get('message', '')}")
     st.subheader("What this system cannot do")
-    from floodmap.sitrep import LIMITATIONS
+    from sampark.sitrep import LIMITATIONS
 
     for line in LIMITATIONS:
         st.write("- " + line)

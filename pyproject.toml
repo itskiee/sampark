@@ -3,7 +3,7 @@ requires = ["setuptools>=69", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "floodmap"
+name = "sampark"
 version = "0.1.0"
 description = "Flood and debris mapping, damage overlay and cut-off settlement analysis from Sentinel-1/2, Copernicus DEM and pre-event OpenStreetMap. Educational prototype."
 readme = "README.md"
@@ -48,13 +48,13 @@ train = [
 ]
 
 [project.scripts]
-floodmap = "floodmap.cli:main"
+sampark = "sampark.cli:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
 
 [tool.setuptools.package-data]
-floodmap = ["py.typed"]
+sampark = ["py.typed"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
@@ -62,7 +62,7 @@ testpaths = ["tests"]
 addopts = "-ra -m 'not cdse and not network'"
 markers = [
     "network: needs internet access to public APIs, no login (skipped by default)",
-    "cdse: needs a Copernicus Data Space login (`python -m floodmap login`) (skipped by default)",
+    "cdse: needs a Copernicus Data Space login (`python -m sampark login`) (skipped by default)",
 ]
 
 [tool.ruff]

@@ -5,7 +5,7 @@ from pathlib import Path
 
 import pytest
 
-from floodmap.config import (
+from sampark.config import (
     REPO_ROOT,
     ConfigError,
     EventSpec,
@@ -90,7 +90,7 @@ def test_absolute_paths_are_kept():
 def test_later_passes_off_by_default_on_for_the_case_study():
     """Design decision 2026-10-13: a new analysis answers where/what/who first; the case study
     (weeks after the event) keeps tracking later passes."""
-    from floodmap.config import REPO_ROOT, load_config, load_event
+    from sampark.config import REPO_ROOT, load_config, load_event
 
     assert load_config().multidate.enabled is False
     event = load_event(REPO_ROOT / "configs" / "events" / "trishuli_2026.yaml")

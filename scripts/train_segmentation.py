@@ -29,9 +29,9 @@ import rasterio
 import torch
 from torch import nn
 
-from floodmap.attribution import SEN1FLOODS11_CITATION
-from floodmap.config import REPO_ROOT
-from floodmap.segmentation import (
+from sampark.attribution import SEN1FLOODS11_CITATION
+from sampark.config import REPO_ROOT
+from sampark.segmentation import (
     CARD_PATH,
     DB_MAX,
     DB_MIN,
@@ -302,7 +302,7 @@ def main() -> int:
 
     export_onnx(model, model_path)
     card = {
-        "name": "floodmap S1 water U-Net",
+        "name": "sampark S1 water U-Net",
         "created_utc": datetime.now(UTC).isoformat(timespec="seconds"),
         "task": "per-pixel water probability from one Sentinel-1 image (VV, VH in dB)",
         "architecture": f"U-Net, 3 levels, base {args.base} channels, {n_params:,} parameters",

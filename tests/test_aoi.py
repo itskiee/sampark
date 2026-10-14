@@ -5,7 +5,7 @@ import json
 import pytest
 from shapely.geometry import Polygon
 
-from floodmap.aoi import AOIError, aoi_hash, parse_aoi, utm_epsg_for
+from sampark.aoi import AOIError, aoi_hash, parse_aoi, utm_epsg_for
 
 LIMITS = {"max_area_km2": 2500, "min_area_km2": 0.5}
 TRISHULI = [85.10, 27.85, 85.45, 28.32]

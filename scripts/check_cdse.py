@@ -5,7 +5,7 @@
 1. Lists every Sentinel-1 scene over the AOI from ~6 weeks before to ~5 weeks after the
    event (public catalogue, no login), grouped by track (relative orbit + pass direction),
    showing which tracks have both pre- and post-event images.
-2. If you are logged in (`python -m floodmap login`), reads the Copernicus DEM elevation at
+2. If you are logged in (`python -m sampark login`), reads the Copernicus DEM elevation at
    the centre of the focus area through openEO, proving processing access works.
 """
 
@@ -18,9 +18,9 @@ from collections import defaultdict
 from datetime import UTC, datetime, time, timedelta
 from pathlib import Path
 
-from floodmap.aoi import parse_aoi
-from floodmap.catalogue import search_s1_scenes
-from floodmap.config import REPO_ROOT, load_config, load_event
+from sampark.aoi import parse_aoi
+from sampark.catalogue import search_s1_scenes
+from sampark.config import REPO_ROOT, load_config, load_event
 
 
 def _inventory(event, aoi, config) -> None:
@@ -56,7 +56,7 @@ def _inventory(event, aoi, config) -> None:
 def _dem_sample(event, aoi) -> None:
     import rasterio
 
-    from floodmap.cdse_client import CDSEError, connect, load_collection
+    from sampark.cdse_client import CDSEError, connect, load_collection
 
     try:
         conn = connect()

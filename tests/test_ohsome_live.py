@@ -5,9 +5,9 @@ from __future__ import annotations
 
 import pytest
 
-from floodmap.data_rules import OHSOME_API_URL, OHSOME_LATEST_KNOWN
-from floodmap.net import request_json
-from floodmap.ohsome_client import fetch_snapshot
+from sampark.data_rules import OHSOME_API_URL, OHSOME_LATEST_KNOWN
+from sampark.net import request_json
+from sampark.ohsome_client import fetch_snapshot
 
 pytestmark = pytest.mark.network
 

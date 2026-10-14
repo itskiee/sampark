@@ -6,7 +6,7 @@ import geopandas as gpd
 import pytest
 from shapely.geometry import LineString, Point, box
 
-from floodmap.damage import (
+from sampark.damage import (
     affected_buildings,
     affected_points,
     affected_roads,
@@ -91,7 +91,7 @@ def test_fast_road_cutting_equals_merged_zone_method():
     import numpy as np
     import shapely
 
-    from floodmap.damage import road_pieces_in
+    from sampark.damage import road_pieces_in
 
     rng = np.random.default_rng(3)
     zones = np.array([shapely.Point(x, y).buffer(r) for x, y, r in
@@ -110,7 +110,7 @@ def test_road_cutting_with_huge_jagged_flood_polygon_is_unchanged():
     import numpy as np
     import shapely
 
-    from floodmap.damage import road_pieces_in
+    from sampark.damage import road_pieces_in
 
     rng = np.random.default_rng(11)
     a = np.linspace(0, 2 * np.pi, 4000, endpoint=False)

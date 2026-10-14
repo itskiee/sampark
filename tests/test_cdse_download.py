@@ -10,7 +10,7 @@ from __future__ import annotations
 import pytest
 import requests
 
-from floodmap.cdse_client import NETWORK_RETRIES, download
+from sampark.cdse_client import NETWORK_RETRIES, download
 
 
 class FakeCube:

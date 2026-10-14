@@ -1,8 +1,7 @@
 # Sampark — who is cut off after a flood, mapped from space
 
 **Sampark** (सम्पर्क) means *connection* in Hindi and Nepali; Nepali news calls villages cut off
-after floods and landslides *सम्पर्कविहीन*, "without connection". The code package and commands
-are named `floodmap`.
+after floods and landslides *सम्पर्कविहीन*, "without connection".
 
 > **Educational prototype** built for the Multimodal AI Hackathon 2026 (Track B). Not an
 > operational tool. All results are estimates from satellite data and pre-event
@@ -78,8 +77,8 @@ hackathon brief). No GPU needed.
 
 ### 1. Install
 ```bash
-git clone https://github.com/itskiee/floodmap.git
-cd floodmap
+git clone https://github.com/itskiee/sampark.git
+cd sampark
 python -m venv .venv
 .venv/Scripts/python -m pip install --require-hashes -r requirements.txt   # Windows
 # .venv/bin/python -m pip install --require-hashes -r requirements.txt     # Linux / macOS
@@ -98,13 +97,13 @@ fresh-clone test).
 1. Create a free account at https://dataspace.copernicus.eu.
 2. Run the login and follow the link it prints (sign in, confirm the code):
    ```bash
-   .venv/Scripts/python -m floodmap login
+   .venv/Scripts/python -m sampark login
    ```
    The login token is stored in your user profile, never in this repository.
 
 ### 3. Check everything is ready
 ```bash
-.venv/Scripts/python -m floodmap doctor
+.venv/Scripts/python -m sampark doctor
 ```
 It checks Python, packages, the configuration, disk space, the Copernicus login and
 catalogue, **a tiny Copernicus processing request** (proves that login, credits and the
@@ -113,14 +112,14 @@ the segmentation model file. Run it before every demo.
 
 ### 4. Run the case study
 ```bash
-.venv/Scripts/python -m floodmap run --event configs/events/trishuli_2026.yaml
+.venv/Scripts/python -m sampark run --event configs/events/trishuli_2026.yaml
 ```
 Prints every stage with its status (ok / partial / skipped / failed), time and a one-line
 result, and writes `outputs/<run id>/`.
 
 ### 5. Open the dashboard
 ```bash
-.venv/Scripts/python -m floodmap dashboard
+.venv/Scripts/python -m sampark dashboard
 ```
 Opens http://localhost:8501 (local only, no usage statistics). Open a previous run, or start
 **New analysis** for any area and date with live progress. Tabs: situation report, where /
@@ -132,18 +131,18 @@ the priority list (CSV) and landing zones can be downloaded.
 Written automatically at the end of every run (`outputs/<run id>/report/sitrep.pdf`, `.png`
 and a plain-text `.txt` for radio/SMS relay). To rebuild it for a run:
 ```bash
-.venv/Scripts/python -m floodmap report --run outputs/<run id>
+.venv/Scripts/python -m sampark report --run outputs/<run id>
 ```
 
 ---
 
 ## Analyse any area and date
 ```bash
-.venv/Scripts/python -m floodmap run --bbox MIN_LON MIN_LAT MAX_LON MAX_LAT --date YYYY-MM-DD --name "my area"
+.venv/Scripts/python -m sampark run --bbox MIN_LON MIN_LAT MAX_LON MAX_LAT --date YYYY-MM-DD --name "my area"
 ```
 Example (Melamchi flood, Nepal, 2021):
 ```bash
-.venv/Scripts/python -m floodmap run --bbox 85.50 27.78 85.62 27.92 --date 2021-06-15 --name "Melamchi"
+.venv/Scripts/python -m sampark run --bbox 85.50 27.78 85.62 27.92 --date 2021-06-15 --name "Melamchi"
 ```
 Options:
 - `--flood-path-start LON LAT`: trace the flood path from an upstream point (bonus) and list
@@ -217,7 +216,7 @@ OSM-derived files carry `LICENSE_OSM_DATA.txt` (ODbL).
 ---
 
 ## How it works
-One entry point, `floodmap.pipeline.run_pipeline(area, date, config)`, used by the command
+One entry point, `sampark.pipeline.run_pipeline(area, date, config)`, used by the command
 line, the dashboard and the tests. Each stage returns ok / partial / skipped / failed with a
 reason and never stops the run; all tunable values live in
 [configs/default.yaml](configs/default.yaml), each with the reason for its value.
@@ -238,9 +237,7 @@ reason and never stops the run; all tunable values live in
 | `multidate` | optional (`--later-passes`): later passes of the same track, same thresholds: receding water, new ponding, possible lakes |
 | `report`, `exports` | one-page situation report; field package |
 
-Design notes per milestone (what, why, what if removed, alternatives):
-[docs/explainers/](docs/explainers/). Rule-by-rule check against the brief:
-[docs/compliance.md](docs/compliance.md).
+Rule-by-rule check against the hackathon brief: [docs/compliance.md](docs/compliance.md).
 
 ---
 
@@ -267,8 +264,7 @@ data, and show how well it works on Himalayan scenes it has never seen."*
   augmentation (0.6242) and an ensemble of three models (0.6281). The unseen-event score varies between trainings (0.536–0.648), so a
   fair summary is "about 0.54–0.65 against 0.58 for the threshold rule". The limit is the
   training data, not the model: [models/segmentation/experiments.json](models/segmentation/experiments.json).
-- Model card with all metrics: [models/segmentation/model_card.json](models/segmentation/model_card.json);
-  full discussion: [docs/explainers/M5_segmentation_model.md](docs/explainers/M5_segmentation_model.md).
+- Model card with all metrics: [models/segmentation/model_card.json](models/segmentation/model_card.json).
 
 **Reproduce the training** (about 40 minutes on a laptop CPU, fixed seed):
 ```bash
@@ -360,7 +356,7 @@ Only the inputs the brief allows, from the sources it names:
 
 Not used as inputs: Copernicus EMS / EMSR927 (checking only, in `validation/`), UNOSAT or any
 other damage map, post-event OSM edits, population rasters, other land-cover or water
-datasets. Enforced at runtime (allowlists in `src/floodmap/data_rules.py`) and statically
+datasets. Enforced at runtime (allowlists in `src/sampark/data_rules.py`) and statically
 (`tests/test_data_rules.py`).
 
 ## Security

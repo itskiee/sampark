@@ -2,8 +2,8 @@ from __future__ import annotations
 
 import json
 
-from floodmap import cli
-from floodmap.config import REPO_ROOT
+from sampark import cli
+from sampark.config import REPO_ROOT
 
 TRISHULI = str(REPO_ROOT / "configs" / "events" / "trishuli_2026.yaml")
 
@@ -44,7 +44,7 @@ def test_console_output_never_crashes_on_legacy_code_page(monkeypatch):
     import io
     import sys
 
-    from floodmap.cli import _utf8_console
+    from sampark.cli import _utf8_console
 
     raw = io.BytesIO()
     legacy = io.TextIOWrapper(raw, encoding="cp1252")

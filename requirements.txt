@@ -454,7 +454,7 @@ geopandas==1.2.0 \
     --hash=sha256:72425b0dec1b77122b1e00f72c2b3b91f320cf0331ae236d37e26865e8808628 \
     --hash=sha256:948fd57df4f713697d5cce149333c0e4714965320c9f5ffa411666c577962eba
     # via
-    #   floodmap (pyproject.toml)
+    #   sampark (pyproject.toml)
     #   openeo
 h11==0.16.0 \
     --hash=sha256:4e35b956cf45792e4caa5885e69fba00bdbc6ffafbfa020300e549b208ee5ff1 \
@@ -1004,7 +1004,7 @@ matplotlib==3.11.2 \
     --hash=sha256:f25446b2981717dca9786bac841cb3fd7efb568e3e3c755dd980481c5cb9228d \
     --hash=sha256:f2ac30cf5eb5dff1b584627ae0b0e1186551a4f69ae3c75073911da497a29170 \
     --hash=sha256:fea03cf56568cc1cba08b470be6a0559e71c3a5b688d54b7179bb35ba23d0821
-    # via floodmap (pyproject.toml)
+    # via sampark (pyproject.toml)
 narwhals==2.27.1 \
     --hash=sha256:aed93076a3ea42d9c32c88e4eb5ea422a21937011cbe1f480f9572a523c82094 \
     --hash=sha256:d057df13f5852b8e157596e82eb5e955fad267425df5e420e0ee9863da483b31
@@ -1125,7 +1125,7 @@ numpy==2.4.6 ; python_full_version < '3.12' \
     --hash=sha256:f407cb6b8e9d6d8c626bc73c945db1706035af8fd632295547bf1c9e46d092d6 \
     --hash=sha256:f74a575920ab21fe304421a3fc28793d82e299cae9eccb37084e9fc7f3617c20
     # via
-    #   floodmap (pyproject.toml)
+    #   sampark (pyproject.toml)
     #   contourpy
     #   geopandas
     #   imageio
@@ -1212,7 +1212,7 @@ numpy==2.5.3 ; python_full_version >= '3.12' \
     --hash=sha256:fc36dc566135b5eceec4cf89758fcb719266a019ef07dae1754ae7c9f617ef3e \
     --hash=sha256:ffdc76bfcae6b255dff75202c5e7feaf95b40246bc0a17944facc1fecf9f79ab
     # via
-    #   floodmap (pyproject.toml)
+    #   sampark (pyproject.toml)
     #   contourpy
     #   geopandas
     #   imageio
@@ -1256,10 +1256,10 @@ onnxruntime==1.31.0 \
     --hash=sha256:e51d10d2e2e1e5bbf9b126a0cd9853d3e6c4e21424518dd50160b91471be33dc \
     --hash=sha256:e85c1632c0a8cf488bd8f1039f5320877b864c8f9ebd4122fb8bb909f83b7096 \
     --hash=sha256:e93d7c5fad20afa697ac16f376fd0306ed180f9a376e86106cc0b7d84f53ef87
-    # via floodmap (pyproject.toml)
+    # via sampark (pyproject.toml)
 openeo==0.53.0 \
     --hash=sha256:dfa2abc5837d90b110a8fab48290c6deea49f9b2a6ddb41c5a24c6b88e295de9
-    # via floodmap (pyproject.toml)
+    # via sampark (pyproject.toml)
 oschmod==0.3.12 ; sys_platform == 'win32' \
     --hash=sha256:bec99216f31615ee653b2a5c87cacfb4e4b6184c0e9f71da186300dacae974f3 \
     --hash=sha256:e71efd5ebcf5cfbb620548644f39eed4fc3cd4a907638a8caaff452fb256637c
@@ -1492,7 +1492,7 @@ pyarrow==25.0.1 \
 pydantic==2.14.0 \
     --hash=sha256:15fab1bea6f1dc5003b54fc2ecab230c1fd1dbade2acd4addc52d81e32416d4b \
     --hash=sha256:8a51a7aaddd60f55566d1f07bdd87b92b463903f39a8f26b71a06314cd1548ae
-    # via floodmap (pyproject.toml)
+    # via sampark (pyproject.toml)
 pydantic-core==2.50.0 \
     --hash=sha256:00963fde61cf8880d9e7b5635a9830e0591edfa45168447fdc5b47635c0f6437 \
     --hash=sha256:01340f4fbb4f854b1f36a6fe9dcd2b26c8936aead4e4ad1205624ac025c875fc \
@@ -1657,7 +1657,7 @@ pyogrio==0.13.0 \
     --hash=sha256:e605494bfea5d40ad4d37df1db1d7cb8950a3135eff9adba2f79673393f31e12 \
     --hash=sha256:ffa3b91f4ac7518dbd9fc1294fa81df316ff5e5a67ae6d95fc5f7bb35b2acf10
     # via
-    #   floodmap (pyproject.toml)
+    #   sampark (pyproject.toml)
     #   geopandas
 pyparsing==3.3.3 \
     --hash=sha256:928ae7e20211f3b6f3915a72f06a0cfd29ab9d24279dd6346b6b1a7146397d36 \
@@ -1722,7 +1722,7 @@ pyproj==3.7.2 ; python_full_version < '3.12' \
     --hash=sha256:f9428b318530625cb389b9ddc9c51251e172808a4af79b82809376daaeabe5e9 \
     --hash=sha256:fc52ba896cfc3214dc9f9ca3c0677a623e8fdd096b257c14a31e719d21ff3fdd
     # via
-    #   floodmap (pyproject.toml)
+    #   sampark (pyproject.toml)
     #   geopandas
     #   pysheds
 pyproj==3.8.0 ; python_full_version >= '3.12' \
@@ -1782,13 +1782,13 @@ pyproj==3.8.0 ; python_full_version >= '3.12' \
     --hash=sha256:faa68c0996bdd3fd997d86c676e758b72a96209ab14b7c5e8b8dcf3b23f85881 \
     --hash=sha256:fe26eb69e78f8b8d30ee67a6a6cfc172dd6085bc2c164a7143568138cb3a5a39
     # via
-    #   floodmap (pyproject.toml)
+    #   sampark (pyproject.toml)
     #   geopandas
     #   pysheds
 pysheds==0.5 \
     --hash=sha256:b56fb478ed3e4194b6d0a0033c66dcdc5dafafd90dbc05ad096ffb450e6a8005 \
     --hash=sha256:c3a0448035c836d4253f8bc724ebf1639552a11f759bd86e4eb522dc039675c5
-    # via floodmap (pyproject.toml)
+    # via sampark (pyproject.toml)
 pystac==1.15.2 \
     --hash=sha256:4c9a3b2352cad7eb3c226145251c65cbe5c1b04b25d4265b30c015dddf5f391d \
     --hash=sha256:b006833253d7e5acd04d877bb7504e14aa1dc98dd0f0ab12f893595030dda2b3
@@ -1927,7 +1927,7 @@ python-dateutil==2.9.0.post0 \
 python-dotenv==1.2.4 \
     --hash=sha256:42269a8a5b3fd54ffa6f3d84b18abed50064717576b4ecf03dc4a55d8aa04fdc \
     --hash=sha256:f0d53e69935a851c0dcc78f3ab7aaccd8cabef0b92382b576b824212902873c0
-    # via floodmap (pyproject.toml)
+    # via sampark (pyproject.toml)
 python-multipart==0.0.32 \
     --hash=sha256:be54b7f3fa167bb83e4fcd936b887b708f4e57fe75911c02aebf53efaf8d938e \
     --hash=sha256:ff6d3f776f16878c894e52e107296ffc890e913c611b1a4ec6c44e2821fe2e23
@@ -2033,7 +2033,7 @@ pyyaml==6.0.3 \
     --hash=sha256:f7057c9a337546edc7973c0d3ba84ddcdf0daa14533c2065749c9075001090e6 \
     --hash=sha256:fa160448684b4e94d80416c0fa4aac48967a969efe22931448d853ada8baf926 \
     --hash=sha256:fc09d0aa354569bc501d4e787133afc08552722d3ab34836a80547331bb5d4a0
-    # via floodmap (pyproject.toml)
+    # via sampark (pyproject.toml)
 rasterio==1.4.4 ; python_full_version < '3.12' \
     --hash=sha256:019693f14a83ae9225cb57c16e466901d0e6284962dcf13a9f4bb1175b979011 \
     --hash=sha256:0308ff4762ae9eb40a991f12d758626b59af4376b13675480391dd7295d17bbf \
@@ -2078,7 +2078,7 @@ rasterio==1.4.4 ; python_full_version < '3.12' \
     --hash=sha256:e24b7b8c2df801dde2a1dffb44c58902bd76b5cab740dc11de4ff9963992a71a \
     --hash=sha256:f3c4f0cbd188f893011f2a0a6dc2852b3892799b3a0d79eddf92f2b115ec7ed7
     # via
-    #   floodmap (pyproject.toml)
+    #   sampark (pyproject.toml)
     #   pysheds
 rasterio==1.5.2 ; python_full_version >= '3.12' \
     --hash=sha256:0278c967ca3e95677add4cefa635baae4596fab17f42b5562da43cf1e71162dd \
@@ -2119,7 +2119,7 @@ rasterio==1.5.2 ; python_full_version >= '3.12' \
     --hash=sha256:f85cec5d23e7cd8d22a4b4edba11f63a94008c396a03433b8fb260140c00cb90 \
     --hash=sha256:f9f3360cc66d1e2172018f9858db5c39e1f0046a5029e07645cff67a009e0801
     # via
-    #   floodmap (pyproject.toml)
+    #   sampark (pyproject.toml)
     #   pysheds
 referencing==0.37.0 \
     --hash=sha256:381329a9f99628c9069361716891d34ad94af76e461dcb0335825aecc7692231 \
@@ -2131,7 +2131,7 @@ requests==2.34.2 \
     --hash=sha256:2a0d60c172f83ac6ab31e4554906c0f3b3588d37b5cb939b1c061f4907e278e0 \
     --hash=sha256:f288924cae4e29463698d6d60bc6a4da69c89185ad1e0bcc4104f584e960b9ed
     # via
-    #   floodmap (pyproject.toml)
+    #   sampark (pyproject.toml)
     #   openeo
     #   streamlit
 rpds-py==2026.9.1 \
@@ -2317,7 +2317,7 @@ scikit-image==0.26.0 \
     --hash=sha256:f775f0e420faac9c2aa6757135f4eb468fb7b70e0b67fa77a5e79be3c30ee331 \
     --hash=sha256:fac96a1f9b06cd771cbbb3cd96c5332f36d4efd839b1d8b053f79e5887acde62
     # via
-    #   floodmap (pyproject.toml)
+    #   sampark (pyproject.toml)
     #   pysheds
 scipy==1.17.1 ; python_full_version < '3.12' \
     --hash=sha256:010f4333c96c9bb1a4516269e33cb5917b08ef2166d5556ca2fd9f082a9e6ea0 \
@@ -2382,7 +2382,7 @@ scipy==1.17.1 ; python_full_version < '3.12' \
     --hash=sha256:f8885db0bc2bffa59d5c1b72fad7a6a92d3e80e7257f967dd81abb553a90d293 \
     --hash=sha256:fcb310ddb270a06114bb64bbe53c94926b943f5b7f0842194d585c65eb4edd76
     # via
-    #   floodmap (pyproject.toml)
+    #   sampark (pyproject.toml)
     #   pysheds
     #   scikit-image
 scipy==1.18.1 ; python_full_version >= '3.12' \
@@ -2448,7 +2448,7 @@ scipy==1.18.1 ; python_full_version >= '3.12' \
     --hash=sha256:f55fa87b6c612ecd6b058f167c53231b1d14e412efe361d3d6e38b3631c73218 \
     --hash=sha256:fdaf5ea890a6183d0565f51a61799d67081bd5b1cf03c5f4b3fd3732108625c9
     # via
-    #   floodmap (pyproject.toml)
+    #   sampark (pyproject.toml)
     #   pysheds
     #   scikit-image
 shapely==2.2.0 \
@@ -2517,7 +2517,7 @@ shapely==2.2.0 \
     --hash=sha256:fdb599ec540cea5b635ac47bf24fca4cdfd1c39730ffc0b6cf0d2666b0dd9a33 \
     --hash=sha256:ff9e87b534edf35af65758fafb31ad3b797354cba9323899e263f450c69a2ff2
     # via
-    #   floodmap (pyproject.toml)
+    #   sampark (pyproject.toml)
     #   geopandas
     #   openeo
 six==1.17.0 \
@@ -2531,7 +2531,7 @@ starlette==1.7.0 \
 streamlit==1.65.0 \
     --hash=sha256:42acd9ebdf3576a35584977c48a044ec0b5d3e4997fa9248809b9891598ac6a0 \
     --hash=sha256:517a7254e223f4986d2b2e0745d02acf8ca64656943e63e422d345ce34a7495b
-    # via floodmap (pyproject.toml)
+    # via sampark (pyproject.toml)
 tifffile==2026.3.3 ; python_full_version < '3.12' \
     --hash=sha256:d9a1266bed6f2ee1dd0abde2018a38b4f8b2935cb843df381d70ac4eac5458b7 \
     --hash=sha256:e8be15c94273113d31ecb7aa3a39822189dd11c4967e3cc88c178f1ad2fd1170

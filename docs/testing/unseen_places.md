@@ -65,5 +65,5 @@ Boxes are approximate, from general geography, not from any flood or damage map.
 | tiny area | 2 | no | error: AOI is 0.01 km², smaller than the 0.5 km² minimum. |
 | huge area | 2 | no | error: AOI is 175,957 km², larger than the 2,500 km² limit. Please choose a smaller area (e.g. one valley reach). |
 | inverted box | 2 | no | error: bbox order must be [min_lon, min_lat, max_lon, max_lat] with min < max (boxes crossing the antimeridian are not supported) |
-| bad date text | 2 | no | floodmap run: error: argument --date: date must be YYYY-MM-DD, got '2024-13-40' |
+| bad date text | 2 | no | sampark run: error: argument --date: date must be YYYY-MM-DD, got '2024-13-40' |
 | missing date | 2 | no | error: --date is required with --bbox |

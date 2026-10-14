@@ -1582,7 +1582,7 @@
    "exit_code": 2,
    "wall_seconds": 0.1,
    "traceback": false,
-   "answer": "floodmap run: error: argument --date: date must be YYYY-MM-DD, got '2024-13-40'",
+   "answer": "sampark run: error: argument --date: date must be YYYY-MM-DD, got '2024-13-40'",
    "stage_statuses": {}
   },
   "missing date": {

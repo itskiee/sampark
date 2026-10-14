@@ -13,8 +13,8 @@ sees real imports, names and string values, not comments) and reports:
                         endpoint (data must come from the source named in the brief,
                         the Copernicus Data Space Ecosystem)
   collection            openEO load_collection() with a literal collection id that is not
-                        in floodmap.data_rules.ALLOWED_OPENEO_COLLECTIONS
-  http-library          an HTTP/socket library imported outside floodmap/net.py
+                        in sampark.data_rules.ALLOWED_OPENEO_COLLECTIONS
+  http-library          an HTTP/socket library imported outside sampark/net.py
                         (all network access must go through the allowlisted client)
   url                   a URL whose host has not been reviewed (REVIEWED_URL_HOSTS)
 
@@ -29,7 +29,7 @@ import re
 from dataclasses import dataclass
 from pathlib import Path
 
-from floodmap.data_rules import ALLOWED_OPENEO_COLLECTIONS
+from sampark.data_rules import ALLOWED_OPENEO_COLLECTIONS
 
 SCANNED_DIRS = ("src", "app", "scripts")
 
@@ -65,7 +65,7 @@ VALIDATION_PATH = re.compile(r"(^|[\\/])validation([\\/]|$)", re.IGNORECASE)
 URL = re.compile(r"https?://([^/\s\"'<>]+)", re.IGNORECASE)
 
 # Hosts that are allowed to appear in pipeline code after review. Data access is further
-# restricted at runtime by floodmap.data_rules.ALLOWED_HTTP_HOSTS.
+# restricted at runtime by sampark.data_rules.ALLOWED_HTTP_HOSTS.
 REVIEWED_URL_HOSTS = frozenset(
     {
         "api.ohsome.org",  # OSM pre-event snapshots (data source)
@@ -78,7 +78,7 @@ REVIEWED_URL_HOSTS = frozenset(
 
 HTTP_MODULES = ("requests", "urllib3", "httpx", "aiohttp", "http.client", "socket",
                 "urllib.request")
-HTTP_ALLOWED_FILE = "src/floodmap/net.py"
+HTTP_ALLOWED_FILE = "src/sampark/net.py"
 
 
 @dataclass(frozen=True)

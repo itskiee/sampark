@@ -5,7 +5,7 @@ import math
 import numpy as np
 import pytest
 
-from floodmap.terrain import (
+from sampark.terrain import (
     D8_STEP,
     layover_shadow,
     path_lengths_m,
@@ -81,7 +81,7 @@ def test_hydrology_on_synthetic_valley(tmp_path):
     import rasterio
     from rasterio.transform import from_origin
 
-    from floodmap.terrain import hydrology
+    from sampark.terrain import hydrology
 
     res = 30.0
     rows, cols = np.mgrid[0:80, 0:60]

@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from datetime import date
 
-from floodmap.cache import Cache, stable_hash
+from sampark.cache import Cache, stable_hash
 
 
 def test_stable_hash_ignores_key_order():

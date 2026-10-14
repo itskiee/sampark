@@ -19,11 +19,11 @@ from pyproj import Transformer
 from rasterio.transform import from_origin
 from shapely.geometry import LineString, Point, box, mapping
 
-from floodmap.catalogue import S1Scene
-from floodmap.config import load_config
-from floodmap.pipeline import run_pipeline
-from floodmap.results import StageStatus
-from floodmap.s1_pairing import to_utm
+from sampark.catalogue import S1Scene
+from sampark.config import load_config
+from sampark.pipeline import run_pipeline
+from sampark.results import StageStatus
+from sampark.s1_pairing import to_utm
 
 AOI_BBOX = [85.30, 28.12, 85.40, 28.22]
 EVENT = date(2026, 8, 26)
@@ -134,9 +134,9 @@ def fake_osm_world(aoi):
 
 @pytest.fixture
 def offline_world(monkeypatch):
-    import floodmap.stages.s1 as s1_stage
-    import floodmap.stages.s2 as s2_stage
-    import floodmap.stages.terrain as terrain_stage
+    import sampark.stages.s1 as s1_stage
+    import sampark.stages.s2 as s2_stage
+    import sampark.stages.terrain as terrain_stage
 
     monkeypatch.setattr(s1_stage, "search_s1_scenes", fake_scenes)
     monkeypatch.setattr(s1_stage, "connect", lambda: object())
@@ -145,9 +145,9 @@ def offline_world(monkeypatch):
     monkeypatch.setattr(terrain_stage, "fetch_dem", fake_dem)
     monkeypatch.setattr(s2_stage, "search_s2_scenes",
                         lambda *a, **k: [])  # monsoon: no clear optical image
-    import floodmap.stages.osm as osm_stage
-    from floodmap.aoi import parse_aoi
-    from floodmap.data_rules import OHSOME_LATEST_KNOWN
+    import sampark.stages.osm as osm_stage
+    from sampark.aoi import parse_aoi
+    from sampark.data_rules import OHSOME_LATEST_KNOWN
 
     monkeypatch.setattr(osm_stage, "latest_data_timestamp", lambda **k: OHSOME_LATEST_KNOWN)
     monkeypatch.setattr(osm_stage, "fetch_snapshot",
@@ -171,7 +171,7 @@ def test_full_pipeline_offline(tmp_path, offline_world):
                            focus_bbox=(85.33, 28.14, 85.37, 28.20), flood_path_start=start)
     st = results.stages
     # later passes are an optional follow-up: off by default, with a clear explanation
-    from floodmap.stages.multidate import NOT_REQUESTED
+    from sampark.stages.multidate import NOT_REQUESTED
 
     assert st["multidate"].status == StageStatus.SKIPPED
     assert st["multidate"].message == NOT_REQUESTED
@@ -251,7 +251,7 @@ def test_full_pipeline_offline(tmp_path, offline_world):
 
 
 def test_area_without_osm_data_gives_clear_messages(tmp_path, offline_world, monkeypatch):
-    import floodmap.stages.osm as osm_stage
+    import sampark.stages.osm as osm_stage
 
     monkeypatch.setattr(osm_stage, "fetch_snapshot", lambda *a, **k: [])
     config = load_config(overrides={
@@ -272,7 +272,7 @@ def test_area_without_osm_data_gives_clear_messages(tmp_path, offline_world, mon
     assert st["flood_path"].outputs["settlements_along_path"] == []
 
 
-@pytest.mark.skipif(not __import__("floodmap.segmentation", fromlist=["available"]).available(),
+@pytest.mark.skipif(not __import__("sampark.segmentation", fromlist=["available"]).available(),
                     reason="segmentation model not trained")
 def test_own_segmentation_model_in_pipeline(tmp_path, offline_world):
     """Our U-Net runs inside the pipeline on the synthetic valley and finds the new water."""

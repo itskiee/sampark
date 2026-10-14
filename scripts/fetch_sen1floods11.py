@@ -3,10 +3,10 @@
 Only S1Hand (VV/VH backscatter chips), LabelHand (water / not-water labels) and the official
 split lists, from the dataset's official bucket. Every file is checked against the bucket's
 MD5 checksum; re-running skips files that are already complete. The JRC water folder of the
-bucket is a forbidden dataset and is refused by floodmap.data_rules.
+bucket is a forbidden dataset and is refused by sampark.data_rules.
 
 Usage:  .venv/Scripts/python scripts/fetch_sen1floods11.py [target_dir]
-Cite:   Bonafilia et al., CVPR Workshops 2020 (floodmap.attribution.SEN1FLOODS11_CITATION).
+Cite:   Bonafilia et al., CVPR Workshops 2020 (sampark.attribution.SEN1FLOODS11_CITATION).
 """
 
 from __future__ import annotations
@@ -16,9 +16,9 @@ import time
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
-from floodmap.config import REPO_ROOT
-from floodmap.data_rules import ALLOWED_TRAINING_PREFIXES
-from floodmap.net import download_training_object, list_training_objects
+from sampark.config import REPO_ROOT
+from sampark.data_rules import ALLOWED_TRAINING_PREFIXES
+from sampark.net import download_training_object, list_training_objects
 
 
 def main() -> int:

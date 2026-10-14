@@ -32,7 +32,7 @@ from matplotlib.patches import Patch  # noqa: E402
 from rasterio.features import rasterize  # noqa: E402
 from shapely.geometry import box  # noqa: E402
 
-from floodmap import attribution  # noqa: E402
+from sampark import attribution  # noqa: E402
 
 HERE = Path(__file__).resolve().parent
 EMS = HERE / "data" / "EMSR927" / "extracted" / "EMSR927_products"
@@ -190,7 +190,7 @@ def compare(prod: Path, run: Path) -> dict | None:
 
 
 def _render(prod, covered, final, conf, transform, ref, ems_dmg, mine, hydro, crs, out):
-    from floodmap.viz import hillshade
+    from sampark.viz import hillshade
 
     minx, miny, maxx, maxy = covered.bounds
     pad = 300

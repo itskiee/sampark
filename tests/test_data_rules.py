@@ -16,8 +16,8 @@ from datetime import UTC, date, datetime
 
 import pytest
 
-from floodmap.config import REPO_ROOT
-from floodmap.data_rules import (
+from sampark.config import REPO_ROOT
+from sampark.data_rules import (
     ALLOWED_OPENEO_COLLECTIONS,
     ALLOWED_STAC_COLLECTIONS,
     DataRuleViolation,
@@ -77,14 +77,14 @@ PLANTED = [
 
 @pytest.mark.parametrize(("snippet", "rule"), PLANTED)
 def test_scanner_catches_planted_violation(snippet, rule):
-    rules = {v.rule for v in scan_source(snippet, "src/floodmap/planted.py")}
+    rules = {v.rule for v in scan_source(snippet, "src/sampark/planted.py")}
     assert rule in rules, f"scanner missed rule '{rule}' in: {snippet!r} (found {rules})"
 
 
 def test_scanner_accepts_clean_code():
     clean = (
         "from urllib.parse import urlsplit\n"
-        "from floodmap.cdse_client import load_collection\n"
+        "from sampark.cdse_client import load_collection\n"
         "s1 = conn.load_collection('SENTINEL1_GRD')\n"
         "dem = load_collection(conn, 'COPERNICUS_30')\n"
         "s2 = conn.load_collection(collection_id='SENTINEL2_L2A')\n"
@@ -92,11 +92,11 @@ def test_scanner_accepts_clean_code():
         "STAC = 'https://stac.dataspace.copernicus.eu/v1'\n"
         "msg = 'input validation failed'\n"
     )
-    assert scan_source(clean, "src/floodmap/clean.py") == []
+    assert scan_source(clean, "src/sampark/clean.py") == []
 
 
 def test_http_library_allowed_only_in_net_module():
-    assert scan_source("import requests", "src/floodmap/net.py") == []
+    assert scan_source("import requests", "src/sampark/net.py") == []
 
 
 # ---------------------------------------------------------------------------
@@ -194,14 +194,14 @@ def _ignored(rel_path: str) -> bool:
     "path",
     [".env", ".env.local", "cdse-service-account.json", "my_service_account.json",
      "keys/private.pem", "credentials.json", "cache/x/s1.tif", "outputs/run/results.json",
-     "logs/floodmap.log", "validation/data/emsr927.zip", "docs/Track B.pdf"],
+     "logs/sampark.log", "validation/data/emsr927.zip", "docs/Track B.pdf"],
 )
 def test_sensitive_paths_are_git_ignored(path):
     assert _ignored(path), f"{path} is NOT git-ignored"
 
 
 @pytest.mark.skipif(GIT is None or not (REPO_ROOT / ".git").exists(), reason="needs git repo")
-@pytest.mark.parametrize("path", [".env.example", "src/floodmap/aoi.py", "configs/default.yaml"])
+@pytest.mark.parametrize("path", [".env.example", "src/sampark/aoi.py", "configs/default.yaml"])
 def test_project_files_are_not_git_ignored(path):
     assert not _ignored(path), f"{path} should be tracked but is git-ignored"
 
@@ -212,7 +212,7 @@ def test_project_files_are_not_git_ignored(path):
     "v1.1/splits/flood_handlabeled/flood_test_data.csv",
 ])
 def test_allowed_training_objects(name):
-    from floodmap.data_rules import check_training_object
+    from sampark.data_rules import check_training_object
 
     assert check_training_object(name) == name
 
@@ -224,7 +224,7 @@ def test_allowed_training_objects(name):
     "../v1.1/data/flood_events/HandLabeled/S1Hand/x.tif",
 ])
 def test_refused_training_objects(name):
-    from floodmap.data_rules import DataRuleViolation, check_training_object
+    from sampark.data_rules import DataRuleViolation, check_training_object
 
     with pytest.raises(DataRuleViolation):
         check_training_object(name)

@@ -6,7 +6,7 @@ import geopandas as gpd
 import numpy as np
 from shapely.geometry import LineString, Point, Polygon, box, mapping
 
-from floodmap.osm import (
+from sampark.osm import (
     clean_text,
     features_to_gdf,
     nearest_place,
@@ -90,7 +90,7 @@ def test_building_counts_by_nearest_place():
 
 
 def test_settlements_from_building_groups_p18():
-    from floodmap.osm import building_groups, make_settlements
+    from sampark.osm import building_groups, make_settlements
 
     # group 1: 6 houses at x≈0 (named place "Gatlang" nearby); group 2: 5 houses 2 km east
     # (only "near Gatlang"); group 3: 5 houses 10 km away (coordinates); 2 isolated houses

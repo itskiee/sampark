@@ -1,7 +1,7 @@
 """Live Copernicus Data Space checks (opt-in).
 
     pytest -m network   # public catalogue, no login
-    pytest -m cdse      # openEO processing, needs `python -m floodmap login`
+    pytest -m cdse      # openEO processing, needs `python -m sampark login`
 """
 
 from __future__ import annotations
@@ -10,7 +10,7 @@ from datetime import UTC, datetime
 
 import pytest
 
-from floodmap.catalogue import search_s1_scenes
+from sampark.catalogue import search_s1_scenes
 
 TRISHULI = (85.10, 27.85, 85.45, 28.32)
 
@@ -34,7 +34,7 @@ def test_catalogue_has_same_track_pairs_around_the_event():
 def test_copernicus_dem_via_openeo():
     import rasterio
 
-    from floodmap.cdse_client import connect, load_collection
+    from sampark.cdse_client import connect, load_collection
 
     conn = connect()
     extent = {"west": 85.348, "south": 28.158, "east": 85.352, "north": 28.162}

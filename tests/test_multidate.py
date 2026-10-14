@@ -4,8 +4,8 @@ from __future__ import annotations
 
 import numpy as np
 
-from floodmap.multidate import growing_water_bodies, series_areas, water_changes
-from floodmap.thresholds import DECREASE, NO_CHANGE, NODATA, WATER
+from sampark.multidate import growing_water_bodies, series_areas, water_changes
+from sampark.thresholds import DECREASE, NO_CHANGE, NODATA, WATER
 
 PIX_M2 = 400.0  # 20 m pixels
 

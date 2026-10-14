@@ -5,8 +5,8 @@ from __future__ import annotations
 import numpy as np
 import pytest
 
-from floodmap.segmentation import available, normalise, predict_tiled
-from floodmap.stages.segmentation import agreement
+from sampark.segmentation import available, normalise, predict_tiled
+from sampark.stages.segmentation import agreement
 
 
 def test_normalise_range_and_nodata():
@@ -41,7 +41,7 @@ def test_agreement_counts():
 @pytest.mark.skipif(not available(), reason="model not trained yet")
 def test_shipped_model_finds_a_dark_river():
     """Smoke test of the real ONNX model: a dark (water-like) strip in bright land."""
-    from floodmap.segmentation import WaterModel
+    from sampark.segmentation import WaterModel
 
     rng = np.random.default_rng(1)
     vv = -8 + rng.normal(0, 1.5, (128, 160))

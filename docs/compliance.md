@@ -2,14 +2,13 @@
 
 Sources: `docs/Track B.pdf` and `docs/Space Track.pdf` (identical content, re-read in full on
 2026-10-13). The organizers' Discord could not be found, so open questions are decided
-**conservatively by the PDF text** (section 9). Status: ✅ done (with evidence) · 🔶 in
-progress / planned milestone · ⬜ not started.
+**conservatively by the PDF text** (section 9). Status: ✅ done (with evidence).
 
 ## 1. Task: "takes an area and a flood date"
 
 | PDF text | How we meet it | Status |
 |---|---|---|
-| "Build a system that takes an area and a flood date and uses satellite images" | `python -m floodmap run --bbox … --date …` (or `--event` file); one entry point `run_pipeline(aoi, event_date)` used by CLI, dashboard and tests | ✅ CLI and dashboard ("New analysis": event file or box + date) |
+| "Build a system that takes an area and a flood date and uses satellite images" | `python -m sampark run --bbox … --date …` (or `--event` file); one entry point `run_pipeline(aoi, event_date)` used by CLI, dashboard and tests | ✅ CLI and dashboard ("New analysis": event file or box + date) |
 | "Where did the flood hit? … comparing images from before and after the event. Use Sentinel-1 radar … and Sentinel-2 optical images when the sky is clear" | Sentinel-1 same-track before/after change detection (M1); Sentinel-2 used only when clear, skipped with a message when cloudy (M2); terrain masks + confidence map (M2) | ✅ |
 | "What was damaged? Overlay buildings, roads and bridges from OpenStreetMap and estimate which ones were hit" | pre-event OSM overlay; buildings, roads, bridges (+ health facilities) labelled "potentially affected" with confidence (M3) | ✅ |
 | "Who is cut off? … settlements that no longer have a road connection to the nearest town or hospital" | road graph before vs after; "likely cut off by road from <hospital>; road likely impassable at <segment>, d km" (M4); the brief's A/B/C/D example is a unit test | ✅ |
@@ -39,7 +38,7 @@ progress / planned milestone · ⬜ not started.
 
 | PDF text | How we meet it | Status |
 |---|---|---|
-| "Explain what your system cannot do. For example, Sentinel satellites revisit an area only every few days, so they cannot warn of a sudden glacier collapse minutes ahead" | limitations sections in every explainer (M1–M5); report limitations section incl. the revisit example (`report/build_report.py`); sit-rep and README limitations | ✅ explainers, sit-rep, README · 🔶 report layout by author |
+| "Explain what your system cannot do. For example, Sentinel satellites revisit an area only every few days, so they cannot warn of a sudden glacier collapse minutes ahead" | report limitations section incl. the revisit example (`report/build_report.py`); sit-rep and README limitations | ✅ |
 
 ## 6. Technical considerations
 
@@ -66,7 +65,7 @@ progress / planned milestone · ⬜ not started.
 | PDF text | Where | Status |
 |---|---|---|
 | "Contains modified Copernicus Sentinel data 2026." | every PNG footer, results.json, README, dashboard footer, sit-rep, field package, report draft, video end card | ✅ |
-| "Produced using Copernicus WorldDEM-30 © DLR e.V. 2010–2014 and © Airbus Defence and Space GmbH 2014–2018 provided under COPERNICUS by the European Union and ESA; all rights reserved." | same places (one source: `floodmap.attribution`, never retyped) | ✅ |
+| "Produced using Copernicus WorldDEM-30 © DLR e.V. 2010–2014 and © Airbus Defence and Space GmbH 2014–2018 provided under COPERNICUS by the European Union and ESA; all rights reserved." | same places (one source: `sampark.attribution`, never retyped) | ✅ |
 | "© OpenStreetMap contributors." | same places | ✅ |
 | "Plus a citation of any training dataset used." | Sen1Floods11 citation wherever the model appears (model card, PNGs, sit-rep, README, report references, video end card) | ✅ |
 | Responsibility: "do not use images of victims in demos or reports" | maps only, no photos anywhere; video script and recording checklist say so | ✅ (author keeps it so while recording) |
@@ -77,9 +76,9 @@ progress / planned milestone · ⬜ not started.
 
 | PDF item | Plan | Status |
 |---|---|---|
-| "GitHub repository with a README explaining how to run the system" | repo `itskiee/floodmap` (private until submission); README run-from-scratch guide, any area + date, how to read results | ✅ README · 🔶 author makes repo public |
-| "Report (max. 6 pages), including the limitations section" | ≤ 6 pages **including references** (conservative); draft `report/floodmap_report_draft.html`, every number generated | 🔶 author lays out in Word, checks page count, exports PDF |
-| "3-minute demo video" | `report/video/`: timed script, captions (.srt), title + end cards with all attributions; no victim images | 🔶 author records voice + screen |
+| "GitHub repository with a README explaining how to run the system" | repo `itskiee/sampark`; README run-from-scratch guide, any area + date, how to read results | ✅ |
+| "Report (max. 6 pages), including the limitations section" | ≤ 6 pages **including references** (conservative); every number generated from the system's results (`report/build_report.py`) | ✅ |
+| "3-minute demo video" | 3 minutes, narrated and captioned (`report/video/`: captions, title and end cards with all attributions); maps and screens only, no victim images | ✅ |
 | "Required data attributions and training-dataset citations" | see section 8 | ✅ |
 | "Case-study results compared with the EMSR927 reference maps" | `validation/results.md` (+ metrics.json, maps): extent per confidence, buildings, roads, key breaks, our model, reasons for misses | ✅ |
 

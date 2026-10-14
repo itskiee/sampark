@@ -13,7 +13,7 @@ This builder lives outside src/ and scripts/ on purpose: it quotes the EMSR927 c
 which is checking-only material that pipeline code must never read.
 
 Usage:  .venv/Scripts/python -I report/build_report.py outputs/<case-study run id>
-Writes: report/floodmap_report_draft.html and report/figures/*.png
+Writes: report/sampark_report_draft.html and report/figures/*.png
 """
 
 from __future__ import annotations
@@ -30,7 +30,7 @@ ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "report"
 FIG = OUT / "figures"
 sys.path.insert(0, str(ROOT / "src"))
-from floodmap import attribution  # noqa: E402
+from sampark import attribution  # noqa: E402
 
 
 def _load(path: Path):
@@ -198,14 +198,14 @@ def main() -> int:
     body = f"""
 <h1>Sampark: who is cut off after a flood, mapped from free satellite data</h1>
 <p class="sub">Multimodal AI Hackathon 2026 · Track B "Mapping flood damage from space" ·
-Nandika Agarwal · github.com/itskiee/floodmap<br>
+Nandika Agarwal · github.com/itskiee/sampark<br>
 <b>{html.escape(attribution.DISCLAIMER)}</b></p>
 
 <h2>1. Problem and users</h2>
 <p>After a Himalayan debris flood, district emergency centres, army and police helicopter
 teams and relief organisations need three answers fast, often before anyone can reach the
 valley: <b>where did the flood hit, what was damaged, and who is cut off?</b> Sampark
-(सम्पर्क, Hindi and Nepali for "connection"; code package <code>floodmap</code>) takes
+(सम्पर्क, Hindi and Nepali for "connection") takes
 <b>any area and flood date</b> and answers them from free data only: Sentinel-1 radar,
 Sentinel-2 optical images when the sky is clear, the Copernicus DEM and OpenStreetMap (OSM) as
 it was before the event. Results are worded as estimates for prioritising field checks
@@ -391,7 +391,7 @@ td, th { border: 1px solid #999; padding: 2pt 5pt; } th { background: #e8eef4; }
 </style>"""
     page = (f'<!DOCTYPE html><html><head><meta charset="utf-8"><title>Sampark report draft'
             f"</title>{style}</head><body>{body}</body></html>")
-    target = OUT / "floodmap_report_draft.html"
+    target = OUT / "sampark_report_draft.html"
     target.write_text(page + "\n", encoding="utf-8")
     words = len(" ".join(html.unescape(x) for x in body.split("<")).split())
     print(f"wrote {target.relative_to(ROOT)} (about {words:,} words incl. tags) and "

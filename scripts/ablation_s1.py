@@ -29,11 +29,11 @@ import rasterio  # noqa: E402
 from rasterio.windows import from_bounds  # noqa: E402
 from scipy import ndimage  # noqa: E402
 
-from floodmap import attribution  # noqa: E402
-from floodmap.config import load_config  # noqa: E402
-from floodmap.s1_change import change_layers, load_separate  # noqa: E402
-from floodmap.thresholds import NO_CHANGE, NODATA, ThresholdParams, classify  # noqa: E402
-from floodmap.viz import CLASS_CMAP  # noqa: E402
+from sampark import attribution  # noqa: E402
+from sampark.config import load_config  # noqa: E402
+from sampark.s1_change import change_layers, load_separate  # noqa: E402
+from sampark.thresholds import NO_CHANGE, NODATA, ThresholdParams, classify  # noqa: E402
+from sampark.viz import CLASS_CMAP  # noqa: E402
 
 
 def _params(cfg, method: str) -> ThresholdParams:

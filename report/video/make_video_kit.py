@@ -28,7 +28,7 @@ import matplotlib.pyplot as plt  # noqa: E402
 
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE.parents[1] / "src"))
-from floodmap import attribution  # noqa: E402
+from sampark import attribution  # noqa: E402
 
 NAVY, RED, GREY = "#16324f", "#b2182b", "#555555"
 
@@ -182,7 +182,7 @@ def main() -> int:
         ("EDUCATIONAL PROTOTYPE — NOT AN OPERATIONAL TOOL", 26, RED, "bold"),
     ])
     card(HERE / "end_card.png", [
-        ("Sampark · github.com/itskiee/floodmap", 34, NAVY, "bold"),
+        ("Sampark · github.com/itskiee/sampark", 34, NAVY, "bold"),
         (attribution.DISCLAIMER, 18, RED, "bold"),
         ("", 10, GREY, "normal"),
         *[(a, 17, "black", "normal") for a in attribution.DATA_ATTRIBUTIONS],

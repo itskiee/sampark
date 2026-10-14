@@ -5,8 +5,8 @@ import pytest
 import rasterio
 from rasterio.transform import from_origin
 
-from floodmap.aoi import parse_aoi
-from floodmap.s1_change import (
+from sampark.aoi import parse_aoi
+from sampark.s1_change import (
     analysis_resolution,
     change_layers,
     load_composite,
@@ -15,8 +15,8 @@ from floodmap.s1_change import (
     to_db,
     write_geotiff,
 )
-from floodmap.thresholds import WATER
-from floodmap.viz import crop_window, render_s1
+from sampark.thresholds import WATER
+from sampark.viz import crop_window, render_s1
 
 TRANSFORM = from_origin(330000, 3120000, 20, 20)
 CRS = rasterio.crs.CRS.from_epsg(32645)

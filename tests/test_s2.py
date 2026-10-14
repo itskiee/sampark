@@ -6,9 +6,9 @@ import numpy as np
 import pytest
 from shapely.geometry import box
 
-from floodmap.catalogue import S2Scene
-from floodmap.s2 import NoClearImageError, choose_dates, classify_s2
-from floodmap.thresholds import DECREASE, NO_CHANGE, NODATA, WATER
+from sampark.catalogue import S2Scene
+from sampark.s2 import NoClearImageError, choose_dates, classify_s2
+from sampark.thresholds import DECREASE, NO_CHANGE, NODATA, WATER
 
 AOI = box(85.28, 28.10, 85.42, 28.30)
 FULL = box(84.5, 27.5, 86.5, 29.0)

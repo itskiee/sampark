@@ -5,8 +5,8 @@ from datetime import UTC, date, datetime, timedelta
 import pytest
 from shapely.geometry import box
 
-from floodmap.catalogue import S1Scene
-from floodmap.s1_pairing import NoPairError, merge_slices, rank_pairs
+from sampark.catalogue import S1Scene
+from sampark.s1_pairing import NoPairError, merge_slices, rank_pairs
 
 AOI = box(85.28, 28.10, 85.42, 28.30)
 EPSG = 32645

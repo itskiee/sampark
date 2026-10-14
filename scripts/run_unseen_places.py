@@ -1,7 +1,7 @@
 """Unseen-place test campaign (M9): run the full system on places it has never seen.
 
 Each event file in configs/events/unseen/ is run exactly as a judge would run it
-(`python -m floodmap run --event FILE`, a separate process). The script records the exit
+(`python -m sampark run --event FILE`, a separate process). The script records the exit
 code, wall time, every stage's status, time and message, and a few key numbers, all read
 from the run's results.json. Nothing is typed by hand. A second set of runs feeds the CLI
 invalid inputs (future date, sea, tiny / huge / inverted area, pre-Sentinel-1 date, bad date
@@ -28,7 +28,7 @@ import sys
 import time
 from pathlib import Path
 
-from floodmap.config import REPO_ROOT
+from sampark.config import REPO_ROOT
 
 PLACES = REPO_ROOT / "configs" / "events" / "unseen"
 OUT = REPO_ROOT / "docs" / "testing"
@@ -45,10 +45,10 @@ INVALID = {
 }
 
 
-def _floodmap(args: list[str]) -> tuple[int, str, str, float]:
+def _sampark(args: list[str]) -> tuple[int, str, str, float]:
     env = {**os.environ, "PYTHONIOENCODING": "utf-8"}
     t0 = time.time()
-    proc = subprocess.run([sys.executable, "-m", "floodmap", "run", *args],  # noqa: S603
+    proc = subprocess.run([sys.executable, "-m", "sampark", "run", *args],  # noqa: S603
                           capture_output=True, text=True, encoding="utf-8", errors="replace",
                           env=env, cwd=REPO_ROOT, check=False)
     return proc.returncode, proc.stdout, proc.stderr, round(time.time() - t0, 1)
@@ -85,7 +85,7 @@ def _stages(r: dict) -> dict:
 
 
 def run_place(path: Path, later_passes: bool = False) -> dict:
-    code, stdout, stderr, secs = _floodmap(["--event", str(path.relative_to(REPO_ROOT))]
+    code, stdout, stderr, secs = _sampark(["--event", str(path.relative_to(REPO_ROOT))]
                                            + (["--later-passes"] if later_passes else []))
     rec = {"place": path.stem, "exit_code": code, "wall_seconds": secs,
            "traceback": "Traceback (most recent call last)" in stderr}
@@ -101,7 +101,7 @@ def run_place(path: Path, later_passes: bool = False) -> dict:
 
 
 def run_invalid(label: str, args: list[str]) -> dict:
-    code, stdout, stderr, secs = _floodmap(args)
+    code, stdout, stderr, secs = _sampark(args)
     text = (stderr.strip() or stdout.strip()).splitlines()
     statuses = re.findall(r"^\s{2}(\w+)\s+(ok|partial|skipped|failed)\s", stdout, re.MULTILINE)
     answer = text[-1] if text else ""

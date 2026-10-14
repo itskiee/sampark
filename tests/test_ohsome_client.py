@@ -6,8 +6,8 @@ from datetime import UTC, datetime
 
 import pytest
 
-import floodmap.ohsome_client as oc
-from floodmap.data_rules import DataRuleViolation
+import sampark.ohsome_client as oc
+from sampark.data_rules import DataRuleViolation
 
 SNAP = datetime(2026, 7, 27, 9, 0, tzinfo=UTC)
 
