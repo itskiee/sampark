@@ -65,6 +65,8 @@ def test_dashboard_renders_partial_run(isolated_outputs):
     assert not at.exception, at.exception
     assert at.title[0].value == "test valley"
     assert any("1.25 km²" in m.value for m in at.metric)
+    at.radio(key="section").set_value("What was damaged?").run()  # one section at a time
+    assert not at.exception, at.exception
     assert any("Needs stage(s) ['osm']" in i.value for i in at.info)
 
 
@@ -82,6 +84,8 @@ def test_later_passes_tab_offers_the_follow_up_when_not_requested(isolated_outpu
     }
     (run / "results.json").write_text(json.dumps(results), encoding="utf-8")
     at = _app().run()
+    assert not at.exception, at.exception
+    at.radio(key="section").set_value("Later passes").run()
     assert not at.exception, at.exception
     assert any("were not tracked" in i.value for i in at.info)
     assert any(b.label == "Track later passes for this area" for b in at.button)

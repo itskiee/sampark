@@ -210,11 +210,15 @@ with st.expander("Processing steps (status of every stage)"):
                                for k, v in res.get("stages", {}).items()]),
                  hide_index=True, width="stretch")
 
-tabs = st.tabs(["Situation report", "Where did the flood hit?", "What was damaged?",
-                "Who is cut off?", "Rescue priorities", "Landing zones", "Later passes",
-                "Flood path (bonus)", "AI model", "Data & limitations"])
+SECTIONS = ["Situation report", "Where did the flood hit?", "What was damaged?",
+            "Who is cut off?", "Rescue priorities", "Landing zones", "Later passes",
+            "Flood path (bonus)", "AI model", "Data & limitations"]
+# One section at a time (not st.tabs): tabs draw every section, about 10 MB of map images
+# for the case study, on every load; a selector draws only the section being viewed.
+section = st.radio("Section", SECTIONS, horizontal=True, key="section",
+                   label_visibility="collapsed")
 
-with tabs[0]:
+if section == SECTIONS[0]:
     rep = stage(res, "report")
     files = rep["outputs"]["files"] if rep else {}
     if not files and st.button("Generate the situation report"):
@@ -231,7 +235,7 @@ with tabs[0]:
         download(run, files.get("txt"), "Download text (radio/SMS)", "text/plain")
     show_png(run, files.get("png"))
 
-with tabs[1]:
+if section == SECTIONS[1]:
     if conf:
         o = conf["outputs"]
         st.write(f"Sources: {', '.join(o.get('sources', []))}")
@@ -247,7 +251,7 @@ with tabs[1]:
     else:
         missing(res, "confidence")
 
-with tabs[2]:
+if section == SECTIONS[2]:
     if dmg:
         o = dmg["outputs"]
         show_png(run, (o["files"].get("png") or [None])[-1])
@@ -270,7 +274,7 @@ with tabs[2]:
     else:
         missing(res, "damage")
 
-with tabs[3]:
+if section == SECTIONS[3]:
     if cut:
         o = cut["outputs"]
         st.caption(o["meaning"]["likely cut off"])
@@ -289,7 +293,7 @@ with tabs[3]:
     else:
         missing(res, "cutoff")
 
-with tabs[4]:
+if section == SECTIONS[4]:
     pri = stage(res, "priority")
     if pri:
         st.caption(pri["outputs"]["method"])
@@ -306,7 +310,7 @@ with tabs[4]:
     else:
         missing(res, "priority")
 
-with tabs[5]:
+if section == SECTIONS[5]:
     lz = stage(res, "landing_zones")
     if lz:
         o = lz["outputs"]
@@ -327,7 +331,7 @@ with tabs[5]:
     else:
         missing(res, "landing_zones")
 
-with tabs[6]:
+if section == SECTIONS[6]:
     md = stage(res, "multidate")
     if md:
         o = md["outputs"]
@@ -371,7 +375,7 @@ with tabs[6]:
     else:
         missing(res, "multidate")
 
-with tabs[7]:
+if section == SECTIONS[7]:
     fp = stage(res, "flood_path")
     if fp:
         o = fp["outputs"]
@@ -389,7 +393,7 @@ with tabs[7]:
         missing(res, "flood_path")
         st.caption("Set an upstream point in the sidebar ('New analysis') to trace a path.")
 
-with tabs[8]:
+if section == SECTIONS[8]:
     seg = stage(res, "segmentation")
     if seg:
         o = seg["outputs"]
@@ -408,7 +412,7 @@ with tabs[8]:
     else:
         missing(res, "segmentation")
 
-with tabs[9]:
+if section == SECTIONS[9]:
     st.subheader("Data used (allowed inputs only)")
     for name in ("s1", "s2", "terrain", "osm"):
         s = res.get("stages", {}).get(name)

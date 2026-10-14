@@ -53,27 +53,29 @@ SEGMENTS = [
      "Where did the flood hit? Radar images before and after are compared only on the same "
      "orbit track. Terrain masks remove steep slopes and radar shadow, and every area gets a "
      "confidence level. Here: 15.6 square kilometres."),
-    (60, 74, "Tab 'What was damaged?': the damage map, the most affected settlements, the bridges.",
+    (60, 74, "Section 'What was damaged?': the damage map, the most affected settlements, "
+             "the bridges.",
      "What was damaged? Buildings, roads and bridges mapped before the flood are overlaid: 3,332 "
      "buildings, 80 kilometres of road and 163 bridges potentially affected."),
-    (74, 94, "Tab 'Who is cut off?': the map, then the table; point at one 'Situation' sentence.",
+    (74, 94, "Section 'Who is cut off?': the map, then the table; point at one 'Situation' "
+             "sentence.",
      "Who is cut off? Comparing the road network before and after finds 215 settlements likely "
      "cut off from the nearest town or hospital. Each gets a sentence naming the likely break "
      "and its distance, and a reminder: needs field verification."),
-    (94, 106, "Tab 'Rescue priorities' (the ranked table with reasons), then tab 'Landing zones' "
-              "(the map with green candidates).",
+    (94, 106, "Section 'Rescue priorities' (the ranked table with reasons), then section "
+              "'Landing zones' (the map with green candidates).",
      "Settlements are ranked for rescue, with the reasons, and nearby flat, dry ground is "
      "suggested as helicopter landing candidates."),
-    (106, 116, "Tab 'Later passes': the table, the three change numbers, the possible lakes.",
+    (106, 116, "Section 'Later passes': the table, the three change numbers, the possible lakes.",
      "Later satellite passes show the water receding, and flag possible lakes forming behind "
      "debris."),
-    (116, 128, "Tab 'Flood path (bonus)': the traced path map and the settlements along it.",
+    (116, 128, "Section 'Flood path (bonus)': the traced path map and the settlements along it.",
      "And the bonus: from any upstream point, it traces the flood path down the valley on the "
      "elevation model and lists the settlements along it."),
-    (128, 138, "Tab 'Situation report': the one-page report; click 'Download PDF'.",
+    (128, 138, "Section 'Situation report': the one-page report; click 'Download PDF'.",
      "It writes a one-page situation report, and a field package for GPS units and phones that "
      "works offline."),
-    (138, 155, "Tab 'AI model': the model's water map and the score table.",
+    (138, 155, "Section 'AI model': the model's water map and the score table.",
      "Our AI component is our own flood model, trained from scratch on Sen1Floods11 and run "
      "locally. It clearly beats a simple threshold rule on held-out images. In Himalayan gorges "
      "it transfers poorly, and we say so."),
@@ -82,7 +84,7 @@ SEGMENTS = [
      "We checked against the official Copernicus EMS maps, used only for checking: where we "
      "flag damage, precision is 91 to 100 percent. And we tested it on {unseen} places it had "
      "never seen."),
-    (170, 177, "Tab 'Data & limitations'.",
+    (170, 177, "Section 'Data & limitations'.",
      "Satellites pass every few days, so it maps damage. It cannot warn minutes ahead."),
     (177, 180, "End card (end_card.png).",
      "Educational prototype: always verify on the ground."),
