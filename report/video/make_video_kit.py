@@ -34,49 +34,58 @@ NAVY, RED, GREY = "#16324f", "#b2182b", "#555555"
 
 # (start s, end s, what to show, narration)
 SEGMENTS = [
-    (0, 12, "Title card (title_card.png).",
-     "Sampark. Give it an area and a flood date, and it tells rescue teams where the flood "
-     "hit, what was damaged, and who is cut off, from free satellite data only."),
-    (12, 30, "Dashboard: open the Trishuli case-study run; overview map.",
-     "This is the August 2026 debris flood in Nepal's Bhote Koshi and Trishuli valley. The "
-     "system uses only what the brief allows: Sentinel-1 radar, Sentinel-2 when the sky is "
-     "clear, the Copernicus elevation model, and OpenStreetMap as it was before the flood."),
-    (30, 52, "Sidebar 'New analysis': type a box and a date, click Run; show the live progress "
-             "(speed the recording up and show the caption 'sped up').",
-     "Judges can choose any area and date. Here I start a new analysis. Every step reports "
-     "its status, and if something is missing, say clouds over the optical image, that step "
-     "is skipped with a reason and the rest still runs."),
-    (52, 75, "Tab 'Where did the flood hit?': flood map with confidence; zoom into the valley.",
+    (0, 10, "Title card (title_card.png).",
+     "Sampark. Give it an area and a flood date, and it tells rescue teams where the flood hit, "
+     "what was damaged and who is cut off."),
+    (10, 24, "Dashboard, Trishuli case study open: the title, the yellow prototype notice and the "
+             "four numbers at the top.",
+     "Here is the August 2026 debris flood in Nepal's Trishuli valley. It uses only free data "
+     "the brief allows: Sentinel-1 radar, Sentinel-2 when clear, the Copernicus elevation model "
+     "and OpenStreetMap from before the flood."),
+    (24, 42, "Sidebar: New analysis, pick an area (e.g. unseen/wayanad_2024), leave 'Track later "
+             "satellite passes' unticked, click Run analysis; show the live progress until it "
+             "finishes (speed up, caption 'sped up').",
+     "It works for any area and date. I start a new analysis. Each step shows its status, and "
+     "if data is missing, like clouds over Sentinel-2, that step says why and the rest still "
+     "runs."),
+    (42, 60, "Back to the Trishuli run. Tab 'Where did the flood hit?': the flood map, then the "
+             "confidence table below it.",
      "Where did the flood hit? Radar images before and after are compared only on the same "
-     "orbit track. Terrain masks remove slopes where water cannot stand, and every area gets "
-     "a confidence level. Here, 15.6 square kilometres are potentially affected."),
-    (75, 100, "Tabs 'What was damaged' then 'Who is cut off': cut-off map, then one settlement "
-              "sentence.",
-     "What was damaged? Over three thousand pre-event buildings, 80 kilometres of road and "
-     "163 bridges are potentially affected. Who is cut off? Comparing the road network before "
-     "and after finds 215 settlements likely cut off, each with the likely break and its "
-     "distance, and a reminder: needs field verification."),
-    (100, 120, "Tabs 'Rescue priorities' and 'Landing zones'; 'Later passes' (case study: "
-               "possible lakes forming); then the situation report PDF and the field package.",
-     "Settlements are ranked for rescue, with helicopter landing-zone candidates nearby. "
-     "Later satellite passes show whether a lake is forming behind debris. And it writes a "
-     "one-page situation report and a field package for GPS units and phones."),
-    (120, 142, "Tab 'AI model': the model's water map and its held-out scores.",
-     "Our AI component is our own flood segmentation model, trained from scratch on "
-     "Sen1Floods11. On held-out test images it clearly beats a simple threshold rule. "
-     "In Himalayan gorges it transfers poorly, and we show that honestly: it is a second "
-     "opinion, not the main map."),
-    (142, 165, "validation/results.md table and the Bidur comparison map "
-               "(EMSR927_AOI03_GRA_PRODUCT_v1.png); then docs/testing/unseen_places.md.",
-     "We checked our results against the official Copernicus EMS maps, which were never an "
-     "input. Where we flag damage, EMS agrees, with ninety-one to one hundred percent "
-     "precision. In the narrow gorge we find only about a third of the area, a limitation we "
-     "document. We also ran the system on {unseen} places it had never seen."),
-    (165, 175, "Tab 'Data & limitations'.",
-     "Satellites pass every few days, so this maps the damage. It cannot warn minutes before "
-     "a glacier collapse."),
-    (175, 180, "End card (end_card.png), hold until the end.",
-     "Sampark is an educational prototype. Always verify on the ground."),
+     "orbit track. Terrain masks remove steep slopes and radar shadow, and every area gets a "
+     "confidence level. Here: 15.6 square kilometres."),
+    (60, 74, "Tab 'What was damaged?': the damage map, the most affected settlements, the bridges.",
+     "What was damaged? Buildings, roads and bridges mapped before the flood are overlaid: 3,332 "
+     "buildings, 80 kilometres of road and 163 bridges potentially affected."),
+    (74, 94, "Tab 'Who is cut off?': the map, then the table; point at one 'Situation' sentence.",
+     "Who is cut off? Comparing the road network before and after finds 215 settlements likely "
+     "cut off from the nearest town or hospital. Each gets a sentence naming the likely break "
+     "and its distance, and a reminder: needs field verification."),
+    (94, 106, "Tab 'Rescue priorities' (the ranked table with reasons), then tab 'Landing zones' "
+              "(the map with green candidates).",
+     "Settlements are ranked for rescue, with the reasons, and nearby flat, dry ground is "
+     "suggested as helicopter landing candidates."),
+    (106, 116, "Tab 'Later passes': the table, the three change numbers, the possible lakes.",
+     "Later satellite passes show the water receding, and flag possible lakes forming behind "
+     "debris."),
+    (116, 128, "Tab 'Flood path (bonus)': the traced path map and the settlements along it.",
+     "And the bonus: from any upstream point, it traces the flood path down the valley on the "
+     "elevation model and lists the settlements along it."),
+    (128, 138, "Tab 'Situation report': the one-page report; click 'Download PDF'.",
+     "It writes a one-page situation report, and a field package for GPS units and phones that "
+     "works offline."),
+    (138, 155, "Tab 'AI model': the model's water map and the score table.",
+     "Our AI component is our own flood model, trained from scratch on Sen1Floods11 and run "
+     "locally. It clearly beats a simple threshold rule on held-out images. In Himalayan gorges "
+     "it transfers poorly, and we say so."),
+    (155, 170, "The Bidur comparison map (validation/results/EMSR927_AOI03_GRA_PRODUCT_v1.png), "
+               "then the table in docs/testing/unseen_places.md.",
+     "We checked against the official Copernicus EMS maps, used only for checking: where we "
+     "flag damage, precision is 91 to 100 percent. And we tested it on {unseen} places it had "
+     "never seen."),
+    (170, 177, "Tab 'Data & limitations'.",
+     "Satellites pass every few days, so it maps damage. It cannot warn minutes ahead."),
+    (177, 180, "End card (end_card.png).",
+     "Educational prototype: always verify on the ground."),
 ]
 
 

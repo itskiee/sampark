@@ -1,150 +1,158 @@
 1
-00:00:00,000 --> 00:00:06,370
+00:00:00,000 --> 00:00:06,670
 Sampark. Give it an area and a flood date,
 and it tells rescue teams where the flood
 
 2
-00:00:06,420 --> 00:00:11,950
-hit, what was damaged, and who is cut off,
-from free satellite data only.
+00:00:06,720 --> 00:00:09,950
+hit, what was damaged and who is cut off.
 
 3
-00:00:12,000 --> 00:00:17,687
-This is the August 2026 debris flood in
-Nepal's Bhote Koshi and Trishuli valley.
+00:00:10,000 --> 00:00:15,265
+Here is the August 2026 debris flood in
+Nepal's Trishuli valley. It uses only free
 
 4
-00:00:17,737 --> 00:00:23,209
-The system uses only what the brief
-allows: Sentinel-1 radar, Sentinel-2 when
+00:00:15,315 --> 00:00:20,320
+data the brief allows: Sentinel-1 radar,
+Sentinel-2 when clear, the Copernicus
 
 5
-00:00:23,259 --> 00:00:29,233
-the sky is clear, the Copernicus elevation
-model, and OpenStreetMap as it was before
+00:00:20,370 --> 00:00:23,950
+elevation model and OpenStreetMap from
+before the flood.
 
 6
-00:00:29,283 --> 00:00:29,950
-the flood.
+00:00:24,000 --> 00:00:32,343
+It works for any area and date. I start a
+new analysis. Each step shows its status,
 
 7
-00:00:30,000 --> 00:00:38,427
-Judges can choose any area and date. Here
-I start a new analysis. Every step reports
+00:00:32,393 --> 00:00:40,332
+and if data is missing, like clouds over
+Sentinel-2, that step says why and the
 
 8
-00:00:38,477 --> 00:00:46,500
-its status, and if something is missing,
-say clouds over the optical image, that
+00:00:40,382 --> 00:00:41,950
+rest still runs.
 
 9
-00:00:46,550 --> 00:00:51,950
-step is skipped with a reason and the rest
-still runs.
-
-10
-00:00:52,000 --> 00:00:59,427
+00:00:42,000 --> 00:00:48,503
 Where did the flood hit? Radar images
 before and after are compared only on the
 
-11
-00:00:59,477 --> 00:01:07,094
+10
+00:00:48,553 --> 00:00:55,056
 same orbit track. Terrain masks remove
-slopes where water cannot stand, and every
+steep slopes and radar shadow, and every
+
+11
+00:00:55,106 --> 00:00:59,950
+area gets a confidence level. Here: 15.6
+square kilometres.
 
 12
-00:01:07,144 --> 00:01:14,098
-area gets a confidence level. Here, 15.6
-square kilometres are potentially
+00:01:00,000 --> 00:01:06,466
+What was damaged? Buildings, roads and
+bridges mapped before the flood are
 
 13
-00:01:14,148 --> 00:01:14,950
-affected.
+00:01:06,516 --> 00:01:13,158
+overlaid: 3,332 buildings, 80 kilometres
+of road and 163 bridges potentially
 
 14
-00:01:15,000 --> 00:01:21,917
-What was damaged? Over three thousand pre-
-event buildings, 80 kilometres of road and
+00:01:13,208 --> 00:01:13,950
+affected.
 
 15
-00:01:21,967 --> 00:01:28,475
-163 bridges are potentially affected. Who
-is cut off? Comparing the road network
+00:01:14,000 --> 00:01:20,873
+Who is cut off? Comparing the road network
+before and after finds 215 settlements
 
 16
-00:01:28,525 --> 00:01:35,114
-before and after finds 215 settlements
-likely cut off, each with the likely break
+00:01:20,923 --> 00:01:27,796
+likely cut off from the nearest town or
+hospital. Each gets a sentence naming the
 
 17
-00:01:35,164 --> 00:01:39,950
-and its distance, and a reminder: needs
-field verification.
+00:01:27,846 --> 00:01:33,950
+likely break and its distance, and a
+reminder: needs field verification.
 
 18
-00:01:40,000 --> 00:01:46,870
+00:01:34,000 --> 00:01:41,569
 Settlements are ranked for rescue, with
-helicopter landing-zone candidates nearby.
+the reasons, and nearby flat, dry ground
 
 19
-00:01:46,920 --> 00:01:53,958
-Later satellite passes show whether a lake
-is forming behind debris. And it writes a
+00:01:41,619 --> 00:01:45,950
+is suggested as helicopter landing
+candidates.
 
 20
-00:01:54,008 --> 00:01:59,950
-one-page situation report and a field
-package for GPS units and phones.
+00:01:46,000 --> 00:01:54,445
+Later satellite passes show the water
+receding, and flag possible lakes forming
 
 21
-00:02:00,000 --> 00:02:06,117
-Our AI component is our own flood
-segmentation model, trained from scratch
+00:01:54,495 --> 00:01:55,950
+behind debris.
 
 22
-00:02:06,167 --> 00:02:12,950
-on Sen1Floods11. On held-out test images
-it clearly beats a simple threshold rule.
+00:01:56,000 --> 00:02:03,167
+And the bonus: from any upstream point, it
+traces the flood path down the valley on
 
 23
-00:02:13,000 --> 00:02:19,783
-In Himalayan gorges it transfers poorly,
-and we show that honestly: it is a second
+00:02:03,217 --> 00:02:07,950
+the elevation model and lists the
+settlements along it.
 
 24
-00:02:19,833 --> 00:02:21,950
-opinion, not the main map.
+00:02:08,000 --> 00:02:16,087
+It writes a one-page situation report, and
+a field package for GPS units and phones
 
 25
-00:02:22,000 --> 00:02:27,461
-We checked our results against the
-official Copernicus EMS maps, which were
+00:02:16,137 --> 00:02:17,950
+that works offline.
 
 26
-00:02:27,511 --> 00:02:33,340
-never an input. Where we flag damage, EMS
-agrees, with ninety-one to one hundred
+00:02:18,000 --> 00:02:24,539
+Our AI component is our own flood model,
+trained from scratch on Sen1Floods11 and
 
 27
-00:02:33,390 --> 00:02:39,218
-percent precision. In the narrow gorge we
-find only about a third of the area, a
+00:02:24,589 --> 00:02:30,720
+run locally. It clearly beats a simple
+threshold rule on held-out images. In
 
 28
-00:02:39,268 --> 00:02:44,950
-limitation we document. We also ran the
-system on 13 places it had never seen.
+00:02:30,770 --> 00:02:34,950
+Himalayan gorges it transfers poorly, and
+we say so.
 
 29
-00:02:45,000 --> 00:02:52,474
-Satellites pass every few days, so this
-maps the damage. It cannot warn minutes
+00:02:35,000 --> 00:02:42,153
+We checked against the official Copernicus
+EMS maps, used only for checking: where we
 
 30
-00:02:52,524 --> 00:02:54,950
-before a glacier collapse.
+00:02:42,203 --> 00:02:48,679
+flag damage, precision is 91 to 100
+percent. And we tested it on 13 places it
 
 31
-00:02:55,000 --> 00:02:59,950
-Sampark is an educational prototype.
-Always verify on the ground.
+00:02:48,729 --> 00:02:49,950
+had never seen.
+
+32
+00:02:50,000 --> 00:02:56,950
+Satellites pass every few days, so it maps
+damage. It cannot warn minutes ahead.
+
+33
+00:02:57,000 --> 00:02:59,950
+Educational prototype: always verify on
+the ground.

@@ -62,6 +62,26 @@ def download(run: Path, rel: str | None, label: str, mime: str) -> None:
                            key=f"dl-{rel}")
 
 
+def table(rows, columns: list[tuple[str, str]]) -> None:
+    """A readable table: only the listed columns, plain-language headers, yes/no instead of
+    True/False, lists as text (never raw program output)."""
+    if rows is None or len(rows) == 0:
+        st.caption("(none)")
+        return
+    df = rows if isinstance(rows, pd.DataFrame) else pd.DataFrame(rows)
+    keep = [(k, label) for k, label in columns if k in df.columns]
+    df = df[[k for k, _ in keep]].rename(columns=dict(keep))
+    for c in df.columns:
+        if df[c].dtype == bool:
+            df[c] = df[c].map({True: "yes", False: "no"})
+        elif df[c].dtype == object:
+            df[c] = [", ".join(map(str, v)) if isinstance(v, list | tuple) else v for v in df[c]]
+    st.dataframe(df, hide_index=True, width="stretch")
+
+
+LAT_LON = [("lat", "Latitude"), ("lon", "Longitude")]
+
+
 def start_analysis(aoi, event_date, name, focus, flood_start, event, later_passes: bool) -> None:
     """Run the pipeline with live progress, then show the new run (one code path for the
     sidebar and for 'Track later passes for this area')."""
@@ -185,8 +205,8 @@ m4.metric("Bridges potentially affected",
           f"{dmg['outputs']['bridges']['potentially_affected']:,}" if dmg else "n/a")
 
 with st.expander("Processing steps (status of every stage)"):
-    st.dataframe(pd.DataFrame([{"stage": k, "status": v["status"], "seconds": v.get("seconds"),
-                                "message": v.get("message", "")}
+    st.dataframe(pd.DataFrame([{"Step": k, "Status": v["status"], "Seconds": v.get("seconds"),
+                                "Result": v.get("message", "")}
                                for k, v in res.get("stages", {}).items()]),
                  hide_index=True, width="stretch")
 
@@ -217,7 +237,12 @@ with tabs[1]:
         st.write(f"Sources: {', '.join(o.get('sources', []))}")
         show_png(run, (o["files"].get("png") or [None])[-1])
         show_png(run, (o["files"].get("png") or [None])[0], "whole area")
-        st.dataframe(pd.DataFrame([o.get("affected_by_confidence_km2", {})]), hide_index=True)
+        by = o.get("affected_by_confidence_km2", {})
+        st.subheader("Potentially affected area by confidence (km²)")
+        table([{"high": by.get("high"), "medium": by.get("medium"), "low": by.get("low")}],
+              [("high", "High: two or more sources agree"),
+               ("medium", "Medium: one source, coherent patch"),
+               ("low", "Low: one source, small patch")])
         download(run, o["files"].get("polygons"), "Affected areas (GeoJSON)", "application/json")
     else:
         missing(res, "confidence")
@@ -227,11 +252,18 @@ with tabs[2]:
         o = dmg["outputs"]
         show_png(run, (o["files"].get("png") or [None])[-1])
         st.subheader("Most affected settlements")
-        st.dataframe(pd.DataFrame(o["settlements"]["most_affected"]), hide_index=True,
-                     width="stretch")
+        table([{**x, "share": f"{x['share']:.0%}"} if isinstance(x.get("share"), float) else x
+               for x in o["settlements"]["most_affected"]],
+              [("name", "Settlement"), ("buildings", "Buildings"),
+               ("potentially_affected_buildings", "Potentially affected"),
+               ("of_which_high_confidence", "…of which high confidence"),
+               ("share", "Share affected"), ("on_flood_corridor", "On the traced flood path"),
+               *LAT_LON])
         st.subheader("Bridges potentially affected")
-        st.dataframe(pd.DataFrame(o["bridges"]["list"]), hide_index=True,
-                     width="stretch")
+        table(o["bridges"]["list"],
+              [("name", "Bridge"), ("highway", "Road type"), ("motorable", "Motorable"),
+               ("evidence", "Evidence"), ("confidence", "Confidence"),
+               ("near_settlement", "Near"), ("length_m", "Length (m)"), *LAT_LON])
         for key, label in (("buildings", "Buildings"), ("roads", "Roads"), ("bridges", "Bridges"),
                            ("facilities", "Health facilities")):
             download(run, o["files"].get(key), f"{label} (GeoJSON, ODbL)", "application/json")
@@ -244,12 +276,14 @@ with tabs[3]:
         st.caption(o["meaning"]["likely cut off"])
         show_png(run, (o["files"].get("png") or [None])[-1])
         st.subheader("Settlements likely cut off by road")
-        st.dataframe(pd.DataFrame([{"settlement": s["name"], "buildings": s["buildings"],
-                                    "on foot": s["on_foot"], "situation": s["sentence"]}
-                                   for s in o["cut_off_settlements"]]),
-                     hide_index=True, width="stretch")
+        table(o["cut_off_settlements"],
+              [("name", "Settlement"), ("buildings", "Buildings"), ("on_foot", "On foot"),
+               ("sentence", "Situation"), *LAT_LON])
         st.subheader("Key breaks (repairing these reconnects the most buildings)")
-        st.dataframe(pd.DataFrame(o["key_breaks"]), hide_index=True, width="stretch")
+        table(o["key_breaks"],
+              [("road", "Road"), ("is_bridge", "Bridge"),
+               ("settlements_cut_off", "Settlements it cuts off"),
+               ("buildings_cut_off", "Buildings it cuts off"), *LAT_LON])
         download(run, o["files"].get("settlements"), "All settlements (GeoJSON)",
                  "application/json")
     else:
@@ -261,7 +295,13 @@ with tabs[4]:
         st.caption(pri["outputs"]["method"])
         csv_rel = pri["outputs"]["files"].get("csv")
         if csv_rel and (run / csv_rel).is_file():
-            st.dataframe(pd.read_csv(run / csv_rel), hide_index=True, width="stretch")
+            table(pd.read_csv(run / csv_rel),
+                  [("rank", "Rank"), ("tier", "Tier"), ("name", "Settlement"),
+                   ("buildings", "Buildings"),
+                   ("potentially_affected_buildings", "Potentially affected buildings"),
+                   ("of_which_high_confidence", "…of which high confidence"),
+                   ("road_status", "By road"), ("foot_status", "On foot"),
+                   ("hospital_by_road", "Hospital by road"), ("reasons", "Why"), *LAT_LON])
         download(run, csv_rel, "Download priority list (CSV)", "text/csv")
     else:
         missing(res, "priority")
@@ -275,8 +315,13 @@ with tabs[5]:
                  f"{o.get('likely_cut_off_settlements', 0)}** settlements likely cut off by road.")
         show_png(run, (o.get("files", {}).get("png") or [None])[0])
         if o.get("options"):
-            st.dataframe(pd.DataFrame(o["options"]).drop(columns=["status"], errors="ignore"),
-                         hide_index=True, width="stretch")
+            table(o["options"],
+                  [("settlement", "Settlement"), ("option", "Option"),
+                   ("distance_m", "Distance (m, straight line)"),
+                   ("height_difference_m", "Height difference (m)"),
+                   ("walk_crosses_detected_flood", "Walk crosses detected flood"),
+                   ("clear_square_m", "Clear square (m)"), ("slope_deg", "Slope (°)"),
+                   *LAT_LON])
         download(run, o.get("files", {}).get("geojson"), "Landing-zone candidates (GeoJSON)",
                  "application/json")
     else:
@@ -286,14 +331,29 @@ with tabs[6]:
     md = stage(res, "multidate")
     if md:
         o = md["outputs"]
-        st.caption(o["method"])
-        st.dataframe(pd.DataFrame(o["timeline"]), hide_index=True, width="stretch")
-        st.write(o["changes_first_to_last"])
+        st.caption("Later Sentinel-1 passes of the same orbit track, each compared with the "
+                   "same before-image and the same rules, only where flooding is plausible.")
+        tl = o["timeline"]
+        table([{**t, "observed_share": f"{t['observed_share']:.0%}"} for t in tl],
+              [("date", "Date"), ("water_km2", "Water (km²)"),
+               ("wet_mud_debris_km2", "Likely wet mud / debris (km²)"),
+               ("rough_debris_km2", "Likely rough debris (km²)"),
+               ("observed_share", "Area seen by the radar")])
+        ch = o["changes_first_to_last"]
+        st.subheader(f"Change in water from {tl[0]['date']} to {tl[-1]['date']}")
+        c1, c2, c3 = st.columns(3)
+        c1.metric("Receding (water that disappeared)", f"{ch['receding_water_km2']:.2f} km²")
+        c2.metric("New ponding (new water since the first pass)",
+                  f"{ch['new_ponding_km2']:.2f} km²")
+        c3.metric("Persistent (water on both dates)", f"{ch['persistent_water_km2']:.2f} km²")
         show_png(run, (o["files"].get("png") or [None])[0])
         if o.get("possible_lakes"):
             st.warning("Growing water bodies flagged as POSSIBLE lakes forming (e.g. behind "
                        "debris): verify.")
-            st.dataframe(pd.DataFrame(o["possible_lakes"]), hide_index=True, width="stretch")
+            table(o["possible_lakes"],
+                  [("area_km2_by_date", "Area on each date (km²)"),
+                   ("growth_factor", "Growth (× first date)"), ("status", "Status"),
+                   *LAT_LON])
     elif ((res.get("stages", {}).get("multidate") or {}).get("message") or "").startswith(
             "Not requested"):
         st.info("**Later satellite passes were not tracked for this analysis** (an optional "
@@ -319,8 +379,12 @@ with tabs[7]:
                  f"{o['elevation_start_m'] - o['elevation_end_m']:.0f} m.")
         show_png(run, (o["files"].get("png") or [None])[0])
         if o.get("settlements_along_path"):
-            st.dataframe(pd.DataFrame(o["settlements_along_path"]), hide_index=True,
-                         width="stretch")
+            table(o["settlements_along_path"],
+                  [("name", "Settlement"), ("place", "Type (OpenStreetMap)"),
+                   ("km_downstream", "km downstream"),
+                   ("distance_from_path_m", "Distance from the path (m)"),
+                   ("height_above_river_m", "Height above the river (m)"),
+                   ("low_lying", "Low-lying"), ("buildings", "Buildings"), *LAT_LON])
     else:
         missing(res, "flood_path")
         st.caption("Set an upstream point in the sidebar ('New analysis') to trace a path.")
@@ -333,8 +397,13 @@ with tabs[8]:
                  "running locally. " + o["note"] + ".")
         show_png(run, (o["files"].get("png") or [None])[0])
         scores = o.get("model_test_scores") or {}
-        st.dataframe(pd.DataFrame([{"data": k, **(v or {})} for k, v in scores.items()]),
-                     hide_index=True)
+        names = {"test": "Sen1Floods11 test images (held out)",
+                 "bolivia": "Bolivia: a whole flood event never seen in training",
+                 "valid": "Validation images (used to pick the training epoch)"}
+        st.subheader("How well the model works on images it never trained on")
+        table([{"data": names.get(k, k), **(v or {})} for k, v in scores.items()],
+              [("data", "Data"), ("iou", "IoU (overlap, 1 = perfect)"),
+               ("precision", "Precision"), ("recall", "Recall"), ("f1", "F1")])
         st.caption(o.get("domain_shift_note", ""))
     else:
         missing(res, "segmentation")
@@ -344,7 +413,10 @@ with tabs[9]:
     for name in ("s1", "s2", "terrain", "osm"):
         s = res.get("stages", {}).get(name)
         if s:
-            st.write(f"**{name}** ({s['status']}): {s.get('message', '')}")
+            label = {"s1": "Sentinel-1 radar", "s2": "Sentinel-2 optical",
+                     "terrain": "Copernicus DEM (terrain)",
+                     "osm": "OpenStreetMap before the event"}[name]
+            st.write(f"**{label}** ({s['status']}): {s.get('message', '')}")
     st.subheader("What this system cannot do")
     from floodmap.sitrep import LIMITATIONS
 
